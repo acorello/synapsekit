@@ -266,6 +266,7 @@ class ReActAgent:
         """Stream step-by-step events including thoughts, actions, and tokens."""
         from .step_events import (
             ActionEvent,
+            CostDowngradeEvent,
             ErrorEvent,
             FinalAnswerEvent,
             ObservationEvent,
@@ -281,6 +282,15 @@ class ReActAgent:
 
             full_response = ""
             async for token in self._llm.stream_with_messages(messages):
+                # Downgrade events are recorded during the stream call; drain them
+                # as each token arrives so they surface before the next step.
+                if hasattr(self._llm, "consume_events"):
+                    for raw_event in self._llm.consume_events():
+                        yield CostDowngradeEvent(
+                            from_model=raw_event["from_model"],
+                            to_model=raw_event["to_model"],
+                            reason=raw_event["reason"],
+                        )
                 yield TokenEvent(token=token)
                 full_response += token
 

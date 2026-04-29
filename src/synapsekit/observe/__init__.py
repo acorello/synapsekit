@@ -230,10 +230,11 @@ __all__ = [
     "clear_exported_spans",
     "configure",
     "current_span",
+    "end_span",
     "get_exporter",
     "is_enabled",
+    "record_exception",
     "reset",
     "start_span",
-    "end_span",
     "trace",
 ]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import functools
 import inspect
 import random
 import time
@@ -288,6 +289,7 @@ def trace(name: str):
     def decorator(func):
         if inspect.iscoroutinefunction(func):
 
+            @functools.wraps(func)
             async def async_wrapper(*args: Any, **kwargs: Any):
                 span = start_span(name)
                 try:
@@ -299,10 +301,9 @@ def trace(name: str):
                 finally:
                     end_span(span)
 
-            async_wrapper.__name__ = getattr(func, "__name__", "wrapped")
-            async_wrapper.__doc__ = func.__doc__
             return async_wrapper
 
+        @functools.wraps(func)
         def sync_wrapper(*args: Any, **kwargs: Any):
             span = start_span(name)
             try:
@@ -313,8 +314,6 @@ def trace(name: str):
             finally:
                 end_span(span)
 
-        sync_wrapper.__name__ = getattr(func, "__name__", "wrapped")
-        sync_wrapper.__doc__ = func.__doc__
         return sync_wrapper
 
     return decorator

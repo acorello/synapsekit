@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 from collections.abc import AsyncGenerator
 
 import numpy as np
@@ -161,6 +162,10 @@ class TestObserveConfigAndPrivacy:
             assert exporter.kind == kind
             assert exporter.endpoint == "http://localhost:4317"
 
+    def test_configure_raises_on_unknown_exporter(self):
+        with pytest.raises(ValueError, match="Unsupported exporter"):
+            observe.configure(exporter="unknown_backend")
+
     @pytest.mark.asyncio
     async def test_trace_llm_inputs_false_suppresses_prompt(self):
         observe.configure(trace_llm_inputs=False)
@@ -250,12 +255,32 @@ class TestObserveLLM:
             llm = StreamingLLM(responses=["done"])
             return await llm.generate("decorated")
 
+        assert inspect.iscoroutinefunction(do_work)
         result = await do_work()
 
         assert result == "done"
         root = _root_span()
         assert root["name"] == "custom.work"
         assert root["children"][0]["name"] == "llm.generate"
+
+    def test_trace_decorator_sync_creates_span(self):
+        @observe.trace("sync.work")
+        def do_sync() -> str:
+            return "sync result"
+
+        assert not inspect.iscoroutinefunction(do_sync)
+        result = do_sync()
+
+        assert result == "sync result"
+        assert _root_span()["name"] == "sync.work"
+
+    def test_trace_decorator_preserves_function_metadata(self):
+        @observe.trace("meta.check")
+        async def documented_fn() -> None:
+            """A documented function."""
+
+        assert documented_fn.__name__ == "documented_fn"
+        assert documented_fn.__doc__ == "A documented function."
 
 
 class TestObserveRagAgentGraph:

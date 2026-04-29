@@ -71,6 +71,48 @@ async def test_cost_quality_router_exhaustion():
 
 
 @pytest.mark.asyncio
+async def test_cost_quality_router_on_exceed_raise():
+    expensive = _MockLLM("gpt-4o")
+    cheap = _MockLLM("gpt-4o-mini")
+    router = CostQualityRouter(
+        candidates=[expensive, cheap], max_cost_per_call_usd=0.000001, on_exceed="raise"
+    )
+
+    with pytest.raises(BudgetExceededError):
+        await router.generate_with_messages([{"role": "user", "content": "x" * 1000}])
+
+
+@pytest.mark.asyncio
+async def test_cost_quality_router_on_exceed_skip():
+    expensive = _MockLLM("gpt-4o")
+    router = CostQualityRouter(
+        candidates=[expensive], max_cost_per_call_usd=0.000001, on_exceed="skip"
+    )
+
+    result = await router.generate_with_messages([{"role": "user", "content": "x" * 1000}])
+    assert result == ""
+
+
+@pytest.mark.asyncio
+async def test_cost_quality_router_stream_downgrade():
+    expensive = _MockLLM("gpt-4o")
+    cheap = _MockLLM("gpt-4o-mini")
+    router = CostQualityRouter(
+        candidates=[expensive, cheap], max_cost_per_call_usd=0.005, on_exceed="downgrade"
+    )
+
+    messages = [{"role": "user", "content": "x" * 10000}]
+    tokens = []
+    async for token in router.stream_with_messages(messages):
+        tokens.append(token)
+
+    assert any("gpt-4o-mini" in t for t in tokens)
+    events = router.consume_events()
+    assert len(events) == 1
+    assert events[0]["from_model"] == "gpt-4o"
+
+
+@pytest.mark.asyncio
 async def test_agent_executor_surfaces_downgrade_react():
     expensive = _MockLLM("gpt-4o")
     cheap = _MockLLM("gpt-4o-mini")

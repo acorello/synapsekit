@@ -218,18 +218,10 @@ class ReActAgent:
         for _ in range(self._max_iterations):
             messages = self._build_messages(query, memory_context)
 
-            # Check for cost-downgrade events from router (pre-call)
-            if hasattr(self._llm, "consume_events"):
-                for raw_event in self._llm.consume_events():
-                    yield CostDowngradeEvent(
-                        from_model=raw_event["from_model"],
-                        to_model=raw_event["to_model"],
-                        reason=raw_event["reason"],
-                    )
-
             full_response = ""
             async for token in self._llm.stream_with_messages(messages):
-                # Also check during stream if supported (rare)
+                # Downgrade events are recorded during the stream call; drain them
+                # as each token arrives so they surface before the next step.
                 if hasattr(self._llm, "consume_events"):
                     for raw_event in self._llm.consume_events():
                         yield CostDowngradeEvent(

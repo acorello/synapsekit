@@ -6,7 +6,6 @@ import pytest
 
 from synapsekit.evaluation.optimizer import PromptCandidate, PromptOptimizer, PromptVariantRunner
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

@@ -74,7 +74,7 @@ class SQLiteLLMCache:
 
     # ── context manager ────────────────────────────────────────────────────
 
-    def __enter__(self) -> "SQLiteLLMCache":
+    def __enter__(self) -> SQLiteLLMCache:
         return self
 
     def __exit__(self, *_: object) -> None:

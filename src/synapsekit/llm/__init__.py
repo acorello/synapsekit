@@ -7,6 +7,7 @@ from .structured import generate_structured
 __all__ = [
     "AI21LLM",
     "AlephAlphaLLM",
+    "BaseReasoningProvider",
     "MemcachedCacheBackend",
     "AnthropicLLM",
     "AsyncLRUCache",
@@ -41,6 +42,9 @@ __all__ = [
     "OpenRouterLLM",
     "PerplexityLLM",
     "QUALITY_TABLE",
+    "ReasoningLLM",
+    "ReasoningResponse",
+    "ReasoningStreamChunk",
     "RouterModelSpec",
     "SambaNovaLLM",
     "TogetherLLM",
@@ -88,6 +92,10 @@ _PROVIDERS = {
     "DatabricksLLM": ".databricks",
     "ErnieLLM": ".ernie",
     "DynamoDBCacheBackend": "._cache_dynamodb",
+    "BaseReasoningProvider": ".reasoning",
+    "ReasoningLLM": ".reasoning",
+    "ReasoningResponse": ".reasoning",
+    "ReasoningStreamChunk": ".reasoning",
 }
 
 

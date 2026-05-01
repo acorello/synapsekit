@@ -247,9 +247,12 @@ class TestShellTool:
 
     @pytest.mark.asyncio
     async def test_timeout_triggers_error(self):
+        import sys
+
         tool = ShellTool(timeout=1)
-        # sleep 5 should timeout after 1 second
-        result = await tool.run(command="sleep 5")
+        # Use sys.executable so the blocking command works on every platform.
+        command = f'"{sys.executable}" -c "import time; time.sleep(10)"'
+        result = await tool.run(command=command)
         assert result.error is not None
         assert "timed out" in result.error.lower()
 

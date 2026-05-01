@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import asyncio
 import sys
-from collections import deque
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
@@ -333,9 +332,9 @@ class TestWebScraperRegression:
 
     @pytest.mark.asyncio
     async def test_validate_url_is_async_coroutine(self):
-        from synapsekit.agents.tools.web_scraper import _validate_url
-
         import inspect
+
+        from synapsekit.agents.tools.web_scraper import _validate_url
 
         assert inspect.iscoroutinefunction(_validate_url)
 
@@ -384,8 +383,9 @@ class TestWebScraperRegression:
 
     @pytest.mark.asyncio
     async def test_gaierror_is_ignored(self):
-        from synapsekit.agents.tools.web_scraper import _validate_url
         import socket
+
+        from synapsekit.agents.tools.web_scraper import _validate_url
 
         with patch("socket.gethostbyname", side_effect=socket.gaierror):
             # Should not raise — unknown hosts are allowed through
@@ -812,8 +812,8 @@ class TestEvaluationPipelineRegression:
     @pytest.mark.asyncio
     async def test_batch_concurrency_semaphore_limits_concurrent(self):
         """Semaphore must cap concurrent evaluations at `concurrency`."""
-        from synapsekit.evaluation.pipeline import EvaluationPipeline
         from synapsekit.evaluation.base import MetricResult
+        from synapsekit.evaluation.pipeline import EvaluationPipeline
 
         active: list[int] = []
         peak: list[int] = [0]
@@ -847,10 +847,13 @@ class TestSitemapLoaderRegression:
     @pytest.mark.asyncio
     async def test_collect_urls_uses_deque(self):
         """_collect_urls must use a deque, not a plain list."""
-        import synapsekit.loaders.sitemap as sitemap_module
         import inspect
 
-        source = inspect.getsource(sitemap_module._SitemapLoader__class__ if False else sitemap_module)
+        import synapsekit.loaders.sitemap as sitemap_module
+
+        source = inspect.getsource(
+            sitemap_module._SitemapLoader__class__ if False else sitemap_module
+        )
         # Check deque is imported and used in the source
         assert "deque" in source
         assert "popleft" in source

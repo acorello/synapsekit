@@ -166,6 +166,29 @@ class TestRAGPipeline:
         assert "Partial answer" in contents  # partial answer preserved despite LLM error
 
     @pytest.mark.asyncio
+    async def test_add_prefers_retriever_add_document_when_available(self):
+        llm = make_mock_llm()
+
+        class RetrieverWithAddDocument:
+            def __init__(self):
+                self.add_document = AsyncMock()
+                self.add = AsyncMock()
+                self.retrieve = AsyncMock(return_value=["Context chunk 1."])
+
+        retriever = RetrieverWithAddDocument()
+        pipeline = RAGPipeline(RAGConfig(llm=llm, retriever=retriever, memory=ConversationMemory()))
+
+        mock_splitter = MagicMock()
+        mock_splitter.split = MagicMock(return_value=["chunk1", "chunk2"])
+        pipeline._splitter = mock_splitter
+
+        await pipeline.add("Hello world. This is a test document.", metadata={"source": "unit"})
+
+        retriever.add_document.assert_awaited_once()
+        retriever.add.assert_not_called()
+        mock_splitter.split.assert_not_called()
+
+    @pytest.mark.asyncio
     async def test_add_chunks_text(self):
         llm = make_mock_llm()
         retriever = make_mock_retriever()

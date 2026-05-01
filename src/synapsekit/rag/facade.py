@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncGenerator
 from pathlib import Path
+from typing import Any
 
 from .._compat import run_sync
 from ..embeddings.backend import SynapsekitEmbeddings
@@ -55,6 +56,7 @@ class RAG:
         max_tokens: int = 1024,
         trace: bool = True,
         auto_eval: bool = False,
+        context_packer: Any | None = None,
     ) -> None:
         llm = make_llm(model, api_key, provider, system_prompt, temperature, max_tokens)
         embeddings = SynapsekitEmbeddings(model=embedding_model)
@@ -72,6 +74,7 @@ class RAG:
                 retrieval_top_k=retrieval_top_k,
                 system_prompt=system_prompt,
                 auto_eval=auto_eval,
+                context_packer=context_packer,
             )
         )
         self._embeddings = embeddings

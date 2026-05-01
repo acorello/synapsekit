@@ -1,6 +1,7 @@
 from .base import MetricResult
 from .dataset import EvalDataset, EvalRecord
 from .decorators import EvalCaseMeta, eval_case
+from .optimizer import PromptCandidate, PromptOptimizer, PromptVariantRunner
 from .faithfulness import FaithfulnessMetric
 from .finetune import FineTuneJob, FineTuner
 from .groundedness import GroundednessMetric
@@ -10,6 +11,9 @@ from .relevancy import RelevancyMetric
 
 __all__ = [
     "EvalCaseMeta",
+    "PromptCandidate",
+    "PromptOptimizer",
+    "PromptVariantRunner",
     "EvalDataset",
     "EvalRecord",
     "EvalRegression",

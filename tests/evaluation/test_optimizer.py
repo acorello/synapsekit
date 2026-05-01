@@ -144,9 +144,7 @@ async def test_runner_metadata_contains_per_case_scores():
 @pytest.mark.asyncio
 async def test_manual_variants_are_used_directly():
     llm = _mock_llm()
-    optimizer = PromptOptimizer(
-        llm=llm, eval_suite=".", metric="score", variants=["v1", "v2"]
-    )
+    optimizer = PromptOptimizer(llm=llm, eval_suite=".", metric="score", variants=["v1", "v2"])
     optimizer._load_eval_cases = lambda: [("c1", _async_case(0.7))]
 
     best = await optimizer.run("base", "improve")

@@ -178,11 +178,24 @@ GitHub Action that runs `@eval_case` suites on every PR and blocks merge if qual
 
 **📊 Agent Benchmarking**<br/>
 Evaluate your agents against industry-standard benchmarks like GAIA, SWE-bench, WebArena, and AgentBench directly from the CLI. Generate leaderboards to compare performance across tasks.
+
+**🧪 EvalHub Community Suites**<br/>
+Run shared community eval suites with `synapsekit bench` and compare aggregate score against baseline.
 </td>
 </tr>
 </table>
 
 </div>
+
+### EvalHub quick usage
+
+```bash
+synapsekit bench --list
+synapsekit bench --suite community/customer-support --model gpt-4o-mini
+synapsekit bench --publish my_evals/ --name myorg/rag-finance
+```
+
+Docs: [docs/evalhub.md](docs/evalhub.md)
 
 ---
 

@@ -133,9 +133,15 @@ class RAGPipeline:
         chunks: list[str] = []
         top_score: float | None = None
         try:
+            retriever_state = getattr(self.config.retriever, "__dict__", {})
+            retrieve_overridden = "retrieve" in retriever_state
+            retrieve_with_scores_overridden = "retrieve_with_scores" in retriever_state
+
             retrieve_with_scores = getattr(self.config.retriever, "retrieve_with_scores", None)
             score_call = None
-            if callable(retrieve_with_scores):
+            if callable(retrieve_with_scores) and (
+                not retrieve_overridden or retrieve_with_scores_overridden
+            ):
                 score_call = retrieve_with_scores(query, top_k=k)
 
             if score_call is not None and inspect.isawaitable(score_call):

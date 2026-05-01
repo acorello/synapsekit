@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
 from typing import Any
@@ -76,17 +77,6 @@ class RAGPipeline:
         probe = await self.config.retriever.retrieve("test", top_k=1)
         return len(probe) > 0
 
-    async def _retrieve_context_results(self, query: str, top_k: int) -> list[dict[str, Any]]:
-        retrieve_with_scores = getattr(self.config.retriever, "retrieve_with_scores", None)
-        if callable(retrieve_with_scores):
-            results = await retrieve_with_scores(query, top_k=top_k)
-            if results:
-                return results
-            return []
-
-        chunks = await self.config.retriever.retrieve(query, top_k=top_k)
-        return [{"text": chunk, "metadata": {}, "score": None} for chunk in chunks]
-
     @staticmethod
     def _format_context_result(result: dict[str, Any]) -> str:
         text = str(result.get("text", "")).strip()
@@ -121,12 +111,77 @@ class RAGPipeline:
 
     async def stream(self, query: str, top_k: int | None = None) -> AsyncGenerator[str]:
         """Retrieve context, build prompt, stream LLM response, update memory."""
+        from ..observe.runtime import end_span, record_exception, start_span
+
         k = top_k or self.config.retrieval_top_k
-        results = await self._retrieve_context_results(query, top_k=k)
-        chunks = [str(result.get("text", "")) for result in results if result.get("text")]
+        rag_span = start_span(
+            "rag.ask",
+            {
+                "rag.query": query,
+                "rag.top_k": k,
+            },
+        )
+        retrieve_span = start_span(
+            "rag.retrieve",
+            {
+                "rag.query": query,
+                "rag.top_k": k,
+            },
+        )
+
+        results: list[dict] | list[str] = []
+        chunks: list[str] = []
+        top_score: float | None = None
+        try:
+            retrieve_with_scores = getattr(self.config.retriever, "retrieve_with_scores", None)
+            score_call = None
+            if callable(retrieve_with_scores):
+                score_call = retrieve_with_scores(query, top_k=k)
+
+            if score_call is not None and inspect.isawaitable(score_call):
+                scored_results = await score_call
+                results = scored_results
+                chunks = [
+                    str(item.get("text", "")) for item in scored_results if isinstance(item, dict)
+                ]
+                if scored_results and isinstance(scored_results[0], dict):
+                    score = scored_results[0].get("score")
+                    if score is None:
+                        score = scored_results[0].get("relevance_score")
+                    if score is None:
+                        score = scored_results[0].get("cross_encoder_score")
+                    top_score = float(score) if score is not None else None
+            else:
+                plain_results = await self.config.retriever.retrieve(query, top_k=k)
+                results = plain_results
+                chunks = [str(item) for item in plain_results]
+
+            end_span(
+                retrieve_span,
+                attributes={
+                    "rag.retrieved_chunks": len(chunks),
+                    "rag.top_score": top_score,
+                    "rag.retrieval_latency_ms": round(retrieve_span.duration_ms, 3)
+                    if retrieve_span is not None
+                    else None,
+                },
+            )
+        except Exception as exc:
+            record_exception(retrieve_span, exc)
+            end_span(retrieve_span, error=exc)
+            record_exception(rag_span, exc)
+            end_span(rag_span, error=exc)
+            raise
 
         if results:
-            tagged = [self._format_context_result(result) for result in results]
+            if results and isinstance(results[0], dict):
+                tagged = [
+                    self._format_context_result(result)
+                    for result in results
+                    if isinstance(result, dict)
+                ]
+            else:
+                tagged = [f"<document>\n{chunk}\n</document>" for chunk in chunks]
             context = "\n\n".join(tagged)
         else:
             context = "No context available."
@@ -159,6 +214,9 @@ class RAGPipeline:
             async for token in self.config.llm.stream_with_messages(messages):
                 answer_parts.append(token)
                 yield token
+        except Exception as exc:
+            record_exception(rag_span, exc)
+            raise
         finally:
             # Commit the turn to memory + tracer only if at least one token
             # was delivered to the consumer. This preserves the user query
@@ -187,6 +245,22 @@ class RAGPipeline:
                             contexts=chunks,
                             call_id=call_id,
                         )
+
+                response_span = start_span(
+                    "rag.response",
+                    {
+                        "rag.response_length": len(answer),
+                    },
+                )
+                end_span(response_span)
+
+            end_span(
+                rag_span,
+                attributes={
+                    "rag.retrieved_chunks": len(chunks),
+                    "rag.response_length": len("".join(answer_parts)) if answer_parts else 0,
+                },
+            )
 
     def _schedule_auto_eval(
         self,

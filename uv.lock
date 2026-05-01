@@ -871,6 +871,43 @@ wheels = [
 ]
 
 [[package]]
+name = "cassandra-driver"
+version = "3.30.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "deprecated" },
+    { name = "geomet" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/85/26/8806d0949422b560029a040e7a628d92addd612726468c3fb546354a43a4/cassandra_driver-3.30.0.tar.gz", hash = "sha256:7e4cfd6ec3023576ed0ffa34882d9778e4bacfd918048ae9139ccdd00628ed85", size = 4242039, upload-time = "2026-04-16T05:04:59.838Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/67/01/b13641332953702238b5cdf80340a117b384070fc1cc582030d7dffbde14/cassandra_driver-3.30.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:2637644eac9274e46b0c2a7f729158bdf8582b6842dc48e18297211dd3ee1fec", size = 7612055, upload-time = "2026-04-16T05:01:56.997Z" },
+    { url = "https://files.pythonhosted.org/packages/a6/52/1361729ce8e5ded444b11e00eee19df09e040d46236c7df7cded51913c7a/cassandra_driver-3.30.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:6a5c8982f2b9eb4e789fc12cdd930b1e1511b6d046dde31d0703f855745556a3", size = 7367328, upload-time = "2026-04-16T05:02:06.188Z" },
+    { url = "https://files.pythonhosted.org/packages/96/c6/b4d5b01e10570dfb3394ebf7af40acbe435caaf246553992a459d42caca6/cassandra_driver-3.30.0-cp310-cp310-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:2a0679ebcfdcecb3763c690b5bc6a517e0c0803f7bc88e0a6c793e5e421b558a", size = 7587311, upload-time = "2026-04-16T05:02:16.909Z" },
+    { url = "https://files.pythonhosted.org/packages/b3/83/d5868bc1ea2ffd392dea683589c4dd64363f619ba2d36de802f9ed38775f/cassandra_driver-3.30.0-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:e12dfcd3f0074c16f4bfe650242edb406b935864373ae86160e09e3f5e437e84", size = 7837314, upload-time = "2026-04-16T05:02:24.742Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/e9/ac4f81d96cc9df0ba457ca5f447b405f730de8f343422662f4719ae23619/cassandra_driver-3.30.0-cp310-cp310-win_amd64.whl", hash = "sha256:1d64cbdce764c33e284d339b9a749736d68971edf8b537888f2d13c4b0d1313f", size = 6955273, upload-time = "2026-04-16T05:02:31.22Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/8b/f75fe284ee184b54ba55b2cd69d2ba156e6a8fc88b322e28e2ecbaa6065a/cassandra_driver-3.30.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:5c6cbb396ad6fe456efc799d3b8b6bda360ffc06552c5be2ce1a88ac381a305c", size = 7415263, upload-time = "2026-04-16T05:02:38.441Z" },
+    { url = "https://files.pythonhosted.org/packages/92/f6/67a0e6f937e85131c5e528d3c74e63b1fb041f0d6351eb7b7d5a403ae149/cassandra_driver-3.30.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:8d5e3575ec01d8c043b56ff25de6f61ff4c9ed5cb3ea4c3d9df98def71ba710c", size = 7252160, upload-time = "2026-04-16T05:02:45.14Z" },
+    { url = "https://files.pythonhosted.org/packages/aa/1f/48691b5bed702bbe4db3acb00c1a3cc585e18bd70dadb12a5cf0697c6159/cassandra_driver-3.30.0-cp311-cp311-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:ff2e9fbdc1be54c1d041ea3f7d09812442f334be14bb5ad7aede175544765d25", size = 7586952, upload-time = "2026-04-16T05:02:52.99Z" },
+    { url = "https://files.pythonhosted.org/packages/61/56/74b01c48acf401de3f38054bdfcbb493770e13dd2ddbb4735783045f1e3b/cassandra_driver-3.30.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:385134eba72f048707cd800de0a61cf3c23246113edffe9bc6bc2eb86282d26b", size = 7832995, upload-time = "2026-04-16T05:03:01.344Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/da/25f3542b1b7221c12e323eae591015e2e816fd543e6538cfc29d2c6ff059/cassandra_driver-3.30.0-cp311-cp311-win_amd64.whl", hash = "sha256:0c28a8e84917acebecbaed39844047c2f135739c3627dd7b9f8541af33e11df3", size = 6965120, upload-time = "2026-04-16T05:03:08.538Z" },
+    { url = "https://files.pythonhosted.org/packages/89/46/8fc42a2c836ec525f9313e6bdffbada2911d8501ff008e5d22ebdbaa4895/cassandra_driver-3.30.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:212af4d8ff934c30538f4bdf7da61f14dc9a30349f6cac2161c8125e56fad928", size = 7751805, upload-time = "2026-04-16T05:03:15.913Z" },
+    { url = "https://files.pythonhosted.org/packages/a3/e3/8c3c02380334697c629de2db560d67e44461401175887e7a36374e30bcad/cassandra_driver-3.30.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:61d7eeb17d8f76d5b4a9b1239145250f2a9f7bf949c30e2cc36196b5a0523ce1", size = 7576768, upload-time = "2026-04-16T05:03:23.624Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/5d/ead64522236077f4a63974ed4f193f26e35f85132751154f9aa839680dc5/cassandra_driver-3.30.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:83a9148d408a3dbb48ea1802d643d60fa53cd69dc7b9a244511ecf5b917e4f53", size = 7330139, upload-time = "2026-04-16T05:03:30.567Z" },
+    { url = "https://files.pythonhosted.org/packages/13/fe/bbed363953eee1774842806527e377a79f0cbfb52887b6379c856ff8fedf/cassandra_driver-3.30.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:0f4225082a11d9529416c223553ab38a29c4e65da6646b40159c554480dc002c", size = 7581659, upload-time = "2026-04-16T05:03:37.811Z" },
+    { url = "https://files.pythonhosted.org/packages/a4/60/c776d0d9d6b92bd2f15720db51313af8a194272f725d3fda8827258b728b/cassandra_driver-3.30.0-cp312-cp312-win_amd64.whl", hash = "sha256:6d449f49ce866ac20a1c3d80b1f9245ecdfd1e67b843dccd3d6eccdfe519c02e", size = 6795314, upload-time = "2026-04-16T05:03:44.648Z" },
+    { url = "https://files.pythonhosted.org/packages/10/e8/32c6063738ce418403750575a1a1f73609c313766849cb930699d607fc8d/cassandra_driver-3.30.0-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:d2f9e00127f70dff42d4ef932df8a6b81170c2861d4e75c8b13f4b4816b4450c", size = 7738805, upload-time = "2026-04-16T05:03:51.875Z" },
+    { url = "https://files.pythonhosted.org/packages/48/2c/b88c3747c63eeb36b1ebb46a50734b2490eb05f87944ec907563f861bb76/cassandra_driver-3.30.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:8c4acd28791854c23ca68be50a7a750c9413ba80fec0ca5c27c2be05f6f3fe0a", size = 7568531, upload-time = "2026-04-16T05:03:59.122Z" },
+    { url = "https://files.pythonhosted.org/packages/1e/c0/f44f3fdb7c40cddad7b58cc8102387ae8ee4da793ed5899d4a231989fbea/cassandra_driver-3.30.0-cp313-cp313-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:289e86c81be2543cb9055600c0819850db921e6e138a84e5c88ec160662c7207", size = 7324591, upload-time = "2026-04-16T05:04:06.501Z" },
+    { url = "https://files.pythonhosted.org/packages/63/7a/54466eff67b69653c83d5bcf3972e42a52b2e881f9a3ee7ca8b996943caf/cassandra_driver-3.30.0-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:d73c0429813045ba86b92fc033fbcfd495aa10e9d4a40fe30b6e9dfe8b5d3ab4", size = 7575795, upload-time = "2026-04-16T05:04:13.645Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/0d/ff571cb27e56d8112bc3f4a5e807da54c8b875264e038e791e06ddcc1817/cassandra_driver-3.30.0-cp313-cp313-win_amd64.whl", hash = "sha256:17fb53587c9fc6a27b5c4a89b4f3d9169be43fc572d6f3f67494aa74708be936", size = 6798091, upload-time = "2026-04-16T05:04:20.145Z" },
+    { url = "https://files.pythonhosted.org/packages/73/c0/a8b52c18959d96d313450cdfa97f66d4b67327814671df65a7a2e7fca64f/cassandra_driver-3.30.0-cp314-cp314-macosx_10_15_x86_64.whl", hash = "sha256:c64e20bf46b49f8ef64569208d4a395b0928c27d5960559922a2d13471924d0d", size = 7736773, upload-time = "2026-04-16T05:04:27.315Z" },
+    { url = "https://files.pythonhosted.org/packages/48/a8/a7aae33ef0a74616210b2cff18a5efba3db99f1c5bb7e2a5a31aeabb8558/cassandra_driver-3.30.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:923a6e1c3fa5f98f846a028b1a7207ec9e7d8cfa54ea47a507d41122efa2f54f", size = 7562347, upload-time = "2026-04-16T05:04:34.5Z" },
+    { url = "https://files.pythonhosted.org/packages/99/9e/bed3930f4a726b3783fea179a88cd16b95d968ec8fc1af9d5193d26cfc39/cassandra_driver-3.30.0-cp314-cp314-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:c1b4aa6c7706dec839134adb6a2094d90c5f6f35efa08028ed6aae6e67c8643e", size = 7382080, upload-time = "2026-04-16T05:04:41.48Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/9b/8cd9c03474bac374b0cda4124c7c4d2f6b2b5f7942b028f82222daf54fcb/cassandra_driver-3.30.0-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:137498e2a9b6f578d1902e1af8a988e50b8fe134c76a176f1b8a774e906bc66c", size = 7590242, upload-time = "2026-04-16T05:04:48.477Z" },
+    { url = "https://files.pythonhosted.org/packages/c4/29/aed0ee68f724b9fecc9cebfcae44f331b5dd2e010415f4be2d6e64d77226/cassandra_driver-3.30.0-cp314-cp314-win_amd64.whl", hash = "sha256:136b46437b9902673264e101cdaab309d3e40607bff34430bda86b785badc6e4", size = 6787116, upload-time = "2026-04-16T05:04:55.349Z" },
+]
+
+[[package]]
 name = "catalogue"
 version = "2.0.10"
 source = { registry = "https://pypi.org/simple" }
@@ -2288,6 +2325,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/a7/b2/4140c69c6a66432916b26158687e821ba631a4c9273c474343badf84d3ba/future-1.0.0.tar.gz", hash = "sha256:bd2968309307861edae1458a4f8a4f3598c03be43b97521076aebf5d94c07b05", size = 1228490, upload-time = "2024-02-21T11:52:38.461Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl", hash = "sha256:929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216", size = 491326, upload-time = "2024-02-21T11:52:35.956Z" },
+]
+
+[[package]]
+name = "geomet"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/2a/8c/dde022aa6747b114f6b14a7392871275dea8867e2bd26cddb80cc6d66620/geomet-1.1.0.tar.gz", hash = "sha256:51e92231a0ef6aaa63ac20c443377ba78a303fd2ecd179dc3567de79f3c11605", size = 28732, upload-time = "2023-11-14T15:43:36.764Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/af/90/3bc780df088d439714af8295196a4332a26559ae66fd99865e36f92efa9e/geomet-1.1.0-py3-none-any.whl", hash = "sha256:4372fe4e286a34acc6f2e9308284850bd8c4aa5bc12065e2abbd4995900db12f", size = 31522, upload-time = "2023-11-14T15:43:35.305Z" },
 ]
 
 [[package]]
@@ -11515,7 +11564,7 @@ browser = [
     { name = "playwright" },
 ]
 cassandra = [
-    { name = "astrapy" },
+    { name = "cassandra-driver" },
 ]
 chroma = [
     { name = "chromadb" },
@@ -11735,6 +11784,12 @@ tavily = [
 teams = [
     { name = "httpx" },
 ]
+tiktoken = [
+    { name = "tiktoken" },
+]
+transformers = [
+    { name = "transformers" },
+]
 vertex = [
     { name = "google-cloud-aiplatform" },
 ]
@@ -11812,7 +11867,6 @@ requires-dist = [
     { name = "arxiv", marker = "extra == 'all'", specifier = ">=2.0" },
     { name = "arxiv", marker = "extra == 'arxiv'", specifier = ">=2.0" },
     { name = "astrapy", marker = "extra == 'all'", specifier = ">=1.0" },
-    { name = "astrapy", marker = "extra == 'cassandra'", specifier = ">=1.0" },
     { name = "asyncpg", marker = "extra == 'all'", specifier = ">=0.29" },
     { name = "asyncpg", marker = "extra == 'postgres'", specifier = ">=0.29" },
     { name = "atlassian-python-api", marker = "extra == 'all'", specifier = ">=3.0" },
@@ -11828,6 +11882,7 @@ requires-dist = [
     { name = "boto3", marker = "extra == 'bedrock'", specifier = ">=1.34" },
     { name = "boto3", marker = "extra == 'dynamodb'", specifier = ">=1.34" },
     { name = "boto3", marker = "extra == 's3'", specifier = ">=1.34" },
+    { name = "cassandra-driver", marker = "extra == 'cassandra'", specifier = ">=3.28" },
     { name = "chromadb", marker = "extra == 'all'", specifier = ">=0.5" },
     { name = "chromadb", marker = "extra == 'chroma'", specifier = ">=0.5" },
     { name = "clickhouse-connect", marker = "extra == 'all'", specifier = ">=0.7" },
@@ -11971,6 +12026,8 @@ requires-dist = [
     { name = "supabase", marker = "extra == 'supabase'", specifier = ">=2.0" },
     { name = "tavily-python", marker = "extra == 'all'", specifier = ">=0.3" },
     { name = "tavily-python", marker = "extra == 'tavily'", specifier = ">=0.3" },
+    { name = "tiktoken", marker = "extra == 'tiktoken'", specifier = ">=0.12" },
+    { name = "transformers", marker = "extra == 'transformers'", specifier = ">=4.0" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'all'", specifier = ">=0.29" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'graph-ui'", specifier = ">=0.29" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'serve'", specifier = ">=0.29" },
@@ -11985,7 +12042,7 @@ requires-dist = [
     { name = "youtube-transcript-api", marker = "extra == 'all'", specifier = ">=0.6" },
     { name = "youtube-transcript-api", marker = "extra == 'youtube-transcript'", specifier = ">=0.6" },
 ]
-provides-extras = ["openai", "anthropic", "semantic", "colbert", "pdf", "wikipedia", "arxiv", "html", "web", "chroma", "faiss", "qdrant", "pinecone", "weaviate", "milvus", "lancedb", "sqlite-vec", "cassandra", "clickhouse", "duckdb-vector", "marqo", "opensearch", "vespa", "replicate", "ollama", "lmstudio", "vllm", "ai21", "cohere", "mistral", "gemini", "bedrock", "gcal-tool", "aws-lambda", "rss", "groq", "audio", "video", "voice", "voice-local", "voice-stream", "cron", "excel", "pptx", "docx", "yaml", "teams", "http", "search", "huggingface", "google-search", "tavily", "youtube", "mcp", "redis", "memcached", "vertex", "cloudflare", "aleph-alpha", "llamacpp", "gpt4all", "ernie", "minimax", "serve", "graph-ui", "postgres", "pgvector", "wolfram", "dynamodb", "discord", "gcs", "bigquery", "gdrive", "git", "gsheets", "jira", "hubspot", "sql", "snowflake", "mongodb", "mongodb-vector", "salesforce", "azure", "s3", "onedrive", "slack", "supabase", "notion", "confluence", "dropbox", "rtf", "epub", "parquet", "elasticsearch", "browser", "youtube-transcript", "airtable", "all"]
+provides-extras = ["openai", "anthropic", "semantic", "colbert", "pdf", "wikipedia", "arxiv", "html", "web", "chroma", "faiss", "qdrant", "pinecone", "weaviate", "milvus", "lancedb", "sqlite-vec", "cassandra", "clickhouse", "duckdb-vector", "marqo", "opensearch", "vespa", "replicate", "ollama", "lmstudio", "vllm", "ai21", "cohere", "mistral", "gemini", "bedrock", "gcal-tool", "aws-lambda", "rss", "groq", "audio", "video", "voice", "voice-local", "voice-stream", "cron", "excel", "pptx", "docx", "yaml", "teams", "http", "search", "huggingface", "transformers", "tiktoken", "google-search", "tavily", "youtube", "mcp", "redis", "memcached", "vertex", "cloudflare", "aleph-alpha", "llamacpp", "gpt4all", "ernie", "minimax", "serve", "graph-ui", "observe", "postgres", "pgvector", "wolfram", "dynamodb", "discord", "gcs", "bigquery", "gdrive", "git", "gsheets", "jira", "hubspot", "sql", "snowflake", "mongodb", "mongodb-vector", "salesforce", "azure", "s3", "onedrive", "slack", "supabase", "notion", "confluence", "dropbox", "rtf", "epub", "parquet", "elasticsearch", "browser", "youtube-transcript", "airtable", "all"]
 
 [package.metadata.requires-dev]
 dev = [

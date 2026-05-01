@@ -121,6 +121,7 @@ class ContextPacker:
 
         # Keep the strongest chunk among near-duplicates.
         if self.strategy == "recency":
+
             def _recency_key(c: PackedChunk) -> float:
                 value = (
                     c.metadata.get("timestamp")
@@ -200,7 +201,7 @@ class ContextPacker:
             return packed
 
         # Lost-in-middle mitigation: strongest chunks placed at start/end.
-        ordered = [None] * len(packed)
+        ordered: list[PackedChunk | None] = [None] * len(packed)
         left = 0
         right = len(packed) - 1
 

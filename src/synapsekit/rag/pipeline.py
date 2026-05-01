@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
+from typing import Any
 
 from ..llm.base import BaseLLM
 from ..loaders.base import Document
@@ -75,13 +76,57 @@ class RAGPipeline:
         probe = await self.config.retriever.retrieve("test", top_k=1)
         return len(probe) > 0
 
+    async def _retrieve_context_results(self, query: str, top_k: int) -> list[dict[str, Any]]:
+        retrieve_with_scores = getattr(self.config.retriever, "retrieve_with_scores", None)
+        if callable(retrieve_with_scores):
+            results = await retrieve_with_scores(query, top_k=top_k)
+            if results:
+                return results
+            return []
+
+        chunks = await self.config.retriever.retrieve(query, top_k=top_k)
+        return [{"text": chunk, "metadata": {}, "score": None} for chunk in chunks]
+
+    @staticmethod
+    def _format_context_result(result: dict[str, Any]) -> str:
+        text = str(result.get("text", "")).strip()
+        metadata = result.get("metadata") or {}
+
+        lines: list[str] = []
+        for key in (
+            "source_type",
+            "source",
+            "chunk_type",
+            "page",
+            "timestamp",
+            "start_time",
+            "end_time",
+            "locator",
+            "frame_index",
+            "media_type",
+        ):
+            value = metadata.get(key)
+            if value is not None:
+                lines.append(f"{key}: {value}")
+
+        score = result.get("score")
+        if isinstance(score, int | float):
+            lines.append(f"score: {score:.4f}")
+
+        source_block = ""
+        if lines:
+            source_block = "[SOURCE]\n" + "\n".join(lines) + "\n[/SOURCE]\n"
+
+        return f"{source_block}<document>\n{text}\n</document>"
+
     async def stream(self, query: str, top_k: int | None = None) -> AsyncGenerator[str]:
         """Retrieve context, build prompt, stream LLM response, update memory."""
         k = top_k or self.config.retrieval_top_k
-        chunks = await self.config.retriever.retrieve(query, top_k=k)
+        results = await self._retrieve_context_results(query, top_k=k)
+        chunks = [str(result.get("text", "")) for result in results if result.get("text")]
 
-        if chunks:
-            tagged = [f"<document>\n{chunk}\n</document>" for chunk in chunks]
+        if results:
+            tagged = [self._format_context_result(result) for result in results]
             context = "\n\n".join(tagged)
         else:
             context = "No context available."
@@ -97,7 +142,12 @@ class RAGPipeline:
         messages.append(
             {
                 "role": "user",
-                "content": f"Context:\n{context}\n\nQuestion: {query}",
+                "content": (
+                    "Context:\n"
+                    f"{context}\n\n"
+                    "Use the provided source metadata for citations when available.\n\n"
+                    f"Question: {query}"
+                ),
             }
         )
 

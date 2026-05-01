@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import mimetypes
 from pathlib import Path
 from typing import Any
 
@@ -137,10 +138,13 @@ class AudioLoader:
             return None
 
     def _to_documents(self, transcription: dict[str, Any]) -> list[Document]:
+        media_type, _ = mimetypes.guess_type(str(self._path))
         base_metadata = {
             "source": str(self._path),
             "file": str(self._path),
             "source_type": "audio",
+            "chunk_type": "transcript",
+            "media_type": media_type or "audio/mpeg",
             "loader": "AudioLoader",
             "backend": self._backend,
         }
@@ -152,13 +156,17 @@ class AudioLoader:
                 continue
             chunks = self._splitter.split(segment_text) or [segment_text]
             for chunk in chunks:
+                start_time = seg.get("start")
+                end_time = seg.get("end")
                 docs.append(
                     Document(
                         text=chunk,
                         metadata={
                             **base_metadata,
-                            "start_time": seg.get("start"),
-                            "end_time": seg.get("end"),
+                            "start_time": start_time,
+                            "end_time": end_time,
+                            "timestamp": start_time,
+                            "locator": self._format_locator(start_time, end_time),
                         },
                     )
                 )
@@ -172,3 +180,26 @@ class AudioLoader:
 
         chunks = self._splitter.split(text) or [text]
         return [Document(text=chunk, metadata=dict(base_metadata)) for chunk in chunks]
+
+    @staticmethod
+    def _format_locator(start: Any, end: Any) -> str | None:
+        start_ts = AudioLoader._to_float(start)
+        end_ts = AudioLoader._to_float(end)
+        if start_ts is None and end_ts is None:
+            return None
+        if start_ts is None:
+            return f"{AudioLoader._format_seconds(end_ts)}"
+        if end_ts is None or end_ts == start_ts:
+            return AudioLoader._format_seconds(start_ts)
+        return f"{AudioLoader._format_seconds(start_ts)}-{AudioLoader._format_seconds(end_ts)}"
+
+    @staticmethod
+    def _format_seconds(value: float | None) -> str:
+        if value is None:
+            return "unknown"
+        total_seconds = max(0, int(value))
+        hours, rem = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(rem, 60)
+        if hours:
+            return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+        return f"{minutes:02d}:{seconds:02d}"

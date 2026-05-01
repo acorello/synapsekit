@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import mimetypes
 import tempfile
 from contextlib import suppress
 from pathlib import Path
@@ -102,14 +103,17 @@ class VideoLoader:
 
     def _decorate_transcript_doc(self, doc: Document) -> Document:
         timestamp = doc.metadata.get("start_time")
+        media_type, _ = mimetypes.guess_type(str(self._path))
         doc.metadata = {
             **doc.metadata,
             "source": str(self._path),
             "file": str(self._path),
             "source_type": "video",
+            "media_type": media_type or "video/mp4",
             "loader": "VideoLoader",
             "chunk_type": "transcript",
             "timestamp": self._to_float(timestamp),
+            "locator": self._format_locator(timestamp, doc.metadata.get("end_time")),
         }
         return doc
 
@@ -136,17 +140,20 @@ class VideoLoader:
         frame_index: int,
     ) -> list[Document]:
         timestamp = self._frame_timestamp(frame_index)
+        media_type, _ = mimetypes.guess_type(str(self._path))
         for doc in docs:
             doc.metadata = {
                 **doc.metadata,
                 "source": str(self._path),
                 "file": str(self._path),
                 "source_type": "video",
+                "media_type": media_type or "video/mp4",
                 "loader": "VideoLoader",
                 "chunk_type": "frame_caption",
                 "timestamp": timestamp,
                 "frame_path": str(frame_path),
                 "frame_index": frame_index,
+                "locator": self._format_locator(timestamp),
             }
         return docs
 
@@ -292,3 +299,26 @@ class VideoLoader:
             return float(value)
         except (TypeError, ValueError):
             return None
+
+    @staticmethod
+    def _format_locator(start: Any, end: Any = None) -> str | None:
+        start_ts = VideoLoader._to_float(start)
+        end_ts = VideoLoader._to_float(end)
+        if start_ts is None and end_ts is None:
+            return None
+        if start_ts is None:
+            return VideoLoader._format_seconds(end_ts)
+        if end_ts is None or end_ts == start_ts:
+            return VideoLoader._format_seconds(start_ts)
+        return f"{VideoLoader._format_seconds(start_ts)}-{VideoLoader._format_seconds(end_ts)}"
+
+    @staticmethod
+    def _format_seconds(value: float | None) -> str:
+        if value is None:
+            return "unknown"
+        total_seconds = max(0, int(value))
+        hours, rem = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(rem, 60)
+        if hours:
+            return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+        return f"{minutes:02d}:{seconds:02d}"

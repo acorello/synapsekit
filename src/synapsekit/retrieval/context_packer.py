@@ -120,7 +120,21 @@ class ContextPacker:
             return []
 
         # Keep the strongest chunk among near-duplicates.
-        ordered = sorted(chunks, key=lambda c: c.score, reverse=True)
+        if self.strategy == "recency":
+            def _recency_key(c: PackedChunk) -> float:
+                value = (
+                    c.metadata.get("timestamp")
+                    or c.metadata.get("created_at")
+                    or c.metadata.get("updated_at")
+                    or c.metadata.get("date")
+                    or 0
+                )
+                return self._as_float(value)
+
+            ordered = sorted(chunks, key=_recency_key, reverse=True)
+        else:
+            ordered = sorted(chunks, key=lambda c: c.score, reverse=True)
+
         kept: list[PackedChunk] = []
         for chunk in ordered:
             is_dup = any(

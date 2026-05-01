@@ -14,6 +14,7 @@ def test_custom_count_fn_used():
 
 
 def test_tiktoken_backend_counts_tokens():
+    pytest.importorskip("tiktoken")
     counter = TokenCounter(model="gpt-4o-mini", backend="tiktoken")
     value = counter.count("hello world")
     assert isinstance(value, int)

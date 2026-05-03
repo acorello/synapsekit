@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Protocol
+from typing import Protocol, cast
 
 from .._compat import run_sync
 from ..evaluation.faithfulness import FaithfulnessMetric
@@ -141,9 +141,17 @@ class SelfHealingRAG:
                     metric_result.score,
                     self._quality_threshold,
                 )
-            except Exception as exc:
+            except Exception:
                 logger.exception("SelfHealingRAG attempt failed with %s", last_strategy)
                 if attempt >= max_attempts - 1:
+                    self._last_report = SelfHealingReport(
+                        success=False,
+                        attempts=max_attempts,
+                        retries=max(0, max_attempts - 1),
+                        strategy=last_strategy,
+                        scores=scores,
+                        threshold=self._quality_threshold,
+                    )
                     raise
 
         # No attempt met the threshold; return the last answer produced.
@@ -179,10 +187,10 @@ class SelfHealingRAG:
             raise AttributeError(f"Strategy {type(strategy).__name__} has no retrieve method")
 
         try:
-            return await retrieve(query, top_k=top_k, metadata_filter=metadata_filter)
+            return cast(list[str], await retrieve(query, top_k=top_k, metadata_filter=metadata_filter))
         except TypeError:
             # Some retrievers don't accept metadata_filter
-            return await retrieve(query, top_k=top_k)
+            return cast(list[str], await retrieve(query, top_k=top_k))
 
     async def _generate_answer(self, query: str, chunks: list[str]) -> str:
         if chunks:

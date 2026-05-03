@@ -11,7 +11,6 @@ import pytest
 from synapsekit.llm.base import BaseLLM, LLMConfig
 from synapsekit.llm.cost_quality_router import CostQualityRouter
 
-
 # ------------------------------------------------------------------ #
 # Helpers
 # ------------------------------------------------------------------ #
@@ -52,7 +51,9 @@ class MockLLM(BaseLLM):
         yield self._mock_response
 
 
-def _pre_fill(router: CostQualityRouter, model: str, calls: int, avg_cost: float, avg_quality: float) -> None:
+def _pre_fill(
+    router: CostQualityRouter, model: str, calls: int, avg_cost: float, avg_quality: float
+) -> None:
     """Manually populate router stats to simulate completed exploration."""
     router._stats[model] = {
         "calls": calls,

@@ -77,11 +77,14 @@ class CostQualityRouter(BaseLLM):
         self._evaluator_loaded = True
         if not self._eval_suite:
             return None
+        mod_path: str
+        attr: str | None
         if ":" in self._eval_suite:
             mod_path, attr = self._eval_suite.rsplit(":", 1)
         else:
             parts = self._eval_suite.rsplit(".", 1)
-            mod_path, attr = (parts[0], parts[1]) if len(parts) == 2 else (parts[0], None)
+            mod_path = parts[0]
+            attr = parts[1] if len(parts) == 2 else None
         try:
             mod = importlib.import_module(mod_path)
             self._evaluator = getattr(mod, attr) if attr else mod
@@ -137,8 +140,7 @@ class CostQualityRouter(BaseLLM):
                 continue
             meets_quality = s["avg_quality"] >= self._quality_threshold
             within_budget = (
-                self._budget_per_call_usd is None
-                or s["avg_cost"] <= self._budget_per_call_usd
+                self._budget_per_call_usd is None or s["avg_cost"] <= self._budget_per_call_usd
             )
             if meets_quality and within_budget:
                 group_a.append(llm)
@@ -147,8 +149,8 @@ class CostQualityRouter(BaseLLM):
             else:
                 group_c.append(llm)
 
-        key_cost = lambda l: self._stats[l.config.model]["avg_cost"]  # noqa: E731
-        key_quality = lambda l: self._stats[l.config.model]["avg_quality"]  # noqa: E731
+        key_cost = lambda m: self._stats[m.config.model]["avg_cost"]  # noqa: E731
+        key_quality = lambda m: self._stats[m.config.model]["avg_quality"]  # noqa: E731
         group_a.sort(key=key_cost)
         group_b.sort(key=key_cost)
         group_c.sort(key=key_quality, reverse=True)
@@ -288,9 +290,11 @@ class CostQualityRouter(BaseLLM):
                 if om != model
             )
             if not dominated:
-                frontier.append({
-                    "model": model,
-                    "cost": s["avg_cost"],
-                    "quality": s["avg_quality"],
-                })
+                frontier.append(
+                    {
+                        "model": model,
+                        "cost": s["avg_cost"],
+                        "quality": s["avg_quality"],
+                    }
+                )
         return frontier

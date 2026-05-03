@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import pytest
 from unittest.mock import AsyncMock, MagicMock
+
+import pytest
 
 from synapsekit.rag.self_healing import SelfHealingRAG
 
@@ -42,9 +43,7 @@ async def test_self_healing_fallback_triggered():
     llm.generate_with_messages = AsyncMock(side_effect=["bad", "good"])
 
     metric = MagicMock()
-    metric.evaluate = AsyncMock(
-        side_effect=[MagicMock(score=0.2), MagicMock(score=0.8)]
-    )
+    metric.evaluate = AsyncMock(side_effect=[MagicMock(score=0.2), MagicMock(score=0.8)])
 
     primary = _Strategy(["ctx1"])
     fallback = _Strategy(["ctx2"])

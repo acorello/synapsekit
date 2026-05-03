@@ -187,7 +187,9 @@ class SelfHealingRAG:
             raise AttributeError(f"Strategy {type(strategy).__name__} has no retrieve method")
 
         try:
-            return cast(list[str], await retrieve(query, top_k=top_k, metadata_filter=metadata_filter))
+            return cast(
+                list[str], await retrieve(query, top_k=top_k, metadata_filter=metadata_filter)
+            )
         except TypeError:
             # Some retrievers don't accept metadata_filter
             return cast(list[str], await retrieve(query, top_k=top_k))

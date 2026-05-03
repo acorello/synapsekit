@@ -1,5 +1,6 @@
 from ._cache import AsyncLRUCache
 from .base import BaseLLM, LLMConfig
+from .cost_quality_router import CostQualityRouter
 from .cost_router import QUALITY_TABLE, CostRouter, CostRouterConfig, RouterModelSpec
 from .fallback_chain import FallbackChain, FallbackChainConfig
 from .structured import generate_structured
@@ -18,6 +19,7 @@ __all__ = [
     "CerebrasLLM",
     "CloudflareLLM",
     "CohereLLM",
+    "CostQualityRouter",
     "CostRouter",
     "CostRouterConfig",
     "DatabricksLLM",

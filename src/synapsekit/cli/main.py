@@ -143,6 +143,12 @@ def _add_benchmark_parser(subparsers: argparse._SubParsersAction) -> None:  # ty
     bench_sub.add_parser("list", help="List available benchmarks")
 
 
+def _add_bench_parser(subparsers: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
+    from .bench import build_bench_parser
+
+    build_bench_parser(subparsers)
+
+
 def main(argv: list[str] | None = None) -> None:
     """CLI entry point."""
     parser = argparse.ArgumentParser(
@@ -158,6 +164,7 @@ def main(argv: list[str] | None = None) -> None:
     _add_finetune_parser(subparsers)
     _add_graph_builder_parser(subparsers)
     _add_benchmark_parser(subparsers)
+    _add_bench_parser(subparsers)
     _add_ui_parser(subparsers)
     _add_plugin_parser(subparsers)
 
@@ -193,6 +200,10 @@ def main(argv: list[str] | None = None) -> None:
         from .benchmark import run_benchmark
 
         run_benchmark(args)
+    elif args.command == "bench":
+        from .bench import run_bench
+
+        run_bench(args)
     elif args.command == "ui":
         from .ui import run_ui
 

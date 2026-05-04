@@ -69,6 +69,7 @@ CLAUDE.md
 # Internal docs (not published)
 docs/*
 !docs/observability.md
+!docs/evalhub.md
 
 # Saved vectorstores
 *.npz

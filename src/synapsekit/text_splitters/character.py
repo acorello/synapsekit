@@ -11,6 +11,8 @@ except ImportError:
 class CharacterTextSplitter(BaseSplitter):
     """Split text on a single separator string."""
 
+    __slots__ = ("chunk_overlap", "chunk_size", "separator")
+
     def __init__(
         self,
         separator: str = "\n\n",

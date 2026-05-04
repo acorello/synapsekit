@@ -23,6 +23,8 @@ class FilesystemLLMCache:
         cached = cache.get(key)
     """
 
+    __slots__ = ("_cache_dir", "hits", "misses")
+
     make_key = staticmethod(AsyncLRUCache.make_key)
 
     def __init__(self, cache_dir: str = ".synapsekit_cache") -> None:

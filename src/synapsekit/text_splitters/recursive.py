@@ -16,6 +16,8 @@ class RecursiveCharacterTextSplitter(BaseSplitter):
     This is the same algorithm previously embedded in ``RAGPipeline``.
     """
 
+    __slots__ = ("chunk_overlap", "chunk_size", "separators")
+
     def __init__(
         self,
         chunk_size: int = 512,

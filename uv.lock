@@ -11717,6 +11717,7 @@ pdf = [
 performance = [
     { name = "orjson" },
     { name = "uvloop", marker = "sys_platform != 'win32'" },
+    { name = "xxhash" },
 ]
 pgvector = [
     { name = "pgvector" },
@@ -12041,6 +12042,7 @@ requires-dist = [
     { name = "wikipedia-api", marker = "extra == 'wikipedia'", specifier = ">=0.6" },
     { name = "wolframalpha", marker = "extra == 'all'", specifier = ">=5.0" },
     { name = "wolframalpha", marker = "extra == 'wolfram'", specifier = ">=5.0" },
+    { name = "xxhash", marker = "extra == 'performance'", specifier = ">=3.4" },
     { name = "youtube-search-python", marker = "extra == 'all'", specifier = ">=1.6" },
     { name = "youtube-search-python", marker = "extra == 'youtube'", specifier = ">=1.6" },
     { name = "youtube-transcript-api", marker = "extra == 'all'", specifier = ">=0.6" },

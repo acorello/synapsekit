@@ -9,6 +9,8 @@ from .._json import loads as _json_loads
 class JSONParser:
     """Extract and parse JSON from LLM output text."""
 
+    __slots__ = ()
+
     def parse(self, text: str) -> Any:
         text = text.strip()
         try:

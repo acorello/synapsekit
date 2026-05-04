@@ -102,6 +102,7 @@ async def test_retrieve_delegates_to_wrapped_retriever():
 
 def test_invalid_max_doc_tokens_raises():
     import pytest
+
     retriever = MagicMock()
     with pytest.raises(ValueError, match="max_doc_tokens must be > 0"):
         FullContextRetriever(retriever=retriever, max_doc_tokens=0)
@@ -111,7 +112,9 @@ def test_invalid_max_doc_tokens_raises():
 async def test_add_document_empty_text_is_noop():
     retriever = MagicMock()
     retriever.add = AsyncMock()
-    full = FullContextRetriever(retriever=retriever, max_doc_tokens=10, token_counter=_word_counter())
+    full = FullContextRetriever(
+        retriever=retriever, max_doc_tokens=10, token_counter=_word_counter()
+    )
     await full.add_document("   ")
     retriever.add.assert_not_awaited()
 
@@ -123,7 +126,9 @@ async def test_retrieve_with_scores_fallback_when_not_available():
     retriever.add = AsyncMock()
     retriever.retrieve = AsyncMock(return_value=["result A"])
 
-    full = FullContextRetriever(retriever=retriever, max_doc_tokens=10, token_counter=_word_counter())
+    full = FullContextRetriever(
+        retriever=retriever, max_doc_tokens=10, token_counter=_word_counter()
+    )
     scored = await full.retrieve_with_scores("q")
     assert scored[0]["text"] == "result A"
     assert scored[0]["score"] is None

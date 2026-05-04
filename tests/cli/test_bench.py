@@ -214,6 +214,7 @@ def test_run_bench_limit_restricts_cases(mock_import_module, capsys):
     run_bench(args)
 
     import json
+
     out = capsys.readouterr().out
     data = json.loads(out)
     assert data["cases"] == 3

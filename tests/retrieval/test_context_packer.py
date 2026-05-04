@@ -94,18 +94,21 @@ def test_recency_strategy_prefers_latest_timestamp():
 
 def test_invalid_max_tokens_raises():
     import pytest
+
     with pytest.raises(ValueError, match="max_tokens must be > 0"):
         ContextPacker(max_tokens=0, token_counter=_word_counter())
 
 
 def test_invalid_strategy_raises():
     import pytest
+
     with pytest.raises(ValueError, match="strategy must be one of"):
         ContextPacker(strategy="blah", token_counter=_word_counter())
 
 
 def test_invalid_ordering_raises():
     import pytest
+
     with pytest.raises(ValueError, match="ordering must be one of"):
         ContextPacker(ordering="random", token_counter=_word_counter())
 

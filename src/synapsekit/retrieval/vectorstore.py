@@ -9,6 +9,13 @@ from .._json import loads as _json_loads
 from ..embeddings.backend import SynapsekitEmbeddings
 from .base import VectorStore
 
+try:
+    from .._rust_core import deserialize_metadata_list as _rust_deser
+    from .._rust_core import serialize_metadata_list as _rust_ser
+except ImportError:
+    _rust_ser = None
+    _rust_deser = None
+
 
 class InMemoryVectorStore(VectorStore):
     """
@@ -291,7 +298,12 @@ class InMemoryVectorStore(VectorStore):
             path,
             vectors=self._vectors,
             texts=np.array(self._texts, dtype=object),
-            metadata=np.array([_json_dumps(m) for m in self._metadata], dtype=object),
+            metadata=np.array(
+                _rust_ser(self._metadata)
+                if _rust_ser is not None
+                else [_json_dumps(m) for m in self._metadata],
+                dtype=object,
+            ),
         )
 
     def load(self, path: str) -> None:
@@ -299,7 +311,11 @@ class InMemoryVectorStore(VectorStore):
         data = np.load(path, allow_pickle=True)
         self._vectors = data["vectors"].astype(np.float32)
         self._texts = list(data["texts"])
-        self._metadata = [_json_loads(s) for s in data["metadata"]]
+        raw_meta = list(data["metadata"])
+        self._metadata = (
+            _rust_deser(raw_meta) if _rust_deser is not None
+            else [_json_loads(s) for s in raw_meta]
+        )
         self._pending.clear()
 
         # Rebuild inverted index from loaded metadata

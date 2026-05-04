@@ -241,6 +241,16 @@ dev = [
 [tool.hatch.build.targets.wheel]
 packages = ["src/synapsekit"]
 
+# Rust extension (optional — built separately with maturin)
+# To build: cd src/synapsekit/_rust && maturin develop
+# The pure-Python wheel uses hatchling above; the Rust-accelerated wheel
+# is published separately using maturin as the build backend.
+[tool.maturin]
+module-name = "synapsekit._rust_core"
+manifest-path = "src/synapsekit/_rust/Cargo.toml"
+features = ["pyo3/extension-module"]
+python-source = "src"
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]

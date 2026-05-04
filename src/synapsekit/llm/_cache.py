@@ -6,6 +6,11 @@ from typing import Any
 
 from .._json import dumps as _json_dumps
 
+try:
+    from .._rust_core import fast_cache_key as _rust_cache_key
+except ImportError:
+    _rust_cache_key = None
+
 
 class AsyncLRUCache:
     """Simple LRU cache backed by an ``OrderedDict``."""
@@ -29,6 +34,8 @@ class AsyncLRUCache:
         insertion order, so the literal key order is already stable and
         sorting is redundant overhead.
         """
+        if _rust_cache_key is not None:
+            return _rust_cache_key(model, prompt_or_messages, temperature, max_tokens)
         payload = _json_dumps(
             {
                 "model": model,

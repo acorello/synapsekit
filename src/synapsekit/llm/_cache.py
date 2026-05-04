@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import hashlib
-import json
 from collections import OrderedDict
 from typing import Any
+
+from .._json import dumps as _json_dumps
 
 
 class AsyncLRUCache:
@@ -28,7 +29,7 @@ class AsyncLRUCache:
         insertion order, so the literal key order is already stable and
         sorting is redundant overhead.
         """
-        payload = json.dumps(
+        payload = _json_dumps(
             {
                 "model": model,
                 "input": prompt_or_messages,

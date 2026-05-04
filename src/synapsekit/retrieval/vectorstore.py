@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-import json
 from typing import Any
 
 import numpy as np
 
+from .._json import dumps as _json_dumps
+from .._json import loads as _json_loads
 from ..embeddings.backend import SynapsekitEmbeddings
 from .base import VectorStore
 
@@ -290,7 +291,7 @@ class InMemoryVectorStore(VectorStore):
             path,
             vectors=self._vectors,
             texts=np.array(self._texts, dtype=object),
-            metadata=np.array([json.dumps(m) for m in self._metadata], dtype=object),
+            metadata=np.array([_json_dumps(m) for m in self._metadata], dtype=object),
         )
 
     def load(self, path: str) -> None:
@@ -298,7 +299,7 @@ class InMemoryVectorStore(VectorStore):
         data = np.load(path, allow_pickle=True)
         self._vectors = data["vectors"].astype(np.float32)
         self._texts = list(data["texts"])
-        self._metadata = [json.loads(s) for s in data["metadata"]]
+        self._metadata = [_json_loads(s) for s in data["metadata"]]
         self._pending.clear()
 
         # Rebuild inverted index from loaded metadata

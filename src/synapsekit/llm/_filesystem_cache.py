@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-import json
 import os
 from typing import Any
 
+from .._json import dumps as _json_dumps
+from .._json import loads as _json_loads
 from ._cache import AsyncLRUCache
 
 
@@ -38,14 +39,14 @@ class FilesystemLLMCache:
         if os.path.exists(path):
             with open(path, encoding="utf-8") as f:
                 self.hits += 1
-                return json.load(f)
+                return _json_loads(f.read())
         self.misses += 1
         return None
 
     def put(self, key: str, value: Any) -> None:
         path = self._path_for(key)
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(value, f)
+            f.write(_json_dumps(value))
 
     def clear(self) -> None:
         for name in os.listdir(self._cache_dir):

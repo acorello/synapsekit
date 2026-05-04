@@ -142,6 +142,7 @@ elasticsearch = ["elasticsearch>=8.0"]
 browser = ["playwright>=1.40"]
 youtube_transcript = ["youtube-transcript-api>=0.6"]
 airtable = ["pyairtable>=2.0"]
+performance = ["orjson>=3.9", "uvloop>=0.19; sys_platform != 'win32'"]
 all = [
     "openai>=1.0",
     "anthropic>=0.25",

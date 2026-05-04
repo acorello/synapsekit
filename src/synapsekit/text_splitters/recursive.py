@@ -2,6 +2,11 @@ from __future__ import annotations
 
 from .base import BaseSplitter
 
+try:
+    from .._rust_core import recursive_split as _rust_split
+except ImportError:
+    _rust_split = None
+
 
 class RecursiveCharacterTextSplitter(BaseSplitter):
     """
@@ -22,6 +27,8 @@ class RecursiveCharacterTextSplitter(BaseSplitter):
         self.separators = separators or ["\n\n", "\n", ". ", " "]
 
     def split(self, text: str) -> list[str]:
+        if _rust_split is not None:
+            return _rust_split(text, self.chunk_size, self.chunk_overlap, self.separators)
         text = text.strip()
         if not text:
             return []

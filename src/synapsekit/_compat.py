@@ -4,7 +4,11 @@ import asyncio
 from collections.abc import Coroutine
 from typing import Any, TypeVar
 
+from ._loop import install_fast_loop
+
 T = TypeVar("T")
+
+install_fast_loop()
 
 
 def run_sync(coro: Coroutine[Any, Any, T]) -> T:

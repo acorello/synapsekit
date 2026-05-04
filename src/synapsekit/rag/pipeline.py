@@ -4,6 +4,7 @@ import asyncio
 import inspect
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
+from typing import Any
 
 from ..llm.base import BaseLLM
 from ..loaders.base import Document
@@ -76,6 +77,38 @@ class RAGPipeline:
         probe = await self.config.retriever.retrieve("test", top_k=1)
         return len(probe) > 0
 
+    @staticmethod
+    def _format_context_result(result: dict[str, Any]) -> str:
+        text = str(result.get("text", "")).strip()
+        metadata = result.get("metadata") or {}
+
+        lines: list[str] = []
+        for key in (
+            "source_type",
+            "source",
+            "chunk_type",
+            "page",
+            "timestamp",
+            "start_time",
+            "end_time",
+            "locator",
+            "frame_index",
+            "media_type",
+        ):
+            value = metadata.get(key)
+            if value is not None:
+                lines.append(f"{key}: {value}")
+
+        score = result.get("score")
+        if isinstance(score, int | float):
+            lines.append(f"score: {score:.4f}")
+
+        source_block = ""
+        if lines:
+            source_block = "[SOURCE]\n" + "\n".join(lines) + "\n[/SOURCE]\n"
+
+        return f"{source_block}<document>\n{text}\n</document>"
+
     async def stream(self, query: str, top_k: int | None = None) -> AsyncGenerator[str]:
         """Retrieve context, build prompt, stream LLM response, update memory."""
         from ..observe.runtime import end_span, record_exception, start_span
@@ -95,39 +128,46 @@ class RAGPipeline:
                 "rag.top_k": k,
             },
         )
+
         results: list[dict] | list[str] = []
+        chunks: list[str] = []
         top_score: float | None = None
         try:
             retriever_state = getattr(self.config.retriever, "__dict__", {})
-            prefer_plain_retrieve = "retrieve" in retriever_state
+            retrieve_overridden = "retrieve" in retriever_state
+            retrieve_with_scores_overridden = "retrieve_with_scores" in retriever_state
 
             retrieve_with_scores = getattr(self.config.retriever, "retrieve_with_scores", None)
             score_call = None
-            if not prefer_plain_retrieve and callable(retrieve_with_scores):
+            if callable(retrieve_with_scores) and (
+                not retrieve_overridden or retrieve_with_scores_overridden
+            ):
                 score_call = retrieve_with_scores(query, top_k=k)
+
             if score_call is not None and inspect.isawaitable(score_call):
-                results = await score_call
-                chunks = [item.get("text", "") for item in results if isinstance(item, dict)]
-                if results and isinstance(results[0], dict):
-                    score = results[0].get("score")
+                scored_results = await score_call
+                results = scored_results
+                chunks = [
+                    str(item.get("text", "")) for item in scored_results if isinstance(item, dict)
+                ]
+                if scored_results and isinstance(scored_results[0], dict):
+                    score = scored_results[0].get("score")
                     if score is None:
-                        score = results[0].get("relevance_score")
+                        score = scored_results[0].get("relevance_score")
                     if score is None:
-                        score = results[0].get("cross_encoder_score")
+                        score = scored_results[0].get("cross_encoder_score")
                     top_score = float(score) if score is not None else None
             else:
-                results = await self.config.retriever.retrieve(query, top_k=k)
-                chunks = list(results)
+                plain_results = await self.config.retriever.retrieve(query, top_k=k)
+                results = plain_results
+                chunks = [str(item) for item in plain_results]
 
             end_span(
                 retrieve_span,
                 attributes={
                     "rag.retrieved_chunks": len(chunks),
                     "rag.top_score": top_score,
-                    "rag.retrieval_latency_ms": round(
-                        retrieve_span.duration_ms,
-                        3,
-                    )
+                    "rag.retrieval_latency_ms": round(retrieve_span.duration_ms, 3)
                     if retrieve_span is not None
                     else None,
                 },
@@ -139,8 +179,15 @@ class RAGPipeline:
             end_span(rag_span, error=exc)
             raise
 
-        if chunks:
-            tagged = [f"<document>\n{chunk}\n</document>" for chunk in chunks]
+        if results:
+            if results and isinstance(results[0], dict):
+                tagged = [
+                    self._format_context_result(result)
+                    for result in results
+                    if isinstance(result, dict)
+                ]
+            else:
+                tagged = [f"<document>\n{chunk}\n</document>" for chunk in chunks]
             context = "\n\n".join(tagged)
         else:
             context = "No context available."
@@ -156,7 +203,12 @@ class RAGPipeline:
         messages.append(
             {
                 "role": "user",
-                "content": f"Context:\n{context}\n\nQuestion: {query}",
+                "content": (
+                    "Context:\n"
+                    f"{context}\n\n"
+                    "Use the provided source metadata for citations when available.\n\n"
+                    f"Question: {query}"
+                ),
             }
         )
 

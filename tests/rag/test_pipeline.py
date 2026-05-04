@@ -26,7 +26,19 @@ def make_mock_llm(tokens=("Hello", " world")):
 
 def make_mock_retriever(chunks=None):
     retriever = MagicMock()
-    retriever.retrieve = AsyncMock(return_value=chunks or ["Context chunk 1.", "Context chunk 2."])
+    resolved_chunks = chunks or ["Context chunk 1.", "Context chunk 2."]
+    if resolved_chunks and isinstance(resolved_chunks[0], dict):
+        scored_results = resolved_chunks
+        plain_chunks = [result["text"] for result in resolved_chunks]
+    else:
+        plain_chunks = resolved_chunks
+        scored_results = [
+            {"text": chunk, "score": 0.9 - (idx * 0.1), "metadata": {}}
+            for idx, chunk in enumerate(plain_chunks)
+        ]
+
+    retriever.retrieve = AsyncMock(return_value=plain_chunks)
+    retriever.retrieve_with_scores = AsyncMock(return_value=scored_results)
     retriever.add = AsyncMock()
     return retriever
 
@@ -86,10 +98,62 @@ class TestRAGPipeline:
     @pytest.mark.asyncio
     async def test_empty_retrieval_uses_no_context_message(self, pipeline):
         pipeline.config.retriever.retrieve = AsyncMock(return_value=[])
+        pipeline.config.retriever.retrieve_with_scores = AsyncMock(return_value=[])
         tokens = []
         async for token in pipeline.stream("test?"):
             tokens.append(token)
         assert len(tokens) > 0  # LLM still responds
+
+    @pytest.mark.asyncio
+    async def test_stream_includes_source_metadata_in_prompt_context(self):
+        captured_messages = []
+
+        llm = MagicMock()
+        llm.tokens_used = {"input": 10, "output": 5}
+
+        async def stream_with_messages(messages, **kw):
+            captured_messages.extend(messages)
+            yield "Answer"
+
+        llm.stream_with_messages = stream_with_messages
+
+        retriever = make_mock_retriever(
+            chunks=[
+                {
+                    "text": "Diagram decision summary",
+                    "score": 0.98,
+                    "metadata": {
+                        "source_type": "pdf",
+                        "source": "report.pdf",
+                        "chunk_type": "page",
+                        "page": 3,
+                        "locator": "report.pdf page 3",
+                    },
+                },
+                {
+                    "text": "We approved the diagram in the meeting.",
+                    "score": 0.91,
+                    "metadata": {
+                        "source_type": "audio",
+                        "source": "meeting.mp3",
+                        "chunk_type": "transcript",
+                        "timestamp": 42.0,
+                        "locator": "00:42",
+                    },
+                },
+            ]
+        )
+        pipeline = RAGPipeline(RAGConfig(llm=llm, retriever=retriever, memory=ConversationMemory()))
+
+        await pipeline.ask("What did we approve?")
+
+        prompt = captured_messages[-1]["content"]
+        assert "source_type: pdf" in prompt
+        assert "page: 3" in prompt
+        assert "locator: report.pdf page 3" in prompt
+        assert "source_type: audio" in prompt
+        assert "timestamp: 42.0" in prompt
+        assert "locator: 00:42" in prompt
 
     @pytest.mark.asyncio
     async def test_stream_commits_memory_on_consumer_disconnect(self, pipeline):

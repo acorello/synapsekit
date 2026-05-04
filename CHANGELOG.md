@@ -19,7 +19,7 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`__slots__`** on hot classes — `AsyncLRUCache`, `FilesystemLLMCache`, `RecursiveCharacterTextSplitter`, `CharacterTextSplitter`, `JSONParser` (~30% less per-instance memory)
 - **Lazy imports in `_compat.py`** — `asyncio` and `collections.abc` imported inside `run_sync()` instead of at module level for faster import time
 - **`performance` optional extra** — `pip install synapsekit[performance]` installs `orjson`, `uvloop` (non-Windows), and `xxhash`
-- **Rust extension module** (`_rust/`) — optional PyO3 crate with `recursive_split`, `character_split` (text chunking), `fast_cache_key` (serde_json + BLAKE3), and batch `serialize_metadata_list`/`deserialize_metadata_list`; pure-Python fallback for all functions; build with `maturin develop`
+- **Rust extension module** (`_rust/`) — optional PyO3 crate with text chunking (`recursive_split`, `character_split` with recursive sub-splitting and UTF-8 char boundary safety), cache key hashing (`fast_cache_key` using canonical JSON via `_json.dumps_bytes` + xxh3_128 — keys match Python xxhash path exactly), and batch metadata serialization (`serialize_metadata_list`/`deserialize_metadata_list` via native serde_json ↔ Python object conversion); pure-Python fallback for all functions; 15 Rust unit tests + 11 Python parity tests; build with `maturin develop`
 
 ### Added
 

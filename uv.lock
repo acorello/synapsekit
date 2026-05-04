@@ -11780,6 +11780,12 @@ tavily = [
 teams = [
     { name = "httpx" },
 ]
+tiktoken = [
+    { name = "tiktoken" },
+]
+transformers = [
+    { name = "transformers" },
+]
 vertex = [
     { name = "google-cloud-aiplatform" },
 ]
@@ -12018,6 +12024,8 @@ requires-dist = [
     { name = "supabase", marker = "extra == 'supabase'", specifier = ">=2.0" },
     { name = "tavily-python", marker = "extra == 'all'", specifier = ">=0.3" },
     { name = "tavily-python", marker = "extra == 'tavily'", specifier = ">=0.3" },
+    { name = "tiktoken", marker = "extra == 'tiktoken'", specifier = ">=0.12" },
+    { name = "transformers", marker = "extra == 'transformers'", specifier = ">=4.0" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'all'", specifier = ">=0.29" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'graph-ui'", specifier = ">=0.29" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'serve'", specifier = ">=0.29" },
@@ -12032,7 +12040,7 @@ requires-dist = [
     { name = "youtube-transcript-api", marker = "extra == 'all'", specifier = ">=0.6" },
     { name = "youtube-transcript-api", marker = "extra == 'youtube-transcript'", specifier = ">=0.6" },
 ]
-provides-extras = ["openai", "anthropic", "semantic", "colbert", "pdf", "wikipedia", "arxiv", "html", "web", "chroma", "faiss", "qdrant", "pinecone", "weaviate", "milvus", "lancedb", "sqlite-vec", "cassandra", "clickhouse", "duckdb-vector", "marqo", "opensearch", "vespa", "replicate", "ollama", "lmstudio", "vllm", "ai21", "cohere", "mistral", "gemini", "bedrock", "gcal-tool", "aws-lambda", "rss", "groq", "audio", "video", "voice", "voice-local", "voice-stream", "cron", "excel", "pptx", "docx", "yaml", "teams", "http", "search", "huggingface", "google-search", "tavily", "youtube", "mcp", "redis", "memcached", "vertex", "cloudflare", "aleph-alpha", "llamacpp", "gpt4all", "ernie", "minimax", "serve", "graph-ui", "observe", "postgres", "pgvector", "wolfram", "dynamodb", "discord", "gcs", "bigquery", "gdrive", "git", "gsheets", "jira", "hubspot", "sql", "snowflake", "mongodb", "mongodb-vector", "salesforce", "azure", "s3", "onedrive", "slack", "supabase", "notion", "confluence", "dropbox", "rtf", "epub", "parquet", "elasticsearch", "browser", "youtube-transcript", "airtable", "all"]
+provides-extras = ["openai", "anthropic", "semantic", "colbert", "pdf", "wikipedia", "arxiv", "html", "web", "chroma", "faiss", "qdrant", "pinecone", "weaviate", "milvus", "lancedb", "sqlite-vec", "cassandra", "clickhouse", "duckdb-vector", "marqo", "opensearch", "vespa", "replicate", "ollama", "lmstudio", "vllm", "ai21", "cohere", "mistral", "gemini", "bedrock", "gcal-tool", "aws-lambda", "rss", "groq", "audio", "video", "voice", "voice-local", "voice-stream", "cron", "excel", "pptx", "docx", "yaml", "teams", "http", "search", "huggingface", "transformers", "tiktoken", "google-search", "tavily", "youtube", "mcp", "redis", "memcached", "vertex", "cloudflare", "aleph-alpha", "llamacpp", "gpt4all", "ernie", "minimax", "serve", "graph-ui", "observe", "postgres", "pgvector", "wolfram", "dynamodb", "discord", "gcs", "bigquery", "gdrive", "git", "gsheets", "jira", "hubspot", "sql", "snowflake", "mongodb", "mongodb-vector", "salesforce", "azure", "s3", "onedrive", "slack", "supabase", "notion", "confluence", "dropbox", "rtf", "epub", "parquet", "elasticsearch", "browser", "youtube-transcript", "airtable", "all"]
 
 [package.metadata.requires-dev]
 dev = [

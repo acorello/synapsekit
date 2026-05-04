@@ -30,6 +30,7 @@ class RAGConfig:
     chunk_overlap: int = 50
     auto_eval: bool = False
     splitter: BaseSplitter | None = field(default=None)
+    context_packer: Any | None = None
 
 
 class RAGPipeline:
@@ -58,6 +59,18 @@ class RAGPipeline:
         """
         if not text or not text.strip():
             return
+
+        # Retriever-level long-context strategies can choose full-context
+        # ingestion vs chunking themselves.
+        add_document = getattr(self.config.retriever, "add_document", None)
+        retriever_cls = type(self.config.retriever)
+        explicit_add_document = "add_document" in getattr(
+            self.config.retriever, "__dict__", {}
+        ) or hasattr(retriever_cls, "add_document")
+        if explicit_add_document and callable(add_document):
+            await add_document(text, metadata=metadata)
+            return
+
         chunks = self._splitter.split(text)
         if not chunks:
             return
@@ -161,6 +174,12 @@ class RAGPipeline:
                 plain_results = await self.config.retriever.retrieve(query, top_k=k)
                 results = plain_results
                 chunks = [str(item) for item in plain_results]
+
+            if self.config.context_packer is not None and chunks:
+                packed = self.config.context_packer.pack(
+                    results if results else chunks, query=query
+                )
+                chunks = [item["text"] if isinstance(item, dict) else str(item) for item in packed]
 
             end_span(
                 retrieve_span,

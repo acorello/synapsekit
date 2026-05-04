@@ -2,12 +2,14 @@ from .adaptive import AdaptiveRAGRetriever
 from .agentic_rag import AgenticRAGRetriever
 from .base import VectorStore
 from .cohere_reranker import CohereReranker
+from .context_packer import ContextPacker
 from .contextual_compression import ContextualCompressionRetriever
 from .crag import CRAGRetriever
 from .cross_encoder import CrossEncoderReranker
 from .document_augmentation import DocumentAugmentationRetriever
 from .ensemble import EnsembleRetriever
 from .flare import FLARERetriever
+from .full_context import FullContextRetriever
 from .graphrag import GraphRAGRetriever, KnowledgeGraph
 from .hybrid_search import HybridSearchRetriever
 from .hyde import HyDERetriever
@@ -22,6 +24,7 @@ from .self_query import SelfQueryRetriever
 from .self_rag import SelfRAGRetriever
 from .step_back import StepBackRetriever
 from .strategies.colbert import ColBERTRetriever
+from .token_counting import TokenCounter
 from .vectorstore import InMemoryVectorStore
 
 __all__ = [
@@ -35,6 +38,7 @@ __all__ = [
     "ClickHouseVectorStore",
     "CohereReranker",
     "ColBERTRetriever",
+    "ContextPacker",
     "ContextualCompressionRetriever",
     "CRAGRetriever",
     "CrossEncoderReranker",
@@ -43,6 +47,7 @@ __all__ = [
     "EnsembleRetriever",
     "FAISSVectorStore",
     "FLARERetriever",
+    "FullContextRetriever",
     "GraphRAGRetriever",
     "HybridSearchRetriever",
     "HyDERetriever",
@@ -66,6 +71,7 @@ __all__ = [
     "SQLiteVecStore",
     "StepBackRetriever",
     "SupabaseVectorStore",
+    "TokenCounter",
     "TypesenseVectorStore",
     "VectorStore",
     "VespaVectorStore",

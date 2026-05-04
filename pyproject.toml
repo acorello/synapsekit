@@ -27,6 +27,9 @@ classifiers = [
 dependencies = [
     "numpy>=1.26",
     "rank-bm25>=0.2.2",
+    # Pin to patched versions for high-severity advisories
+    "pillow>=12.2.0",
+    "pyasn1>=0.6.3",
 ]
 
 [project.urls]
@@ -46,7 +49,7 @@ colbert = ["ragatouille"]
 pdf = ["pypdf>=4.0"]
 wikipedia = ["wikipedia-api>=0.6"]
 arxiv = ["arxiv>=2.0"]
-html = ["beautifulsoup4>=4.12", "lxml>=5.0"]
+html = ["beautifulsoup4>=4.12", "lxml>=6.1.0"]
 web = ["httpx>=0.27", "beautifulsoup4>=4.12"]
 chroma = ["chromadb>=0.5"]
 faiss = ["faiss-cpu>=1.7"]
@@ -89,6 +92,8 @@ teams = ["httpx>=0.27"]
 http = ["aiohttp>=3.9"]
 search = ["duckduckgo-search>=6.0"]
 huggingface = ["huggingface-hub>=0.20"]
+transformers = ["transformers>=4.0"]
+tiktoken = ["tiktoken>=0.12"]
 google-search = ["google-search-results>=2.4"]
 tavily = ["tavily-python>=0.3"]
 youtube = ["youtube-search-python>=1.6"]
@@ -113,7 +118,7 @@ discord = ["discord.py>=2.0"]
 gcs = ["google-cloud-storage>=2.0"]
 bigquery = ["google-cloud-bigquery>=3.0"]
 gdrive = ["google-api-python-client>=2.0", "google-auth>=2.0"]
-git = ["gitpython>=3.1"]
+git = ["gitpython>=3.1.47"]
 gsheets = ["google-api-python-client>=2.0", "google-auth>=2.0"]
 jira = ["httpx>=0.27"]
 hubspot = ["hubspot-api-client>=8.0"]
@@ -146,7 +151,7 @@ all = [
     "wikipedia-api>=0.6",
     "arxiv>=2.0",
     "beautifulsoup4>=4.12",
-    "lxml>=5.0",
+    "lxml>=6.1.0",
     "httpx>=0.27",
     "chromadb>=0.5",
     "faiss-cpu>=1.7",
@@ -187,7 +192,7 @@ all = [
     "google-auth>=2.0",
     "google-cloud-bigquery>=3.0",
     "feedparser>=6.0",
-    "gitpython>=3.1",
+    "gitpython>=3.1.47",
     "hubspot-api-client>=8.0",
     "supabase>=2.0",
     "pymongo>=4.0",
@@ -227,7 +232,7 @@ dev = [
     "pydantic>=2.12.5",
     "httpx>=0.27",
     "pyarrow>=23.0.1",
-    "lxml>=6.0.2",
+    "lxml>=6.1.0",
     "beautifulsoup4>=4.14.3",
     "fastapi>=0.135.1",
 ]
@@ -376,6 +381,6 @@ snowflake-connector-python = "snowflake"
 
 [tool.deptry.per_rule_ignores]
 DEP001 = ["sqlalchemy", "pydantic", "aiohttp", "opentelemetry", "whisper", "botocore", "aiomcache", "nest_asyncio", "huggingface_hub", "serpapi", "weaviate", "uvicorn", "starlette", "tomli", "pyttsx3", "faster_whisper", "sounddevice", "soundfile", "aiokafka", "typesense"]
-DEP002 = ["numpy", "rank-bm25", "beautifulsoup4", "lxml", "faiss-cpu", "google-generativeai", "tavily-python", "youtube-search-python", "psycopg", "google-search-results", "discord.py", "google-auth", "weaviate-client", "pymilvus", "lancedb", "pgvector", "slack-sdk", "supabase", "pymongo", "azure-storage-blob", "elasticsearch"]
+DEP002 = ["numpy", "rank-bm25", "beautifulsoup4", "lxml", "pillow", "pyasn1", "faiss-cpu", "google-generativeai", "tavily-python", "youtube-search-python", "psycopg", "google-search-results", "discord.py", "google-auth", "weaviate-client", "pymilvus", "lancedb", "pgvector", "slack-sdk", "supabase", "pymongo", "azure-storage-blob", "elasticsearch"]
 DEP003 = ["sqlalchemy", "botocore", "nest_asyncio", "opentelemetry", "starlette", "uvicorn"]
 DEP004 = ["pydantic"]

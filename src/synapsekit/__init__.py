@@ -234,6 +234,7 @@ from .prompts.hub import PromptHub
 from .prompts.template import ChatPromptTemplate, FewShotPromptTemplate, PromptTemplate
 from .rag.facade import RAG
 from .rag.pipeline import RAGConfig, RAGPipeline
+from .rag.self_healing import SelfHealingRAG
 from .retrieval.adaptive import AdaptiveRAGRetriever
 from .retrieval.base import VectorStore
 from .retrieval.cohere_reranker import CohereReranker
@@ -275,6 +276,7 @@ __version__ = "1.6.0"
 __all__ = [
     # Facade
     "RAG",
+    "SelfHealingRAG",
     # Pipeline
     "RAGPipeline",
     "RAGConfig",

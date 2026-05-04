@@ -9,6 +9,21 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **`SelfHealingRAG`** — retry-on-low-faithfulness RAG wrapper; cycles through a list of `RetrievalStrategy` implementations until the `FaithfulnessMetric` score meets `quality_threshold`; exposes `last_report` (`SelfHealingReport`) with attempt count, retry count, per-attempt scores, and winning strategy name; `ask_sync()` for synchronous callers; `max_retries` bounds total attempts; gracefully falls back to best answer when all strategies are exhausted
+- **`ContextPacker`** — token-budget-aware chunk packing for long-context models; three ranking strategies (`relevance`, `recency`, `diversity`); near-duplicate deduplication via `SequenceMatcher` with configurable `dedup_threshold`; `lost-in-middle` and `as-is` ordering; returns structured dicts with `text`, `score`, `metadata`, and `token_count`; accepts raw strings, `Document` objects, and scored dicts from any retriever
+- **`FullContextRetriever`** — retriever wrapper that auto-switches between full-document ingestion and chunked ingestion based on a per-document token count; exposes `add_document()` so `RAGPipeline` can route large vs. small documents without caller changes; delegates `retrieve()` and `retrieve_with_scores()` to the wrapped retriever
+- **`TokenCounter`** — model-aware token counting with `tiktoken`, `transformers`, or custom callable backends; `auto` mode tries tiktoken first; 8 192-entry LRU cache via `count_cached()`; `pip install synapsekit[tiktoken]` or `pip install synapsekit[transformers]`
+- **EvalHub community registry + `synapsekit bench` CLI** — `synapsekit bench --list` shows available community suites; `synapsekit bench --suite community/rag-general --model gpt-4o-mini` runs evaluation and prints table or JSON results vs. community baseline; `synapsekit bench --publish my_evals/ --name myorg/rag-finance` packages and submits a PR to add a new suite; 5 bundled suites: `community/customer-support` (20 cases), `community/code-generation` (30 cases), `community/rag-general` (25 cases), `community/summarization` (15 cases), `community/qa-hotpotqa` (50 cases)
+- **Source-aware RAG context** — `RAGPipeline.stream()` injects `[SOURCE]` blocks with `source_type`, `source`, `chunk_type`, `page`, `timestamp`, `locator`, and `score` metadata above each `<document>` block when the retriever returns scored results; enables accurate in-answer citations
+- **Unified media locator metadata** — `AudioLoader`, `VideoLoader`, `ImageLoader`, and `PDFLoader` now emit consistent `locator`, `chunk_type`, `media_type`, and `timestamp` fields in document metadata; `PDFLoader` adds `aload()` async wrapper; `RAG.add()` facade routes PDF files via MIME type in addition to the existing audio/video/image routing
+- **`loaders/_media_utils.py`** — shared `format_locator()` and `format_seconds()` helpers extracted from `AudioLoader` and `VideoLoader` to eliminate duplication
+
+### Fixed
+
+- **Security dep bumps** — pinned `pillow>=12.2.0`, `pyasn1>=0.6.3` (high-severity Dependabot advisories); bumped `lxml>=6.1.0` (html/dev extras) and `gitpython>=3.1.47` (git extra) to pick up upstream CVE fixes
+
 ---
 
 ## [1.6.0] — 2026-04-26

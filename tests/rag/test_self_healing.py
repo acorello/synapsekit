@@ -129,8 +129,6 @@ async def test_strategy_exception_propagates_on_last_attempt():
 
 
 def test_ask_sync_returns_str():
-    import asyncio
-
     llm = MagicMock()
     llm.tokens_used = {"input": 1, "output": 1}
     llm.generate_with_messages = AsyncMock(return_value="sync-answer")

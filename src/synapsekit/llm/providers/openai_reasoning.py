@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import AsyncGenerator
-from typing import Any
 
 from ..reasoning import BaseReasoningProvider, ReasoningResponse, ReasoningStreamChunk
 from ..utils import extract_reasoning, extract_reasoning_tokens, extract_text
@@ -124,5 +123,3 @@ class OpenAIReasoning(BaseReasoningProvider):
                     yield ReasoningStreamChunk(text=answer_text, is_thinking=False)
         except Exception as e:
             raise RuntimeError(f"{self.provider} reasoning request failed: {e}") from e
-
-

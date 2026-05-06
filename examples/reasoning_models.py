@@ -57,7 +57,7 @@ async def main():
         anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
         if anthropic_key:
             llm = ReasoningLLM(
-                model="claude-sonnet-4-20250514",
+                model="claude-sonnet-4-6-20251001",
                 api_key=anthropic_key,
                 budget_tokens=1024,
             )

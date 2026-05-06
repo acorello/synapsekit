@@ -421,9 +421,9 @@ class TestHTTPRequestToolRegression:
         mock_instance.request.return_value.__aenter__ = AsyncMock(return_value=resp)
         mock_instance.request.return_value.__aexit__ = AsyncMock(return_value=False)
 
-        MockSession = MagicMock(return_value=mock_instance)
+        mock_session_cls = MagicMock(return_value=mock_instance)
         mock_aiohttp = MagicMock()
-        mock_aiohttp.ClientSession = MockSession
+        mock_aiohttp.ClientSession = mock_session_cls
         mock_aiohttp.ClientTimeout = MagicMock(return_value=MagicMock())
 
         with patch.dict(sys.modules, {"aiohttp": mock_aiohttp}):
@@ -433,7 +433,7 @@ class TestHTTPRequestToolRegression:
             await tool.run(url="https://example.com")
 
         # Session constructor called exactly once despite two run() calls
-        assert MockSession.call_count == 1
+        assert mock_session_cls.call_count == 1
 
     @pytest.mark.asyncio
     async def test_aclose_clears_session(self):
@@ -832,7 +832,7 @@ class TestEvaluationPipelineRegression:
         pipeline = EvaluationPipeline([m])
         samples = [{"question": f"q{i}", "answer": "a"} for i in range(20)]
         await pipeline.evaluate_batch(samples, concurrency=3)
-        # Peak concurrent evaluations must not exceed concurrency × metrics
+        # Peak concurrent evaluations must not exceed concurrency x metrics
         assert peak[0] <= 3
 
 

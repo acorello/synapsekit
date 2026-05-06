@@ -220,9 +220,7 @@ def test_unsupported_model_raises_value_error() -> None:
 async def test_budget_tokens_passed_to_google() -> None:
     thinking_part = SimpleNamespace(text="reasoning steps", thought=True)
     answer_part = SimpleNamespace(text="final answer", thought=False)
-    candidate = SimpleNamespace(
-        content=SimpleNamespace(parts=[thinking_part, answer_part])
-    )
+    candidate = SimpleNamespace(content=SimpleNamespace(parts=[thinking_part, answer_part]))
     response = SimpleNamespace(
         candidates=[candidate],
         usage_metadata=SimpleNamespace(
@@ -253,18 +251,14 @@ async def test_google_stream_splits_thinking_from_answer() -> None:
     thinking_chunk = SimpleNamespace(
         candidates=[
             SimpleNamespace(
-                content=SimpleNamespace(
-                    parts=[SimpleNamespace(text="think step", thought=True)]
-                )
+                content=SimpleNamespace(parts=[SimpleNamespace(text="think step", thought=True)])
             )
         ]
     )
     answer_chunk = SimpleNamespace(
         candidates=[
             SimpleNamespace(
-                content=SimpleNamespace(
-                    parts=[SimpleNamespace(text="answer text", thought=False)]
-                )
+                content=SimpleNamespace(parts=[SimpleNamespace(text="answer text", thought=False)])
             )
         ]
     )
@@ -401,24 +395,18 @@ async def test_openai_stream_yields_thinking_and_answer() -> None:
         async def _gen(self):
             yield SimpleNamespace(
                 choices=[
-                    SimpleNamespace(
-                        delta=SimpleNamespace(reasoning="think step", content=None)
-                    )
+                    SimpleNamespace(delta=SimpleNamespace(reasoning="think step", content=None))
                 ]
             )
             yield SimpleNamespace(
                 choices=[
-                    SimpleNamespace(
-                        delta=SimpleNamespace(reasoning=None, content="answer text")
-                    )
+                    SimpleNamespace(delta=SimpleNamespace(reasoning=None, content="answer text"))
                 ]
             )
             yield SimpleNamespace(choices=[])  # empty choices — skipped
 
     create = AsyncMock(return_value=_FakeOpenAIStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = OpenAIReasoning(model="o3", api_key="k")
     provider._get_client = lambda: client
@@ -439,16 +427,12 @@ async def test_openai_stream_thinking_disabled() -> None:
         async def _gen(self):
             yield SimpleNamespace(
                 choices=[
-                    SimpleNamespace(
-                        delta=SimpleNamespace(reasoning="hidden", content="answer")
-                    )
+                    SimpleNamespace(delta=SimpleNamespace(reasoning="hidden", content="answer"))
                 ]
             )
 
     create = AsyncMock(return_value=_FakeStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = OpenAIReasoning(model="o3", api_key="k", thinking=False)
     provider._get_client = lambda: client
@@ -460,9 +444,7 @@ async def test_openai_stream_thinking_disabled() -> None:
 @pytest.mark.asyncio
 async def test_openai_stream_wraps_sdk_errors() -> None:
     create = AsyncMock(side_effect=ValueError("bad stream"))
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = OpenAIReasoning(model="o3", api_key="k")
     provider._get_client = lambda: client
@@ -654,9 +636,7 @@ async def test_deepseek_generate_extracts_reasoning() -> None:
         ),
     )
     create = AsyncMock(return_value=response)
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
@@ -672,9 +652,7 @@ async def test_deepseek_generate_extracts_reasoning() -> None:
 async def test_deepseek_generate_empty_response() -> None:
     response = SimpleNamespace(choices=[], usage=None)
     create = AsyncMock(return_value=response)
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
@@ -704,9 +682,7 @@ async def test_deepseek_generate_thinking_disabled() -> None:
         ),
     )
     create = AsyncMock(return_value=response)
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k", thinking=False)
     provider._get_client = lambda: client
@@ -719,9 +695,7 @@ async def test_deepseek_generate_thinking_disabled() -> None:
 @pytest.mark.asyncio
 async def test_deepseek_generate_wraps_sdk_errors() -> None:
     create = AsyncMock(side_effect=ValueError("bad response"))
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
@@ -740,27 +714,21 @@ async def test_deepseek_stream_yields_chunks() -> None:
             yield SimpleNamespace(
                 choices=[
                     SimpleNamespace(
-                        delta=SimpleNamespace(
-                            reasoning_content="think step", content=None
-                        )
+                        delta=SimpleNamespace(reasoning_content="think step", content=None)
                     )
                 ]
             )
             yield SimpleNamespace(
                 choices=[
                     SimpleNamespace(
-                        delta=SimpleNamespace(
-                            reasoning_content=None, content="answer text"
-                        )
+                        delta=SimpleNamespace(reasoning_content=None, content="answer text")
                     )
                 ]
             )
             yield SimpleNamespace(choices=[])  # empty — skipped
 
     create = AsyncMock(return_value=_FakeDeepSeekStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
@@ -775,9 +743,7 @@ async def test_deepseek_stream_yields_chunks() -> None:
 @pytest.mark.asyncio
 async def test_deepseek_stream_wraps_sdk_errors() -> None:
     create = AsyncMock(side_effect=ValueError("bad stream"))
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
 
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
@@ -796,9 +762,7 @@ async def test_deepseek_stream_wraps_sdk_errors() -> None:
 async def test_google_generate_thinking_disabled() -> None:
     thinking_part = SimpleNamespace(text="hidden", thought=True)
     answer_part = SimpleNamespace(text="answer", thought=False)
-    candidate = SimpleNamespace(
-        content=SimpleNamespace(parts=[thinking_part, answer_part])
-    )
+    candidate = SimpleNamespace(content=SimpleNamespace(parts=[thinking_part, answer_part]))
     response = SimpleNamespace(
         candidates=[candidate],
         usage_metadata=SimpleNamespace(
@@ -880,9 +844,7 @@ async def test_google_stream_thinking_disabled() -> None:
     answer_chunk = SimpleNamespace(
         candidates=[
             SimpleNamespace(
-                content=SimpleNamespace(
-                    parts=[SimpleNamespace(text="answer", thought=False)]
-                )
+                content=SimpleNamespace(parts=[SimpleNamespace(text="answer", thought=False)])
             )
         ]
     )
@@ -953,9 +915,7 @@ def test_google_extract_chunk_parts_no_candidates() -> None:
 @pytest.mark.asyncio
 async def test_openai_stream_none_returns_empty() -> None:
     create = AsyncMock(return_value=None)
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = OpenAIReasoning(model="o3", api_key="k")
     provider._get_client = lambda: client
     chunks = [c async for c in provider.stream("Q")]
@@ -975,9 +935,7 @@ async def test_openai_stream_skips_null_delta() -> None:
             )
 
     create = AsyncMock(return_value=_FakeStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = OpenAIReasoning(model="o3", api_key="k")
     provider._get_client = lambda: client
     chunks = [c async for c in provider.stream("Q")]
@@ -998,9 +956,7 @@ async def test_openai_stream_mid_iteration_error() -> None:
             raise ValueError("mid-stream failure")
 
     create = AsyncMock(return_value=_ErrorStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = OpenAIReasoning(model="o3", api_key="k")
     provider._get_client = lambda: client
     with pytest.raises(RuntimeError, match="openai reasoning request failed"):
@@ -1076,9 +1032,7 @@ def test_anthropic_extract_answer_text_inner_dict() -> None:
 @pytest.mark.asyncio
 async def test_deepseek_stream_none_returns_empty() -> None:
     create = AsyncMock(return_value=None)
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
     chunks = [c async for c in provider.stream("Q")]
@@ -1094,13 +1048,13 @@ async def test_deepseek_stream_skips_null_delta() -> None:
         async def _gen(self):
             yield SimpleNamespace(choices=[SimpleNamespace(delta=None)])
             yield SimpleNamespace(
-                choices=[SimpleNamespace(delta=SimpleNamespace(reasoning_content=None, content="ans"))]
+                choices=[
+                    SimpleNamespace(delta=SimpleNamespace(reasoning_content=None, content="ans"))
+                ]
             )
 
     create = AsyncMock(return_value=_FakeStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
     chunks = [c async for c in provider.stream("Q")]
@@ -1116,14 +1070,14 @@ async def test_deepseek_stream_mid_iteration_error() -> None:
 
         async def _gen(self):
             yield SimpleNamespace(
-                choices=[SimpleNamespace(delta=SimpleNamespace(reasoning_content=None, content="a"))]
+                choices=[
+                    SimpleNamespace(delta=SimpleNamespace(reasoning_content=None, content="a"))
+                ]
             )
             raise ValueError("mid-stream failure")
 
     create = AsyncMock(return_value=_ErrorStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
     with pytest.raises(RuntimeError, match="deepseek reasoning request failed"):
@@ -1135,9 +1089,7 @@ async def test_deepseek_stream_mid_iteration_error() -> None:
 async def test_deepseek_generate_total_tokens_accumulation() -> None:
     response = SimpleNamespace(
         choices=[
-            SimpleNamespace(
-                message=SimpleNamespace(content="answer", reasoning_content="think")
-            )
+            SimpleNamespace(message=SimpleNamespace(content="answer", reasoning_content="think"))
         ],
         usage=SimpleNamespace(
             completion_tokens=5,
@@ -1147,9 +1099,7 @@ async def test_deepseek_generate_total_tokens_accumulation() -> None:
         ),
     )
     create = AsyncMock(return_value=response)
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k")
     provider._get_client = lambda: client
     result = await provider.generate("Hi")
@@ -1197,9 +1147,7 @@ async def test_google_stream_mid_iteration_error() -> None:
 async def test_google_generate_total_tokens_accumulation() -> None:
     thinking_part = SimpleNamespace(text="think", thought=True)
     answer_part = SimpleNamespace(text="ans", thought=False)
-    candidate = SimpleNamespace(
-        content=SimpleNamespace(parts=[thinking_part, answer_part])
-    )
+    candidate = SimpleNamespace(content=SimpleNamespace(parts=[thinking_part, answer_part]))
     response = SimpleNamespace(
         candidates=[candidate],
         usage_metadata=SimpleNamespace(
@@ -1222,9 +1170,7 @@ def test_google_extract_response_parts_empty_parts() -> None:
     # Part with no text — should be skipped via `if not part_text: continue`
     empty_part = SimpleNamespace(text="", thought=False)
     thinking_part = SimpleNamespace(text="think", thought=True)
-    candidate = SimpleNamespace(
-        content=SimpleNamespace(parts=[empty_part, thinking_part])
-    )
+    candidate = SimpleNamespace(content=SimpleNamespace(parts=[empty_part, thinking_part]))
     response = SimpleNamespace(candidates=[candidate])
     answer, thinking = _extract_response_parts(response)
     assert thinking == "think"
@@ -1252,7 +1198,6 @@ def test_google_extract_chunk_parts_with_thinking() -> None:
 
 
 def test_google_get_model_missing_package() -> None:
-    import types
 
     with patch.dict(sys.modules, {"google": None, "google.generativeai": None}):
         provider = GoogleThinking(model="gemini-2.5-pro", api_key="k")
@@ -1269,15 +1214,15 @@ async def test_deepseek_stream_thinking_disabled() -> None:
 
         async def _gen(self):
             yield SimpleNamespace(
-                choices=[SimpleNamespace(
-                    delta=SimpleNamespace(reasoning_content="hidden", content="answer")
-                )]
+                choices=[
+                    SimpleNamespace(
+                        delta=SimpleNamespace(reasoning_content="hidden", content="answer")
+                    )
+                ]
             )
 
     create = AsyncMock(return_value=_FakeStream())
-    client = SimpleNamespace(
-        chat=SimpleNamespace(completions=SimpleNamespace(create=create))
-    )
+    client = SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create)))
     provider = DeepSeekR1Reasoning(model="deepseek-r1", api_key="k", thinking=False)
     provider._get_client = lambda: client
     chunks = [c async for c in provider.stream("Q")]
@@ -1315,9 +1260,7 @@ def test_google_extract_response_parts_skips_empty_part_text() -> None:
 
     empty_part = SimpleNamespace(text="", thought=False)
     real_part = SimpleNamespace(text="answer", thought=False)
-    candidate = SimpleNamespace(
-        content=SimpleNamespace(parts=[empty_part, real_part])
-    )
+    candidate = SimpleNamespace(content=SimpleNamespace(parts=[empty_part, real_part]))
     response = SimpleNamespace(candidates=[candidate])
     answer, thinking = _extract_response_parts(response)
     assert answer == "answer"

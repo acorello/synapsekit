@@ -115,6 +115,9 @@ from .evaluation import (
     GroundednessMetric,
     MetricDelta,
     MetricResult,
+    PromptCandidate,
+    PromptOptimizer,
+    PromptVariantRunner,
     RegressionReport,
     RelevancyMetric,
     eval_case,
@@ -157,9 +160,16 @@ from .graph import (
     ws_stream,
 )
 from .llm.base import BaseLLM, LLMConfig
+from .llm.cost_quality_router import CostQualityRouter
 from .llm.cost_router import QUALITY_TABLE, CostRouter, CostRouterConfig, RouterModelSpec
 from .llm.fallback_chain import FallbackChain, FallbackChainConfig
 from .llm.multimodal import AudioContent, ImageContent, MultimodalMessage
+from .llm.reasoning import (
+    BaseReasoningProvider,
+    ReasoningLLM,
+    ReasoningResponse,
+    ReasoningStreamChunk,
+)
 from .llm.structured import generate_structured
 from .loaders.arxiv import ArXivLoader
 from .loaders.azure_blob import AzureBlobLoader
@@ -286,12 +296,14 @@ __all__ = [
     "MemcachedCacheBackend",
     "BaseLLM",
     "LLMConfig",
+    "CostQualityRouter",
     "CostRouter",
     "CostRouterConfig",
     "RouterModelSpec",
     "QUALITY_TABLE",
     "FallbackChain",
     "FallbackChainConfig",
+    "BaseReasoningProvider",
     "AlephAlphaLLM",
     "AzureOpenAILLM",
     "CerebrasLLM",
@@ -306,6 +318,9 @@ __all__ = [
     "NovitaLLM",
     "OpenRouterLLM",
     "PerplexityLLM",
+    "ReasoningLLM",
+    "ReasoningResponse",
+    "ReasoningStreamChunk",
     "SambaNovaLLM",
     "TogetherLLM",
     "VertexAILLM",
@@ -571,6 +586,9 @@ __all__ = [
     "GroundednessMetric",
     "MetricDelta",
     "MetricResult",
+    "PromptCandidate",
+    "PromptOptimizer",
+    "PromptVariantRunner",
     "RegressionReport",
     "RelevancyMetric",
     "eval_case",
@@ -664,6 +682,10 @@ _LAZY_IMPORTS = {
     "LMStudioLLM": "llm.lmstudio",
     "VLLMLLM": "llm.vllm",
     "CloudflareLLM": "llm.cloudflare",
+    "BaseReasoningProvider": "llm.reasoning",
+    "ReasoningLLM": "llm.reasoning",
+    "ReasoningResponse": "llm.reasoning",
+    "ReasoningStreamChunk": "llm.reasoning",
     # Checkpointers
     "RedisCheckpointer": "graph.checkpointers.redis",
     "PostgresCheckpointer": "graph.checkpointers.postgres",

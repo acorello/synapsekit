@@ -23,6 +23,13 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **`FederatedRetriever`** — fan-out retrieval across multiple local and remote sources in parallel; merges results using RRF (default), normalised score fusion, or round-robin interleave; per-source timeout with graceful partial results on failure; near-duplicate deduplication via `SequenceMatcher`; optional bearer-token auth for remote HTTP endpoints; closes #595
+- **Discord `#stats` workflow** — GitHub Actions workflow that patches a pinned message in the Discord `#stats` channel every 6 hours with live GitHub stars, forks, open issues, 30-day PyPI downloads, and latest version; requires `DISCORD_STATS_WEBHOOK` and `DISCORD_STATS_MESSAGE_ID` secrets; zero external deps (stdlib `urllib`)
+
+### Fixed
+
+- **Type annotation suppressions for Rust/optional-import fallback paths** — added `# type: ignore` to `_json.py`, `_cache.py`, `text_splitters/character.py`, and `text_splitters/recursive.py` where mypy cannot narrow module-level callables set to `None` in `except ImportError` blocks; no behaviour change
+
 - **`SelfHealingRAG`** — retry-on-low-faithfulness RAG wrapper; cycles through a list of `RetrievalStrategy` implementations until the `FaithfulnessMetric` score meets `quality_threshold`; exposes `last_report` (`SelfHealingReport`) with attempt count, retry count, per-attempt scores, and winning strategy name; `ask_sync()` for synchronous callers; `max_retries` bounds total attempts; gracefully falls back to best answer when all strategies are exhausted
 - **`ContextPacker`** — token-budget-aware chunk packing for long-context models; three ranking strategies (`relevance`, `recency`, `diversity`); near-duplicate deduplication via `SequenceMatcher` with configurable `dedup_threshold`; `lost-in-middle` and `as-is` ordering; returns structured dicts with `text`, `score`, `metadata`, and `token_count`; accepts raw strings, `Document` objects, and scored dicts from any retriever
 - **`FullContextRetriever`** — retriever wrapper that auto-switches between full-document ingestion and chunked ingestion based on a per-document token count; exposes `add_document()` so `RAGPipeline` can route large vs. small documents without caller changes; delegates `retrieve()` and `retrieve_with_scores()` to the wrapped retriever

@@ -9,6 +9,10 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+---
+
+## [1.7.0] — 2026-05-06
+
 ### Added
 
 - **`ReasoningLLM`** — unified adapter for reasoning/chain-of-thought models; auto-detects provider from model name (`o1`/`o3` → OpenAI, `claude` → Anthropic, `gemini` → Google, `deepseek` → DeepSeek, `qwq` → Qwen); `agenerate()` returns a `ReasoningResponse` dataclass with `answer`, `thinking`, `thinking_tokens`, `answer_tokens`, `total_tokens`, `model`, and `provider`; `astream()` yields `ReasoningStreamChunk` objects with `text` and `is_thinking` and enforces reasoning-before-answer ordering; each backend in `llm/providers/` handles provider-specific API params (reasoning_effort, thinking blocks, thinkingConfig, reasoning_content)

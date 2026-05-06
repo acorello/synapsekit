@@ -125,9 +125,12 @@ class CostQualityRouter(BaseLLM):
         """Return candidates ordered for exploitation.
 
         Priority:
-          1. Meets quality threshold AND within budget  — cheapest first
+          1. Unseen (calls == 0) OR meets quality threshold AND within budget — cheapest first
           2. Meets quality threshold but over budget    — cheapest first (quality-over-budget fallback)
-          3. Below threshold or unseen                  — highest quality first (last resort)
+          3. Below threshold                            — highest quality first (last resort)
+
+        Unseen models land in group_a so early exploitation gives them a chance
+        to accumulate stats rather than burying them behind proven-bad models.
         """
         group_a: list[BaseLLM] = []
         group_b: list[BaseLLM] = []
@@ -136,7 +139,7 @@ class CostQualityRouter(BaseLLM):
         for llm in self._candidates:
             s = self._stats[llm.config.model]
             if s["calls"] == 0:
-                group_c.append(llm)
+                group_a.append(llm)
                 continue
             meets_quality = s["avg_quality"] >= self._quality_threshold
             within_budget = (
@@ -149,8 +152,12 @@ class CostQualityRouter(BaseLLM):
             else:
                 group_c.append(llm)
 
-        key_cost = lambda m: self._stats[m.config.model]["avg_cost"]  # noqa: E731
-        key_quality = lambda m: self._stats[m.config.model]["avg_quality"]  # noqa: E731
+        def key_cost(m: BaseLLM) -> float:
+            return self._stats[m.config.model]["avg_cost"]
+
+        def key_quality(m: BaseLLM) -> float:
+            return self._stats[m.config.model]["avg_quality"]
+
         group_a.sort(key=key_cost)
         group_b.sort(key=key_cost)
         group_c.sort(key=key_quality, reverse=True)

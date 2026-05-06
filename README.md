@@ -205,67 +205,86 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 ### 🧠 LLM Providers
 
-![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white)
-![Anthropic](https://img.shields.io/badge/Anthropic-CC785C?style=flat-square&logo=anthropic&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=flat-square&logo=googlegemini&logoColor=white)
-![Azure OpenAI](https://img.shields.io/badge/Azure%20OpenAI-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)
-![AWS Bedrock](https://img.shields.io/badge/AWS%20Bedrock-FF9900?style=flat-square&logo=amazonaws&logoColor=white)
-![Google Vertex AI](https://img.shields.io/badge/Vertex%20AI-4285F4?style=flat-square&logo=googlecloud&logoColor=white)
-![Mistral](https://img.shields.io/badge/Mistral-FF7000?style=flat-square&logo=mistralai&logoColor=white)
-![Cohere](https://img.shields.io/badge/Cohere-39594D?style=flat-square&logo=cohere&logoColor=white)
-![Groq](https://img.shields.io/badge/Groq-F55036?style=flat-square&logo=groq&logoColor=white)
-![Hugging Face](https://img.shields.io/badge/Hugging%20Face-FF9D00?style=flat-square&logo=huggingface&logoColor=white)
-![Cloudflare](https://img.shields.io/badge/Cloudflare-F48120?style=flat-square&logo=cloudflare&logoColor=white)
-![Databricks](https://img.shields.io/badge/Databricks-FF3621?style=flat-square&logo=databricks&logoColor=white)
-![Perplexity](https://img.shields.io/badge/Perplexity-20808D?style=flat-square&logo=perplexity&logoColor=white)
-![Replicate](https://img.shields.io/badge/Replicate-000000?style=flat-square&logo=replicate&logoColor=white)
-![xAI](https://img.shields.io/badge/xAI%20Grok-000000?style=flat-square&logo=x&logoColor=white)
-![Baidu ERNIE](https://img.shields.io/badge/Baidu%20ERNIE-2932E1?style=flat-square&logo=baidu&logoColor=white)
-![DeepSeek](https://img.shields.io/badge/DeepSeek-4D6BFE?style=flat-square&logoColor=white)
-![Ollama](https://img.shields.io/badge/Ollama-000000?style=flat-square&logo=ollama&logoColor=white)
-![Together AI](https://img.shields.io/badge/Together%20AI-000000?style=flat-square&logoColor=white)
-![OpenRouter](https://img.shields.io/badge/OpenRouter-6467F2?style=flat-square&logoColor=white)
-![Fireworks AI](https://img.shields.io/badge/Fireworks%20AI-6D28D9?style=flat-square&logoColor=white)
-![Cerebras](https://img.shields.io/badge/Cerebras-FF4B4B?style=flat-square&logoColor=white)
-![SambaNova](https://img.shields.io/badge/SambaNova-E64A19?style=flat-square&logoColor=white)
-![NovitaAI](https://img.shields.io/badge/NovitaAI-7C3AED?style=flat-square&logoColor=white)
-![Writer](https://img.shields.io/badge/Writer-5B21B6?style=flat-square&logoColor=white)
-![AI21 Labs](https://img.shields.io/badge/AI21%20Labs-4B5563?style=flat-square&logoColor=white)
-![Aleph Alpha](https://img.shields.io/badge/Aleph%20Alpha-374151?style=flat-square&logoColor=white)
-![Minimax](https://img.shields.io/badge/Minimax-1F2937?style=flat-square&logoColor=white)
-![Moonshot](https://img.shields.io/badge/Moonshot%20Kimi-0F172A?style=flat-square&logoColor=white)
-![Zhipu](https://img.shields.io/badge/Zhipu%20ChatGLM-1E3A5F?style=flat-square&logoColor=white)
-![LM Studio](https://img.shields.io/badge/LM%20Studio-1A1A2E?style=flat-square&logoColor=white)
-![llama.cpp](https://img.shields.io/badge/llama.cpp-4A4A4A?style=flat-square&logoColor=white)
-![vLLM](https://img.shields.io/badge/vLLM-2D3748?style=flat-square&logoColor=white)
-![GPT4All](https://img.shields.io/badge/GPT4All-3B4252?style=flat-square&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/openai/412991" height="40" alt="OpenAI"/><br/><sub><b>OpenAI</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/anthropic/CC785C" height="40" alt="Anthropic"/><br/><sub><b>Anthropic</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" height="40" alt="Google Gemini"/><br/><sub><b>Gemini</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/microsoftazure/0078D4" height="40" alt="Azure OpenAI"/><br/><sub><b>Azure OpenAI</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/amazonaws/FF9900" height="40" alt="AWS Bedrock"/><br/><sub><b>AWS Bedrock</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlecloud/4285F4" height="40" alt="Vertex AI"/><br/><sub><b>Vertex AI</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mistralai/FF7000" height="40" alt="Mistral"/><br/><sub><b>Mistral</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/cohere/39594D" height="40" alt="Cohere"/><br/><sub><b>Cohere</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/groq/F55036" height="40" alt="Groq"/><br/><sub><b>Groq</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/huggingface/FF9D00" height="40" alt="Hugging Face"/><br/><sub><b>Hugging Face</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/cloudflare/F48120" height="40" alt="Cloudflare"/><br/><sub><b>Cloudflare</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/databricks/FF3621" height="40" alt="Databricks"/><br/><sub><b>Databricks</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/perplexity/20808D" height="40" alt="Perplexity"/><br/><sub><b>Perplexity</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/replicate.com" height="40" alt="Replicate"/><br/><sub><b>Replicate</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/x/000000" height="40" alt="xAI Grok"/><br/><sub><b>xAI (Grok)</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/baidu/2932E1" height="40" alt="Baidu ERNIE"/><br/><sub><b>Baidu ERNIE</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/deepseek.com" height="40" alt="DeepSeek"/><br/><sub><b>DeepSeek</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/ollama/000000" height="40" alt="Ollama"/><br/><sub><b>Ollama</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/together.ai" height="40" alt="Together AI"/><br/><sub><b>Together AI</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/openrouter.ai" height="40" alt="OpenRouter"/><br/><sub><b>OpenRouter</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/fireworks.ai" height="40" alt="Fireworks AI"/><br/><sub><b>Fireworks AI</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/cerebras.net" height="40" alt="Cerebras"/><br/><sub><b>Cerebras</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/sambanova.ai" height="40" alt="SambaNova"/><br/><sub><b>SambaNova</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/novita.ai" height="40" alt="NovitaAI"/><br/><sub><b>NovitaAI</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/writer.com" height="40" alt="Writer"/><br/><sub><b>Writer</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/ai21.com" height="40" alt="AI21 Labs"/><br/><sub><b>AI21 Labs</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/aleph-alpha.com" height="40" alt="Aleph Alpha"/><br/><sub><b>Aleph Alpha</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/minimaxi.com" height="40" alt="Minimax"/><br/><sub><b>Minimax</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/moonshot.cn" height="40" alt="Moonshot Kimi"/><br/><sub><b>Moonshot</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/zhipuai.cn" height="40" alt="Zhipu"/><br/><sub><b>Zhipu</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/lmstudio.ai" height="40" alt="LM Studio"/><br/><sub><b>LM Studio</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/meta/0082FB" height="40" alt="llama.cpp"/><br/><sub><b>llama.cpp</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/vllm.ai" height="40" alt="vLLM"/><br/><sub><b>vLLM</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/nomic.ai" height="40" alt="GPT4All"/><br/><sub><b>GPT4All</b></sub></td>
+  </tr>
+</table>
 
 ---
 
 ### 🗄 Vector Stores
 
-![In-Memory](https://img.shields.io/badge/In--Memory-6B7280?style=flat-square&logoColor=white)
-![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6B35?style=flat-square&logoColor=white)
-![FAISS](https://img.shields.io/badge/FAISS%20(Meta)-0467DF?style=flat-square&logo=meta&logoColor=white)
-![Qdrant](https://img.shields.io/badge/Qdrant-24386C?style=flat-square&logo=qdrant&logoColor=white)
-![Pinecone](https://img.shields.io/badge/Pinecone-000000?style=flat-square&logo=pinecone&logoColor=white)
-![Weaviate](https://img.shields.io/badge/Weaviate-3DBE6C?style=flat-square&logoColor=white)
-![Milvus](https://img.shields.io/badge/Milvus-00A1EA?style=flat-square&logoColor=white)
-![LanceDB](https://img.shields.io/badge/LanceDB-1E293B?style=flat-square&logoColor=white)
-![PGVector](https://img.shields.io/badge/PGVector-4169E1?style=flat-square&logo=postgresql&logoColor=white)
-![SQLiteVec](https://img.shields.io/badge/SQLiteVec-003B57?style=flat-square&logo=sqlite&logoColor=white)
-![MongoDB Atlas](https://img.shields.io/badge/MongoDB%20Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis%20Vector-DC382D?style=flat-square&logo=redis&logoColor=white)
-![Elasticsearch](https://img.shields.io/badge/Elasticsearch-005571?style=flat-square&logo=elasticsearch&logoColor=white)
-![OpenSearch](https://img.shields.io/badge/OpenSearch-003B57?style=flat-square&logo=opensearch&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase%20Vector-3ECF8E?style=flat-square&logo=supabase&logoColor=white)
-![Cassandra](https://img.shields.io/badge/Cassandra-1287B1?style=flat-square&logo=apachecassandra&logoColor=white)
-![DuckDB](https://img.shields.io/badge/DuckDB-FFF000?style=flat-square&logo=duckdb&logoColor=black)
-![ClickHouse](https://img.shields.io/badge/ClickHouse-FFCC01?style=flat-square&logo=clickhouse&logoColor=black)
-![Marqo](https://img.shields.io/badge/Marqo-6D28D9?style=flat-square&logoColor=white)
-![Typesense](https://img.shields.io/badge/Typesense-D8014B?style=flat-square&logoColor=white)
-![Vespa](https://img.shields.io/badge/Vespa-1A73E8?style=flat-square&logoColor=white)
-![Zilliz](https://img.shields.io/badge/Zilliz-00A1EA?style=flat-square&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/trychroma.com" height="40" alt="ChromaDB"/><br/><sub><b>ChromaDB</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/meta/0082FB" height="40" alt="FAISS"/><br/><sub><b>FAISS</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/qdrant/24386C" height="40" alt="Qdrant"/><br/><sub><b>Qdrant</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/pinecone.io" height="40" alt="Pinecone"/><br/><sub><b>Pinecone</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/weaviate.io" height="40" alt="Weaviate"/><br/><sub><b>Weaviate</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/milvus.io" height="40" alt="Milvus"/><br/><sub><b>Milvus</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/lancedb.com" height="40" alt="LanceDB"/><br/><sub><b>LanceDB</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/postgresql/4169E1" height="40" alt="PGVector"/><br/><sub><b>PGVector</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="40" alt="SQLiteVec"/><br/><sub><b>SQLiteVec</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mongodb/47A248" height="40" alt="MongoDB Atlas"/><br/><sub><b>MongoDB Atlas</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/redis/DC382D" height="40" alt="Redis Vector"/><br/><sub><b>Redis</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/elasticsearch/005571" height="40" alt="Elasticsearch"/><br/><sub><b>Elasticsearch</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/opensearch/003B57" height="40" alt="OpenSearch"/><br/><sub><b>OpenSearch</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="40" alt="Supabase"/><br/><sub><b>Supabase</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/apachecassandra/1287B1" height="40" alt="Cassandra"/><br/><sub><b>Cassandra</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/duckdb/FFF000" height="40" alt="DuckDB"/><br/><sub><b>DuckDB</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/clickhouse/FFCC01" height="40" alt="ClickHouse"/><br/><sub><b>ClickHouse</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/marqo.ai" height="40" alt="Marqo"/><br/><sub><b>Marqo</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/typesense.org" height="40" alt="Typesense"/><br/><sub><b>Typesense</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/vespa.ai" height="40" alt="Vespa"/><br/><sub><b>Vespa</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/zilliz.com" height="40" alt="Zilliz"/><br/><sub><b>Zilliz</b></sub></td>
+  </tr>
+</table>
 
 ---
 
@@ -273,120 +292,144 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 **File Formats**
 
-![PDF](https://img.shields.io/badge/PDF-FF0000?style=flat-square&logo=adobeacrobatreader&logoColor=white)
-![Word](https://img.shields.io/badge/Word%20DOCX-2B579A?style=flat-square&logo=microsoftword&logoColor=white)
-![Excel](https://img.shields.io/badge/Excel%20XLSX-217346?style=flat-square&logo=microsoftexcel&logoColor=white)
-![PowerPoint](https://img.shields.io/badge/PowerPoint%20PPTX-B7472A?style=flat-square&logo=microsoftpowerpoint&logoColor=white)
-![CSV](https://img.shields.io/badge/CSV-217346?style=flat-square&logoColor=white)
-![JSON](https://img.shields.io/badge/JSON-292929?style=flat-square&logo=json&logoColor=white)
-![Markdown](https://img.shields.io/badge/Markdown-000000?style=flat-square&logo=markdown&logoColor=white)
-![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=html5&logoColor=white)
-![XML](https://img.shields.io/badge/XML-FF6600?style=flat-square&logoColor=white)
-![YAML](https://img.shields.io/badge/YAML-CB171E?style=flat-square&logo=yaml&logoColor=white)
-![LaTeX](https://img.shields.io/badge/LaTeX-008080?style=flat-square&logo=latex&logoColor=white)
-![EPUB](https://img.shields.io/badge/EPUB-4A4A4A?style=flat-square&logoColor=white)
-![RTF](https://img.shields.io/badge/RTF-4A4A4A?style=flat-square&logoColor=white)
-![TSV](https://img.shields.io/badge/TSV-4A4A4A?style=flat-square&logoColor=white)
-![Parquet](https://img.shields.io/badge/Parquet-50ABF1?style=flat-square&logo=apacheparquet&logoColor=white)
-![Images](https://img.shields.io/badge/Images%20JPG%2FPNG-FF6B6B?style=flat-square&logoColor=white)
-![Audio](https://img.shields.io/badge/Audio%20Whisper-FF9900?style=flat-square&logo=openai&logoColor=white)
-![Video](https://img.shields.io/badge/Video%20MP4-FF0000?style=flat-square&logo=youtube&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/adobeacrobatreader/FF0000" height="40" alt="PDF"/><br/><sub><b>PDF</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/microsoftword/2B579A" height="40" alt="Word"/><br/><sub><b>Word (DOCX)</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/microsoftexcel/217346" height="40" alt="Excel"/><br/><sub><b>Excel (XLSX)</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/microsoftpowerpoint/B7472A" height="40" alt="PowerPoint"/><br/><sub><b>PowerPoint</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/html5/E34F26" height="40" alt="HTML"/><br/><sub><b>HTML</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/markdown/000000" height="40" alt="Markdown"/><br/><sub><b>Markdown</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/latex/008080" height="40" alt="LaTeX"/><br/><sub><b>LaTeX</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/yaml/CB171E" height="40" alt="YAML"/><br/><sub><b>YAML / JSON</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/apacheparquet/50ABF1" height="40" alt="Parquet"/><br/><sub><b>Parquet</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/openai/412991" height="40" alt="Audio/Whisper"/><br/><sub><b>Audio (Whisper)</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/youtube/FF0000" height="40" alt="Video"/><br/><sub><b>Video</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/rss/FFA500" height="40" alt="RSS"/><br/><sub><b>RSS</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/git/F05032" height="40" alt="Git Repo"/><br/><sub><b>Git Repo</b></sub></td>
+  </tr>
+</table>
 
 **Cloud Storage**
 
-![AWS S3](https://img.shields.io/badge/AWS%20S3-569A31?style=flat-square&logo=amazons3&logoColor=white)
-![Google Drive](https://img.shields.io/badge/Google%20Drive-4285F4?style=flat-square&logo=googledrive&logoColor=white)
-![Azure Blob](https://img.shields.io/badge/Azure%20Blob-0078D4?style=flat-square&logo=microsoftazure&logoColor=white)
-![OneDrive](https://img.shields.io/badge/OneDrive-0078D4?style=flat-square&logo=microsoftonedrive&logoColor=white)
-![Dropbox](https://img.shields.io/badge/Dropbox-0061FF?style=flat-square&logo=dropbox&logoColor=white)
-![GCS](https://img.shields.io/badge/Google%20Cloud%20Storage-4285F4?style=flat-square&logo=googlecloud&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/amazons3/569A31" height="40" alt="AWS S3"/><br/><sub><b>AWS S3</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googledrive/4285F4" height="40" alt="Google Drive"/><br/><sub><b>Google Drive</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/microsoftazure/0078D4" height="40" alt="Azure Blob"/><br/><sub><b>Azure Blob</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/microsoftonedrive/0078D4" height="40" alt="OneDrive"/><br/><sub><b>OneDrive</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/dropbox/0061FF" height="40" alt="Dropbox"/><br/><sub><b>Dropbox</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlecloud/4285F4" height="40" alt="GCS"/><br/><sub><b>Google Cloud</b></sub></td>
+  </tr>
+</table>
 
 **Databases**
 
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
-![DynamoDB](https://img.shields.io/badge/DynamoDB-FF9900?style=flat-square&logo=amazondynamodb&logoColor=white)
-![Elasticsearch](https://img.shields.io/badge/Elasticsearch-005571?style=flat-square&logo=elasticsearch&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
-![BigQuery](https://img.shields.io/badge/BigQuery-4285F4?style=flat-square&logo=googlebigquery&logoColor=white)
-![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=flat-square&logo=snowflake&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/postgresql/4169E1" height="40" alt="PostgreSQL"/><br/><sub><b>PostgreSQL</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mysql/4479A1" height="40" alt="MySQL"/><br/><sub><b>MySQL</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mongodb/47A248" height="40" alt="MongoDB"/><br/><sub><b>MongoDB</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/amazondynamodb/FF9900" height="40" alt="DynamoDB"/><br/><sub><b>DynamoDB</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/elasticsearch/005571" height="40" alt="Elasticsearch"/><br/><sub><b>Elasticsearch</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/redis/DC382D" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlebigquery/669DF6" height="40" alt="BigQuery"/><br/><sub><b>BigQuery</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/snowflake/29B5E8" height="40" alt="Snowflake"/><br/><sub><b>Snowflake</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="40" alt="SQLite"/><br/><sub><b>SQLite</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="40" alt="Supabase"/><br/><sub><b>Supabase</b></sub></td>
+  </tr>
+</table>
 
 **APIs & Productivity**
 
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
-![Jira](https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=jira&logoColor=white)
-![Confluence](https://img.shields.io/badge/Confluence-172B4D?style=flat-square&logo=confluence&logoColor=white)
-![Notion](https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white)
-![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=slack&logoColor=white)
-![Discord](https://img.shields.io/badge/Discord-5865F2?style=flat-square&logo=discord&logoColor=white)
-![HubSpot](https://img.shields.io/badge/HubSpot-FF7A59?style=flat-square&logo=hubspot&logoColor=white)
-![Salesforce](https://img.shields.io/badge/Salesforce-00A1E0?style=flat-square&logo=salesforce&logoColor=white)
-![Airtable](https://img.shields.io/badge/Airtable-18BFFF?style=flat-square&logo=airtable&logoColor=white)
-![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=flat-square&logo=youtube&logoColor=white)
-![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=flat-square&logo=reddit&logoColor=white)
-![Wikipedia](https://img.shields.io/badge/Wikipedia-000000?style=flat-square&logo=wikipedia&logoColor=white)
-![Google Sheets](https://img.shields.io/badge/Google%20Sheets-34A853?style=flat-square&logo=googlesheets&logoColor=white)
-![Sitemap](https://img.shields.io/badge/Sitemap-FF6600?style=flat-square&logoColor=white)
-![Obsidian](https://img.shields.io/badge/Obsidian-483699?style=flat-square&logo=obsidian&logoColor=white)
-![arXiv](https://img.shields.io/badge/arXiv-B31B1B?style=flat-square&logoColor=white)
-![PubMed](https://img.shields.io/badge/PubMed-326599?style=flat-square&logoColor=white)
-![RSS](https://img.shields.io/badge/RSS-FFA500?style=flat-square&logo=rss&logoColor=white)
-![Email](https://img.shields.io/badge/Email%20IMAP-EA4335?style=flat-square&logo=gmail&logoColor=white)
-![Git Repo](https://img.shields.io/badge/Git%20Repo-F05032?style=flat-square&logo=git&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat-square&logo=firebase&logoColor=black)
-![Twilio](https://img.shields.io/badge/Twilio-F22F46?style=flat-square&logo=twilio&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/github/181717" height="40" alt="GitHub"/><br/><sub><b>GitHub</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/jira/0052CC" height="40" alt="Jira"/><br/><sub><b>Jira</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/confluence/172B4D" height="40" alt="Confluence"/><br/><sub><b>Confluence</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/notion/000000" height="40" alt="Notion"/><br/><sub><b>Notion</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/slack/4A154B" height="40" alt="Slack"/><br/><sub><b>Slack</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/discord/5865F2" height="40" alt="Discord"/><br/><sub><b>Discord</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/hubspot/FF7A59" height="40" alt="HubSpot"/><br/><sub><b>HubSpot</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/salesforce/00A1E0" height="40" alt="Salesforce"/><br/><sub><b>Salesforce</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/airtable/18BFFF" height="40" alt="Airtable"/><br/><sub><b>Airtable</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/youtube/FF0000" height="40" alt="YouTube"/><br/><sub><b>YouTube</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/reddit/FF4500" height="40" alt="Reddit"/><br/><sub><b>Reddit</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/wikipedia/000000" height="40" alt="Wikipedia"/><br/><sub><b>Wikipedia</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/obsidian/483699" height="40" alt="Obsidian"/><br/><sub><b>Obsidian</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlesheets/34A853" height="40" alt="Google Sheets"/><br/><sub><b>Google Sheets</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/firebase/FFCA28" height="40" alt="Firebase"/><br/><sub><b>Firebase</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/twilio/F22F46" height="40" alt="Twilio"/><br/><sub><b>Twilio</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/arxiv.org" height="40" alt="arXiv"/><br/><sub><b>arXiv</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/ncbi.nlm.nih.gov" height="40" alt="PubMed"/><br/><sub><b>PubMed</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/gmail/EA4335" height="40" alt="Email"/><br/><sub><b>Email (IMAP)</b></sub></td>
+  </tr>
+</table>
 
 ---
 
 ### 🔧 Agent Tools
 
-![DuckDuckGo](https://img.shields.io/badge/DuckDuckGo-DE5833?style=flat-square&logo=duckduckgo&logoColor=white)
-![Google Search](https://img.shields.io/badge/Google%20Search-4285F4?style=flat-square&logo=google&logoColor=white)
-![Tavily](https://img.shields.io/badge/Tavily-000000?style=flat-square&logoColor=white)
-![Wikipedia](https://img.shields.io/badge/Wikipedia-000000?style=flat-square&logo=wikipedia&logoColor=white)
-![arXiv](https://img.shields.io/badge/arXiv-B31B1B?style=flat-square&logoColor=white)
-![PubMed](https://img.shields.io/badge/PubMed-326599?style=flat-square&logoColor=white)
-![YouTube](https://img.shields.io/badge/YouTube%20Search-FF0000?style=flat-square&logo=youtube&logoColor=white)
-![Wolfram Alpha](https://img.shields.io/badge/Wolfram%20Alpha-DD1100?style=flat-square&logo=wolframalpha&logoColor=white)
-![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=slack&logoColor=white)
-![Discord](https://img.shields.io/badge/Discord-5865F2?style=flat-square&logo=discord&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub%20API-181717?style=flat-square&logo=github&logoColor=white)
-![Jira](https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=jira&logoColor=white)
-![Notion](https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white)
-![Linear](https://img.shields.io/badge/Linear-5E6AD2?style=flat-square&logo=linear&logoColor=white)
-![Stripe](https://img.shields.io/badge/Stripe-008CDD?style=flat-square&logo=stripe&logoColor=white)
-![Twilio](https://img.shields.io/badge/Twilio-F22F46?style=flat-square&logo=twilio&logoColor=white)
-![Google Calendar](https://img.shields.io/badge/Google%20Calendar-4285F4?style=flat-square&logo=googlecalendar&logoColor=white)
-![AWS Lambda](https://img.shields.io/badge/AWS%20Lambda-FF9900?style=flat-square&logo=awslambda&logoColor=white)
-![Playwright](https://img.shields.io/badge/Browser%20(Playwright)-2EAD33?style=flat-square&logo=playwright&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL%20Query-4479A1?style=flat-square&logo=mysql&logoColor=white)
-![Python REPL](https://img.shields.io/badge/Python%20REPL-3776AB?style=flat-square&logo=python&logoColor=white)
-![Shell](https://img.shields.io/badge/Shell%20Command-4EAA25?style=flat-square&logo=gnubash&logoColor=white)
-![HTTP](https://img.shields.io/badge/HTTP%20Request-FF6600?style=flat-square&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/duckduckgo/DE5833" height="40" alt="DuckDuckGo"/><br/><sub><b>DuckDuckGo</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/google/4285F4" height="40" alt="Google Search"/><br/><sub><b>Google Search</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/tavily.com" height="40" alt="Tavily"/><br/><sub><b>Tavily</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/wolframalpha.com" height="40" alt="Wolfram Alpha"/><br/><sub><b>Wolfram Alpha</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/wikipedia/000000" height="40" alt="Wikipedia"/><br/><sub><b>Wikipedia</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/youtube/FF0000" height="40" alt="YouTube"/><br/><sub><b>YouTube</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/arxiv.org" height="40" alt="arXiv"/><br/><sub><b>arXiv</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/ncbi.nlm.nih.gov" height="40" alt="PubMed"/><br/><sub><b>PubMed</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/slack/4A154B" height="40" alt="Slack"/><br/><sub><b>Slack</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/discord/5865F2" height="40" alt="Discord"/><br/><sub><b>Discord</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/github/181717" height="40" alt="GitHub"/><br/><sub><b>GitHub API</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/jira/0052CC" height="40" alt="Jira"/><br/><sub><b>Jira</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/notion/000000" height="40" alt="Notion"/><br/><sub><b>Notion</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/linear/5E6AD2" height="40" alt="Linear"/><br/><sub><b>Linear</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/stripe/008CDD" height="40" alt="Stripe"/><br/><sub><b>Stripe</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/twilio/F22F46" height="40" alt="Twilio"/><br/><sub><b>Twilio</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlecalendar/4285F4" height="40" alt="Google Calendar"/><br/><sub><b>Google Calendar</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/awslambda/FF9900" height="40" alt="AWS Lambda"/><br/><sub><b>AWS Lambda</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/playwright/2EAD33" height="40" alt="Browser"/><br/><sub><b>Browser (Playwright)</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mysql/4479A1" height="40" alt="SQL"/><br/><sub><b>SQL Query</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/python/3776AB" height="40" alt="Python REPL"/><br/><sub><b>Python REPL</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/gnubash/4EAA25" height="40" alt="Shell"/><br/><sub><b>Shell</b></sub></td>
+  </tr>
+</table>
 
 ---
 
-### 🧠 Memory Backends
+### 🧠 Memory & Cache Backends
 
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
-![In-Memory](https://img.shields.io/badge/In--Memory-6B7280?style=flat-square&logoColor=white)
-
-### 🗃 LLM Cache Backends
-
-![Filesystem](https://img.shields.io/badge/Filesystem-4A4A4A?style=flat-square&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
-![Memcached](https://img.shields.io/badge/Memcached-009DC4?style=flat-square&logoColor=white)
-![DynamoDB](https://img.shields.io/badge/DynamoDB-FF9900?style=flat-square&logo=amazondynamodb&logoColor=white)
-![Semantic Cache](https://img.shields.io/badge/Semantic%20Cache-8E75B2?style=flat-square&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/sqlite/003B57" height="40" alt="SQLite"/><br/><sub><b>SQLite</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/redis/DC382D" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/postgresql/4169E1" height="40" alt="PostgreSQL"/><br/><sub><b>PostgreSQL</b></sub></td>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/amazondynamodb/FF9900" height="40" alt="DynamoDB"/><br/><sub><b>DynamoDB</b></sub></td>
+    <td align="center" width="90"><img src="https://logo.clearbit.com/memcached.org" height="40" alt="Memcached"/><br/><sub><b>Memcached</b></sub></td>
+  </tr>
+</table>
 
 ### 📡 Observability
 
-![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-425CC7?style=flat-square&logo=opentelemetry&logoColor=white)
+<table>
+  <tr>
+    <td align="center" width="90"><img src="https://cdn.simpleicons.org/opentelemetry/425CC7" height="40" alt="OpenTelemetry"/><br/><sub><b>OpenTelemetry</b></sub></td>
+  </tr>
+</table>
 
 ---
 

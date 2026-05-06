@@ -283,7 +283,7 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
     <td align="center" width="90"><img src="https://cdn.simpleicons.org/clickhouse/E8903A" height="40" alt="ClickHouse"/><br/><sub><b>ClickHouse</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=marqo.ai&sz=128" height="40" alt="Marqo"/><br/><sub><b>Marqo</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=typesense.org&sz=128" height="40" alt="Typesense"/><br/><sub><b>Typesense</b></sub></td>
-    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=vespa.ai&sz=128" height="40" alt="Vespa"/><br/><sub><b>Vespa</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=docs.vespa.ai&sz=128" height="40" alt="Vespa"/><br/><sub><b>Vespa</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=zilliz.com&sz=128" height="40" alt="Zilliz"/><br/><sub><b>Zilliz</b></sub></td>
   </tr>
 </table>

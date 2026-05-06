@@ -5,10 +5,13 @@ from __future__ import annotations
 import importlib.util
 import inspect
 import json
+import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -125,6 +128,11 @@ class PromptOptimizer:
     # ------------------------------------------------------------------
 
     def _load_eval_cases(self) -> list[tuple[str, Any]]:
+        """Load all ``@eval_case``-decorated functions from :attr:`eval_suite`.
+
+        ``eval_suite`` is resolved relative to the **current working directory**
+        at call time.  Pass an absolute path to avoid ambiguity.
+        """
         root = Path(self.eval_suite)
         files: list[Path] = []
         if root.is_file():
@@ -141,7 +149,8 @@ class PromptOptimizer:
             mod = importlib.util.module_from_spec(spec)
             try:
                 spec.loader.exec_module(mod)  # type: ignore[union-attr]
-            except Exception:
+            except Exception as exc:
+                log.warning("Skipping eval file %s — import failed: %s", filepath, exc)
                 continue
             for name in dir(mod):
                 obj = getattr(mod, name)

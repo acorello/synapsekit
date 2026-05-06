@@ -237,11 +237,23 @@ Docs: [docs/evalhub.md](docs/evalhub.md)
 
 ## Integrations
 
-Everything plugs into the same interface. Swap any piece without rewriting your application logic.
+<div align="center">
 
-> Icons use [Simple Icons](https://simpleicons.org) (SVG) and [Google Favicons](https://google.com/s2/favicons) for reliability across themes.
+### One interface. 190+ integrations. Zero lock-in.
 
-### 🧠 LLM Providers
+| 🧠 LLM Providers | 🗄 Vector Stores | 📂 Data Loaders | 🔧 Agent Tools |
+|:---:|:---:|:---:|:---:|
+| **33** | **22** | **64** | **48+** |
+
+Every integration is `pip install synapsekit[name]` — nothing else. Swap providers, vector stores, or loaders without touching your application code.
+
+</div>
+
+> Icons use [Google Favicons](https://google.com/s2/favicons) for reliability across light and dark themes.
+
+### 🧠 LLM Providers — 33 supported
+
+> Every provider implements the same `BaseLLM` interface. Auto-detected from model name — `gpt-4o` → OpenAI, `claude-*` → Anthropic, `gemini-*` → Google. **Swap without rewriting.**
 
 <table>
   <tr>
@@ -292,7 +304,9 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 ---
 
-### 🗄 Vector Stores
+### 🗄 Vector Stores — 22 backends
+
+> All implement `VectorStore` with `add()`, `search()`, `search_mmr()`, `save()`, and `load()`. Built-in `InMemoryVectorStore` needs zero extra deps. Everything else is `pip install synapsekit[name]`.
 
 <table>
   <tr>
@@ -326,7 +340,9 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 ---
 
-### 📂 Data Loaders
+### 📂 Data Loaders — 64 sources
+
+> All return `list[Document]` with `.text` and `.metadata`. Every loader has a sync `.load()` and async `.aload()`. Load from disk, cloud, databases, or APIs — same interface everywhere.
 
 **File Formats**
 
@@ -414,7 +430,9 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 ---
 
-### 🔧 Agent Tools
+### 🔧 Agent Tools — 48+ built-in
+
+> All implement `BaseTool` with a single async `run()`. Pass any list of tools to `ReActAgent` or `FunctionCallingAgent`. **Write your own in 5 lines.**
 
 <table>
   <tr>
@@ -468,6 +486,18 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=opentelemetry.io&sz=128" height="40" alt="OpenTelemetry"/><br/><sub><b>OpenTelemetry</b></sub></td>
   </tr>
 </table>
+
+<div align="center">
+
+---
+
+**Don't see your stack?**
+Every integration is built the same way — most take under an hour.
+[Browse `good first issue` →](https://github.com/SynapseKit/SynapseKit/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) · [Contributing guide →](CONTRIBUTING.md) · [Discord →](https://discord.gg/PSuAXHRywJ)
+
+We credit every contributor in the README and send a personal thank-you on Discord.
+
+</div>
 
 ---
 

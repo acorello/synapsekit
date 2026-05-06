@@ -73,6 +73,10 @@ TOP_LEVEL_NAMES = [
     "public_api",
     "experimental",
     "deprecated",
+    # Prompt optimisation
+    "PromptCandidate",
+    "PromptOptimizer",
+    "PromptVariantRunner",
 ]
 
 
@@ -267,6 +271,12 @@ def test_react_agent_stream_is_async_generator():
     assert inspect.isasyncgenfunction(ReActAgent.stream)
 
 
+def test_prompt_optimizer_run_is_coroutine():
+    from synapsekit import PromptOptimizer
+
+    assert inspect.iscoroutinefunction(PromptOptimizer.run)
+
+
 # ---------------------------------------------------------------------------
 # 6. Key class instantiation smoke tests
 # ---------------------------------------------------------------------------
@@ -349,6 +359,25 @@ def test_in_memory_vector_store_instantiates():
 
     store = InMemoryVectorStore(SynapsekitEmbeddings())
     assert len(store._texts) == 0
+
+
+def test_prompt_optimizer_instantiates():
+    from unittest.mock import AsyncMock
+
+    from synapsekit import PromptCandidate, PromptOptimizer, PromptVariantRunner
+
+    llm = AsyncMock()
+    opt = PromptOptimizer(llm=llm, eval_suite=".", metric="score")
+    assert opt.metric == "score"
+    assert opt.n_variants == 5
+    assert opt.budget_usd is None
+    assert opt.candidates == []
+
+    c = PromptCandidate(text="hello", score=0.9, cost_usd=0.01)
+    assert c.text == "hello"
+
+    runner = PromptVariantRunner([], "score")
+    assert runner._metric == "score"
 
 
 # ---------------------------------------------------------------------------

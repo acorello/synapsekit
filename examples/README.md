@@ -67,6 +67,40 @@ Shows PR2-style memory integration:
 python examples/agent_memory.py
 ```
 
+### 7. `reasoning_models.py` — Reasoning LLMs *(v1.7.0)*
+Use `ReasoningLLM` across OpenAI o1/o3, Claude thinking, Gemini thinking, DeepSeek R1, and Qwen QwQ.
+Returns structured `ReasoningResponse` with answer, thinking trace, and token counts.
+
+```bash
+pip install synapsekit[openai,anthropic]
+python examples/reasoning_models.py
+```
+
+### 8. `multimodal_rag.py` — Multimodal RAG
+Load images, audio (Whisper transcription), and video into a single RAG pipeline.
+Requires `ffmpeg` for video frame extraction.
+
+```bash
+pip install synapsekit[openai]
+python examples/multimodal_rag.py
+```
+
+### 9. `fine_tune_flywheel.py` — Fine-Tune Data Flywheel *(v1.7.0)*
+End-to-end workflow: capture eval results → filter dataset → export to OpenAI/Together AI format → submit fine-tune job.
+
+```bash
+pip install synapsekit[openai]
+python examples/fine_tune_flywheel.py
+```
+
+### 10. `observability.py` — OpenTelemetry Observability
+Trace RAG calls and LLM requests with OpenTelemetry. Works with Jaeger, Grafana Tempo, or any OTLP backend.
+
+```bash
+pip install synapsekit[observe]
+python examples/observability.py
+```
+
 ## General Pattern
 
 All examples follow this pattern:

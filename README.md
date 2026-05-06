@@ -7,7 +7,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/synapsekit?color=22c55e&label=pypi&logo=pypi&logoColor=white)](https://pypi.org/project/synapsekit/)
 [![Python](https://img.shields.io/badge/python-3.10%2B-22c55e?logo=python&logoColor=white)](https://www.python.org/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-22c55e)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-3195%20passing-22c55e?logo=pytest&logoColor=white)]()
+[![Tests](https://img.shields.io/badge/tests-3600%20passing-22c55e?logo=pytest&logoColor=white)]()
 [![Downloads](https://img.shields.io/pypi/dm/synapsekit?color=22c55e&logo=pypi&logoColor=white)](https://pypistats.org/packages/synapsekit)
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/synapsekit?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/synapsekit)
 [![Docs](https://img.shields.io/badge/docs-online-22c55e?logo=readthedocs&logoColor=white)](https://synapsekit.github.io/synapsekit-docs/)
@@ -24,7 +24,7 @@ Async-native RAG, Agents, and Graph workflows — no magic, no SaaS, no bloat.
 
 > *"LangChain for people who hate LangChain."*
 
-SynapseKit is the minimal, async-first Python framework for LLM applications. 34 providers · 48+ tools · 64 loaders · 22 vector stores. Every abstraction is plain Python you can read, debug, and extend. No hidden chains. No global state. No lock-in.
+SynapseKit is the minimal, async-first Python framework for LLM applications. 33 providers · 48+ tools · 64 loaders · 22 vector stores. Every abstraction is plain Python you can read, debug, and extend. No hidden chains. No global state. No lock-in.
 
 ---
 
@@ -48,7 +48,7 @@ Token-level streaming is the default,<br/>not an afterthought.<br/>Works across 
 <tr>
 <td align="center" width="33%">
 <h3>🔌 One interface</h3>
-34 LLM providers and 22 vector stores<br/>behind the same API.<br/>Swap without rewriting.
+33 LLM providers and 22 vector stores<br/>behind the same API.<br/>Swap without rewriting.
 </td>
 <td align="center" width="33%">
 <h3>🧩 Composable</h3>
@@ -98,7 +98,7 @@ print(my_agent.run("What's the weather in Tokyo?"))
 | Cost tracking | **✅ Built-in** | ❌ LangSmith (SaaS) | ❌ No |
 | Evaluation | **✅ CLI + GitHub Action** | ❌ LangSmith (SaaS) | ✅ Built-in |
 | Graph workflows | **✅ Built-in** | ✅ LangGraph (separate pkg) | ❌ No |
-| LLM providers | **34** | 38+ | 20+ |
+| LLM providers | **33** | 38+ | 20+ |
 | Stack traces | **Your code** | Framework internals | Framework internals |
 
 </div>
@@ -155,13 +155,49 @@ OpenAI, Anthropic, Ollama, Gemini, Cohere, Mistral, Bedrock, Azure OpenAI, Groq,
 <td width="50%">
 
 **🗄 Vector Stores**<br/>
-InMemory (built-in, `.npz` persistence), ChromaDB, FAISS, Qdrant, Pinecone, Weaviate, PGVector, Milvus, LanceDB. One interface for all 9 backends.
+InMemory (built-in, `.npz` persistence), ChromaDB, FAISS, Qdrant, Pinecone, Weaviate, PGVector, Milvus, LanceDB, SQLiteVec, MongoDB Atlas, Redis, Elasticsearch, OpenSearch, Supabase, Cassandra, DuckDB, ClickHouse, Marqo, Typesense, Vespa, Zilliz. One interface for all 22 backends.
 
 </td>
 <td width="50%">
 
 **🔧 Utilities**<br/>
 Output parsers (JSON, Pydantic, List), prompt templates (standard, chat, few-shot), token tracing with cost estimation.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**🧠 Reasoning LLMs** *(new in v1.7.0)*<br/>
+`ReasoningLLM` unified adapter for o1/o3, Claude thinking, Gemini thinking, DeepSeek R1, and Qwen QwQ. Returns `ReasoningResponse` with answer, thinking trace, and token breakdown. `stream()` yields `ReasoningStreamChunk` with `is_thinking` flag.
+
+</td>
+<td width="50%">
+
+**⚖️ Cost-Quality Routing** *(new in v1.7.0)*<br/>
+`CostQualityRouter` explores candidates round-robin then exploits the cheapest model meeting your quality threshold. Tracks Pareto frontier of cost vs quality. Optional `budget_per_call_usd` hard cap.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**🎯 Prompt Optimization** *(new in v1.7.0)*<br/>
+`PromptOptimizer` scores prompt variants against an `@eval_case` suite and returns the best `PromptCandidate`. Supports LLM-generated variants or manual lists. Budget-aware early stopping.
+
+</td>
+<td width="50%">
+
+**🌐 Federated Retrieval** *(new in v1.7.0)*<br/>
+`FederatedRetriever` fans out to multiple local retrievers and remote HTTP endpoints in parallel. RRF, normalised score fusion, or round-robin interleave. Near-duplicate dedup, per-source timeouts.
+
+</td>
+</tr>
+<tr>
+<td width="50%" colspan="2">
+
+**⚡ Performance suite** *(new in v1.7.0)*<br/>
+`orjson` fast JSON across all hot paths · `uvloop` event loop · `xxhash` cache key hashing (5–10× faster) · pre-allocated vector buffer (O(1) amortised inserts) · vectorised MMR · `__slots__` on hot classes · optional Rust extension for chunking and hashing. Install with `pip install synapsekit[performance]`.
 
 </td>
 </tr>
@@ -442,6 +478,7 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 pip install synapsekit[openai]       # OpenAI
 pip install synapsekit[anthropic]    # Anthropic
 pip install synapsekit[ollama]       # Ollama (local)
+pip install synapsekit[performance]  # orjson + uvloop + xxhash (faster)
 pip install synapsekit[observe]      # Observability extras
 pip install synapsekit[all]          # Everything
 ```
@@ -474,7 +511,7 @@ Everything you need to get started and go deep is in the docs.
 | 🗂 [RAG](https://synapsekit.github.io/synapsekit-docs/docs/rag/pipeline) | Pipelines, loaders, retrieval, vector stores |
 | 🤖 [Agents](https://synapsekit.github.io/synapsekit-docs/docs/agents/overview) | ReAct, function calling, tools, executor |
 | 🔀 [Graph Workflows](https://synapsekit.github.io/synapsekit-docs/docs/graph/overview) | DAG pipelines, conditional routing, parallel execution |
-| 🧠 [LLM Providers](https://synapsekit.github.io/synapsekit-docs/docs/llms/overview) | All 34 providers with examples |
+| 🧠 [LLM Providers](https://synapsekit.github.io/synapsekit-docs/docs/llms/overview) | All 33 providers + ReasoningLLM with examples |
 | 🧪 [EvalCI](https://synapsekit.github.io/synapsekit-docs/docs/evalci/overview) | LLM quality gates on every PR — GitHub Action |
 | 📖 [API Reference](https://synapsekit.github.io/synapsekit-docs/docs/api/llm) | Full class and method reference |
 

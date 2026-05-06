@@ -160,6 +160,7 @@ from .graph import (
     ws_stream,
 )
 from .llm.base import BaseLLM, LLMConfig
+from .llm.cost_quality_router import CostQualityRouter
 from .llm.cost_router import QUALITY_TABLE, CostRouter, CostRouterConfig, RouterModelSpec
 from .llm.fallback_chain import FallbackChain, FallbackChainConfig
 from .llm.multimodal import AudioContent, ImageContent, MultimodalMessage
@@ -295,6 +296,7 @@ __all__ = [
     "MemcachedCacheBackend",
     "BaseLLM",
     "LLMConfig",
+    "CostQualityRouter",
     "CostRouter",
     "CostRouterConfig",
     "RouterModelSpec",

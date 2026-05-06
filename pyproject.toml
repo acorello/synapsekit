@@ -83,7 +83,7 @@ video = ["openai>=1.0"]
 voice = ["openai>=1.0"]
 voice-local = ["pyttsx3>=2.90", "faster-whisper>=1.0"]
 voice-stream = ["sounddevice>=0.4", "soundfile>=0.12"]
-cron = ["croniter>=2.0"]
+cron = ["croniter>=2.0", "tzdata>=2024.1; sys_platform == 'win32'"]
 excel = ["openpyxl>=3.1"]
 pptx = ["python-pptx>=0.6"]
 docx = ["python-docx>=1.0"]
@@ -236,6 +236,7 @@ dev = [
     "lxml>=6.1.0",
     "beautifulsoup4>=4.14.3",
     "fastapi>=0.135.1",
+    "tzdata>=2024.1",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -398,6 +399,6 @@ snowflake-connector-python = "snowflake"
 
 [tool.deptry.per_rule_ignores]
 DEP001 = ["sqlalchemy", "pydantic", "aiohttp", "opentelemetry", "whisper", "botocore", "aiomcache", "nest_asyncio", "huggingface_hub", "serpapi", "weaviate", "uvicorn", "starlette", "tomli", "pyttsx3", "faster_whisper", "sounddevice", "soundfile", "aiokafka", "typesense"]
-DEP002 = ["numpy", "rank-bm25", "beautifulsoup4", "lxml", "pillow", "pyasn1", "faiss-cpu", "google-generativeai", "tavily-python", "youtube-search-python", "psycopg", "google-search-results", "discord.py", "google-auth", "weaviate-client", "pymilvus", "lancedb", "pgvector", "slack-sdk", "supabase", "pymongo", "azure-storage-blob", "elasticsearch"]
+DEP002 = ["numpy", "rank-bm25", "beautifulsoup4", "lxml", "pillow", "pyasn1", "faiss-cpu", "google-generativeai", "tavily-python", "youtube-search-python", "psycopg", "google-search-results", "discord.py", "google-auth", "weaviate-client", "pymilvus", "lancedb", "pgvector", "slack-sdk", "supabase", "pymongo", "azure-storage-blob", "elasticsearch", "tzdata"]
 DEP003 = ["sqlalchemy", "botocore", "nest_asyncio", "opentelemetry", "starlette", "uvicorn"]
 DEP004 = ["pydantic"]

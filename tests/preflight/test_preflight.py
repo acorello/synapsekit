@@ -77,6 +77,13 @@ TOP_LEVEL_NAMES = [
     "PromptCandidate",
     "PromptOptimizer",
     "PromptVariantRunner",
+    # Reasoning LLM
+    "BaseReasoningProvider",
+    "ReasoningLLM",
+    "ReasoningResponse",
+    "ReasoningStreamChunk",
+    # Cost-quality router
+    "CostQualityRouter",
 ]
 
 

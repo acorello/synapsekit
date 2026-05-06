@@ -32,6 +32,8 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`FederatedRetriever`** — fan-out retrieval across multiple local and remote sources in parallel; merges results using RRF (default), normalised score fusion, or round-robin interleave; per-source timeout with graceful partial results on failure; near-duplicate deduplication via `SequenceMatcher`; optional bearer-token auth for remote HTTP endpoints; closes #595
 - **Discord `#stats` workflow** — GitHub Actions workflow that patches a pinned message in the Discord `#stats` channel every 6 hours with live GitHub stars, forks, open issues, 30-day PyPI downloads, and latest version; requires `DISCORD_STATS_WEBHOOK` and `DISCORD_STATS_MESSAGE_ID` secrets; zero external deps (stdlib `urllib`)
 
+- **Fine-tune data flywheel** (closes #515) — end-to-end workflow from eval results to fine-tuned model; `@eval_case(capture_io=True)` captures `input`/`output`/`ideal` in snapshots; `EvalDataset` loads, filters, and exports to OpenAI, Anthropic, Together AI, and DPO formats; `FineTuner` submits jobs to OpenAI and Together AI and polls via `wait()`; CLI commands `synapsekit eval report/export/compare` and `synapsekit finetune submit/status/wait`; `examples/fine_tune_flywheel.py` end-to-end example
+
 ### Fixed
 
 - **README Integrations icons** — replaced all `cdn.simpleicons.org` URLs with Google Favicons (`google.com/s2/favicons`) after GitHub's image proxy (camo) was found to block the SimpleIcons CDN; all 60+ integration icons now load reliably across light and dark themes

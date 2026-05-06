@@ -153,10 +153,10 @@ class CostQualityRouter(BaseLLM):
                 group_c.append(llm)
 
         def key_cost(m: BaseLLM) -> float:
-            return self._stats[m.config.model]["avg_cost"]
+            return float(self._stats[m.config.model]["avg_cost"])
 
         def key_quality(m: BaseLLM) -> float:
-            return self._stats[m.config.model]["avg_quality"]
+            return float(self._stats[m.config.model]["avg_quality"])
 
         group_a.sort(key=key_cost)
         group_b.sort(key=key_cost)

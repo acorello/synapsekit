@@ -37,6 +37,7 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Fixed
 
 - **README Integrations icons** — replaced all `cdn.simpleicons.org` URLs with Google Favicons (`google.com/s2/favicons`) after GitHub's image proxy (camo) was found to block the SimpleIcons CDN; all 60+ integration icons now load reliably across light and dark themes
+- **v1.7.0 production test suite** — fixed 24 API-mismatch failures in `tests/test_v170_production.py`: corrected `AsyncLRUCache.make_key()` usage (was importing non-existent `make_cache_key`), `put()`/`get()` are synchronous (removed erroneous `await`), splitter method is `.split()` not `.split_text()`, `__slots__` check uses `type(s).__dict__`, `InMemoryVectorStore` uses async `add()`/`search()`/`search_mmr()` with `SynapsekitEmbeddings` backend (not LangChain-style API), reasoning provider public attrs (`model`/`thinking`/`provider`) and method names (`generate()`/`stream()` not `agenerate()`/`astream()`), `qwq` maps to `"qwen"` provider, `PromptOptimizer.run()` takes `instructions` (variants go to constructor), `FederatedRetriever` exceptions swallowed by `asyncio.gather(return_exceptions=True)` return empty lists, and dedup threshold semantics corrected (higher threshold = more permissive)
 
 - **Type annotation suppressions for Rust/optional-import fallback paths** — added `# type: ignore` to `_json.py`, `_cache.py`, `text_splitters/character.py`, and `text_splitters/recursive.py` where mypy cannot narrow module-level callables set to `None` in `except ImportError` blocks; no behaviour change
 

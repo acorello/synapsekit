@@ -209,7 +209,7 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 <table>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/openai/412991" height="40" alt="OpenAI"/><br/><sub><b>OpenAI</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" height="40" alt="OpenAI"/><br/><sub><b>OpenAI</b></sub></td>
     <td align="center" width="90"><img src="https://cdn.simpleicons.org/anthropic/CC785C" height="40" alt="Anthropic"/><br/><sub><b>Anthropic</b></sub></td>
     <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" height="40" alt="Google Gemini"/><br/><sub><b>Gemini</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=azure.microsoft.com&sz=128" height="40" alt="Azure OpenAI"/><br/><sub><b>Azure OpenAI</b></sub></td>
@@ -307,7 +307,7 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=parquet.apache.org&sz=128" height="40" alt="Parquet"/><br/><sub><b>Parquet</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/openai/412991" height="40" alt="Audio"/><br/><sub><b>Audio (Whisper)</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" height="40" alt="Audio"/><br/><sub><b>Audio (Whisper)</b></sub></td>
     <td align="center" width="90"><img src="https://cdn.simpleicons.org/youtube/FF0000" height="40" alt="Video"/><br/><sub><b>Video</b></sub></td>
     <td align="center" width="90"><img src="https://cdn.simpleicons.org/rss/EE802F" height="40" alt="RSS"/><br/><sub><b>RSS / Sitemap</b></sub></td>
     <td align="center" width="90"><img src="https://cdn.simpleicons.org/git/F05032" height="40" alt="Git Repo"/><br/><sub><b>Git Repo</b></sub></td>

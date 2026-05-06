@@ -323,8 +323,7 @@ class InMemoryVectorStore(VectorStore):
         self._texts = list(data["texts"])
         raw_meta = list(data["metadata"])
         self._metadata = (
-            _rust_deser(raw_meta) if _rust_deser is not None
-            else [_json_loads(s) for s in raw_meta]
+            _rust_deser(raw_meta) if _rust_deser is not None else [_json_loads(s) for s in raw_meta]
         )
         self._pending.clear()
 

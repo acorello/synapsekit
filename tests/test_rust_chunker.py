@@ -82,9 +82,7 @@ class TestRecursiveSplit:
         finally:
             mod._rust_split = old
 
-        rust_result = recursive_split(
-            text, 50, 10, ["\n\n", "\n", ". ", " "]
-        )
+        rust_result = recursive_split(text, 50, 10, ["\n\n", "\n", ". ", " "])
         assert rust_result == py_result
 
 
@@ -186,6 +184,7 @@ class TestSerializeMetadata:
         result = serialize_metadata_list(data)
         assert len(result) == 1
         import json
+
         parsed = json.loads(result[0])
         assert parsed["a"]["b"] == [1, 2, 3]
         assert parsed["c"] is None

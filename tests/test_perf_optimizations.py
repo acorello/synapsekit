@@ -56,7 +56,11 @@ class TestJsonDumps:
     def test_unicode_roundtrip(self):
         from synapsekit._json import dumps, loads
 
-        obj = {"emoji": "\U0001f600\U0001f680", "cjk": "\u4e16\u754c", "arabic": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629"}
+        obj = {
+            "emoji": "\U0001f600\U0001f680",
+            "cjk": "\u4e16\u754c",
+            "arabic": "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+        }
         assert loads(dumps(obj)) == obj
 
     def test_special_float_values(self):
@@ -454,12 +458,8 @@ class TestFilesystemCacheJsonWiring:
 def _make_mock_embeddings(dim: int = 8):
     """Create a mock embedding backend that returns random unit vectors."""
     mock = AsyncMock()
-    mock.embed = AsyncMock(
-        side_effect=lambda texts: _random_unit_vectors(len(texts), dim)
-    )
-    mock.embed_one = AsyncMock(
-        side_effect=lambda _text: _random_unit_vectors(1, dim)[0]
-    )
+    mock.embed = AsyncMock(side_effect=lambda texts: _random_unit_vectors(len(texts), dim))
+    mock.embed_one = AsyncMock(side_effect=lambda _text: _random_unit_vectors(1, dim)[0])
     return mock
 
 

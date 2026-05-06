@@ -34,8 +34,7 @@ class _MockRetriever:
         self, query: str, top_k: int = 5, metadata_filter=None
     ) -> list[dict]:
         return [
-            {"text": t, "score": s, "metadata": {"src": "mock"}}
-            for t, s in self._results[:top_k]
+            {"text": t, "score": s, "metadata": {"src": "mock"}} for t, s in self._results[:top_k]
         ]
 
 
@@ -238,9 +237,7 @@ class TestFederatedRetrieverDedup:
 
         a = _MockRetriever([("same doc", 0.9)])
         b = _MockRetriever([("same doc", 0.8)])
-        fr = FederatedRetriever(
-            sources=[{"retriever": a}, {"retriever": b}], fusion="rrf", top_k=5
-        )
+        fr = FederatedRetriever(sources=[{"retriever": a}, {"retriever": b}], fusion="rrf", top_k=5)
         results = await fr.retrieve("q")
         assert results.count("same doc") == 1
 
@@ -483,9 +480,7 @@ class TestFederatedRetrieverRemoteHTTP:
                 return _FakeResponse()
 
         with patch("httpx.AsyncClient", return_value=_FakeClient()):
-            fr = FederatedRetriever(
-                sources=[{"url": "https://example.com/retrieve"}]
-            )
+            fr = FederatedRetriever(sources=[{"url": "https://example.com/retrieve"}])
             results = await fr.retrieve("q")
 
         assert results == ["good doc"]
@@ -498,9 +493,7 @@ class TestFederatedRetrieverRemoteHTTP:
         # asyncio.gather(return_exceptions=True), which silently skips it.
         # The result is an empty list.
         with patch.dict("sys.modules", {"httpx": None}):
-            fr = FederatedRetriever(
-                sources=[{"url": "https://example.com/retrieve"}]
-            )
+            fr = FederatedRetriever(sources=[{"url": "https://example.com/retrieve"}])
             results = await fr.retrieve("q")
         assert results == []
 
@@ -1071,7 +1064,9 @@ class TestSplitterPerformance:
 
         # Verify that __slots__ is declared on the class (memory-efficient hot path)
         s = RecursiveCharacterTextSplitter(chunk_size=100)
-        assert "__slots__" in type(s).__dict__, "RecursiveCharacterTextSplitter should define __slots__"
+        assert "__slots__" in type(s).__dict__, (
+            "RecursiveCharacterTextSplitter should define __slots__"
+        )
 
 
 class TestAsyncLRUCachePerformance:
@@ -1228,10 +1223,14 @@ class TestCrossFeatureIntegration:
             )()
 
             def __init__(self):
-                msg = type("M", (), {
-                    "content": "The answer is 42",
-                    "refusal": None,
-                })()
+                msg = type(
+                    "M",
+                    (),
+                    {
+                        "content": "The answer is 42",
+                        "refusal": None,
+                    },
+                )()
                 c = type("C", (), {"message": msg, "finish_reason": "stop"})()
                 self.choices = [c]
                 self.model = "o1-mini"
@@ -1241,9 +1240,7 @@ class TestCrossFeatureIntegration:
                     {
                         "prompt_tokens": 10,
                         "completion_tokens": 20,
-                        "completion_tokens_details": type(
-                            "D", (), {"reasoning_tokens": 8}
-                        )(),
+                        "completion_tokens_details": type("D", (), {"reasoning_tokens": 8})(),
                     },
                 )()
 

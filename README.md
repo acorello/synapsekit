@@ -210,23 +210,23 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 <table>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" height="40" alt="OpenAI"/><br/><sub><b>OpenAI</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/anthropic/CC785C" height="40" alt="Anthropic"/><br/><sub><b>Anthropic</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" height="40" alt="Google Gemini"/><br/><sub><b>Gemini</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=anthropic.com&sz=128" height="40" alt="Anthropic"/><br/><sub><b>Anthropic</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=128" height="40" alt="Google Gemini"/><br/><sub><b>Gemini</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=azure.microsoft.com&sz=128" height="40" alt="Azure OpenAI"/><br/><sub><b>Azure OpenAI</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=128" height="40" alt="AWS Bedrock"/><br/><sub><b>AWS Bedrock</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlecloud/4285F4" height="40" alt="Vertex AI"/><br/><sub><b>Vertex AI</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mistralai/FF7000" height="40" alt="Mistral"/><br/><sub><b>Mistral</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=cloud.google.com&sz=128" height="40" alt="Vertex AI"/><br/><sub><b>Vertex AI</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=mistral.ai&sz=128" height="40" alt="Mistral"/><br/><sub><b>Mistral</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=cohere.com&sz=128" height="40" alt="Cohere"/><br/><sub><b>Cohere</b></sub></td>
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=groq.com&sz=128" height="40" alt="Groq"/><br/><sub><b>Groq</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/huggingface/FF9D00" height="40" alt="Hugging Face"/><br/><sub><b>Hugging Face</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/cloudflare/F48120" height="40" alt="Cloudflare"/><br/><sub><b>Cloudflare</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/databricks/FF3621" height="40" alt="Databricks"/><br/><sub><b>Databricks</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=huggingface.co&sz=128" height="40" alt="Hugging Face"/><br/><sub><b>Hugging Face</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=cloudflare.com&sz=128" height="40" alt="Cloudflare"/><br/><sub><b>Cloudflare</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=databricks.com&sz=128" height="40" alt="Databricks"/><br/><sub><b>Databricks</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=perplexity.ai&sz=128" height="40" alt="Perplexity"/><br/><sub><b>Perplexity</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=replicate.com&sz=128" height="40" alt="Replicate"/><br/><sub><b>Replicate</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=x.ai&sz=128" height="40" alt="xAI Grok"/><br/><sub><b>xAI (Grok)</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/baidu/2932E1" height="40" alt="Baidu ERNIE"/><br/><sub><b>Baidu ERNIE</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=baidu.com&sz=128" height="40" alt="Baidu ERNIE"/><br/><sub><b>Baidu ERNIE</b></sub></td>
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=128" height="40" alt="DeepSeek"/><br/><sub><b>DeepSeek</b></sub></td>
@@ -246,7 +246,7 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=moonshot.cn&sz=128" height="40" alt="Moonshot"/><br/><sub><b>Moonshot</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=zhipuai.cn&sz=128" height="40" alt="Zhipu"/><br/><sub><b>Zhipu</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=lmstudio.ai&sz=128" height="40" alt="LM Studio"/><br/><sub><b>LM Studio</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/meta/0082FB" height="40" alt="llama.cpp"/><br/><sub><b>llama.cpp</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=ai.meta.com&sz=128" height="40" alt="llama.cpp"/><br/><sub><b>llama.cpp</b></sub></td>
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=docs.vllm.ai&sz=128" height="40" alt="vLLM"/><br/><sub><b>vLLM</b></sub></td>
@@ -261,26 +261,26 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 <table>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=trychroma.com&sz=128" height="40" alt="ChromaDB"/><br/><sub><b>ChromaDB</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/meta/0082FB" height="40" alt="FAISS"/><br/><sub><b>FAISS</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=ai.meta.com&sz=128" height="40" alt="FAISS"/><br/><sub><b>FAISS</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=qdrant.tech&sz=128" height="40" alt="Qdrant"/><br/><sub><b>Qdrant</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=pinecone.io&sz=128" height="40" alt="Pinecone"/><br/><sub><b>Pinecone</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=weaviate.io&sz=128" height="40" alt="Weaviate"/><br/><sub><b>Weaviate</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=milvus.io&sz=128" height="40" alt="Milvus"/><br/><sub><b>Milvus</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=lancedb.com&sz=128" height="40" alt="LanceDB"/><br/><sub><b>LanceDB</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/postgresql/4169E1" height="40" alt="PGVector"/><br/><sub><b>PGVector</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=postgresql.org&sz=128" height="40" alt="PGVector"/><br/><sub><b>PGVector</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/sqlite/44799F" height="40" alt="SQLiteVec"/><br/><sub><b>SQLiteVec</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mongodb/47A248" height="40" alt="MongoDB Atlas"/><br/><sub><b>MongoDB Atlas</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/redis/DC382D" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/elasticsearch/00BFB3" height="40" alt="Elasticsearch"/><br/><sub><b>Elasticsearch</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=sqlite.org&sz=128" height="40" alt="SQLiteVec"/><br/><sub><b>SQLiteVec</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=mongodb.com&sz=128" height="40" alt="MongoDB Atlas"/><br/><sub><b>MongoDB Atlas</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=redis.io&sz=128" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=elastic.co&sz=128" height="40" alt="Elasticsearch"/><br/><sub><b>Elasticsearch</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=opensearch.org&sz=128" height="40" alt="OpenSearch"/><br/><sub><b>OpenSearch</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="40" alt="Supabase"/><br/><sub><b>Supabase</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/apachecassandra/1287B1" height="40" alt="Cassandra"/><br/><sub><b>Cassandra</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/duckdb/E6B800" height="40" alt="DuckDB"/><br/><sub><b>DuckDB</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=supabase.com&sz=128" height="40" alt="Supabase"/><br/><sub><b>Supabase</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=cassandra.apache.org&sz=128" height="40" alt="Cassandra"/><br/><sub><b>Cassandra</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=duckdb.org&sz=128" height="40" alt="DuckDB"/><br/><sub><b>DuckDB</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/clickhouse/E8903A" height="40" alt="ClickHouse"/><br/><sub><b>ClickHouse</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=clickhouse.com&sz=128" height="40" alt="ClickHouse"/><br/><sub><b>ClickHouse</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=marqo.ai&sz=128" height="40" alt="Marqo"/><br/><sub><b>Marqo</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=typesense.org&sz=128" height="40" alt="Typesense"/><br/><sub><b>Typesense</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=docs.vespa.ai&sz=128" height="40" alt="Vespa"/><br/><sub><b>Vespa</b></sub></td>
@@ -300,17 +300,17 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=word.office.com&sz=128" height="40" alt="Word"/><br/><sub><b>Word (DOCX)</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=excel.office.com&sz=128" height="40" alt="Excel"/><br/><sub><b>Excel (XLSX)</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=powerpoint.office.com&sz=128" height="40" alt="PowerPoint"/><br/><sub><b>PowerPoint</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/html5/E34F26" height="40" alt="HTML"/><br/><sub><b>HTML / XML</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/markdown/6B7280" height="40" alt="Markdown"/><br/><sub><b>Markdown</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/latex/008080" height="40" alt="LaTeX"/><br/><sub><b>LaTeX</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/yaml/CB171E" height="40" alt="YAML"/><br/><sub><b>YAML / JSON</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=developer.mozilla.org&sz=128" height="40" alt="HTML"/><br/><sub><b>HTML / XML</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=markdownguide.org&sz=128" height="40" alt="Markdown"/><br/><sub><b>Markdown</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=latex-project.org&sz=128" height="40" alt="LaTeX"/><br/><sub><b>LaTeX</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=yaml.org&sz=128" height="40" alt="YAML"/><br/><sub><b>YAML / JSON</b></sub></td>
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=parquet.apache.org&sz=128" height="40" alt="Parquet"/><br/><sub><b>Parquet</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=openai.com&sz=128" height="40" alt="Audio"/><br/><sub><b>Audio (Whisper)</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/youtube/FF0000" height="40" alt="Video"/><br/><sub><b>Video</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/rss/EE802F" height="40" alt="RSS"/><br/><sub><b>RSS / Sitemap</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/git/F05032" height="40" alt="Git Repo"/><br/><sub><b>Git Repo</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=128" height="40" alt="Video"/><br/><sub><b>Video</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=rss.com&sz=128" height="40" alt="RSS"/><br/><sub><b>RSS / Sitemap</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=git-scm.com&sz=128" height="40" alt="Git Repo"/><br/><sub><b>Git Repo</b></sub></td>
   </tr>
 </table>
 
@@ -319,11 +319,11 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 <table>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=128" height="40" alt="AWS S3"/><br/><sub><b>AWS S3</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googledrive/4285F4" height="40" alt="Google Drive"/><br/><sub><b>Google Drive</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=drive.google.com&sz=128" height="40" alt="Google Drive"/><br/><sub><b>Google Drive</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=azure.microsoft.com&sz=128" height="40" alt="Azure Blob"/><br/><sub><b>Azure Blob</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=onedrive.live.com&sz=128" height="40" alt="OneDrive"/><br/><sub><b>OneDrive</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/dropbox/0061FF" height="40" alt="Dropbox"/><br/><sub><b>Dropbox</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlecloud/4285F4" height="40" alt="GCS"/><br/><sub><b>Google Cloud</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=dropbox.com&sz=128" height="40" alt="Dropbox"/><br/><sub><b>Dropbox</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=cloud.google.com&sz=128" height="40" alt="GCS"/><br/><sub><b>Google Cloud</b></sub></td>
   </tr>
 </table>
 
@@ -331,18 +331,18 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 <table>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/postgresql/4169E1" height="40" alt="PostgreSQL"/><br/><sub><b>PostgreSQL</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mysql/4479A1" height="40" alt="MySQL"/><br/><sub><b>MySQL</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mongodb/47A248" height="40" alt="MongoDB"/><br/><sub><b>MongoDB</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=postgresql.org&sz=128" height="40" alt="PostgreSQL"/><br/><sub><b>PostgreSQL</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=mysql.com&sz=128" height="40" alt="MySQL"/><br/><sub><b>MySQL</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=mongodb.com&sz=128" height="40" alt="MongoDB"/><br/><sub><b>MongoDB</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=128" height="40" alt="DynamoDB"/><br/><sub><b>DynamoDB</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/elasticsearch/00BFB3" height="40" alt="Elasticsearch"/><br/><sub><b>Elasticsearch</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/redis/DC382D" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlecloud/4285F4" height="40" alt="BigQuery"/><br/><sub><b>BigQuery</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/snowflake/29B5E8" height="40" alt="Snowflake"/><br/><sub><b>Snowflake</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=elastic.co&sz=128" height="40" alt="Elasticsearch"/><br/><sub><b>Elasticsearch</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=redis.io&sz=128" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=cloud.google.com&sz=128" height="40" alt="BigQuery"/><br/><sub><b>BigQuery</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=snowflake.com&sz=128" height="40" alt="Snowflake"/><br/><sub><b>Snowflake</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/sqlite/44799F" height="40" alt="SQLite"/><br/><sub><b>SQLite</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/supabase/3ECF8E" height="40" alt="Supabase"/><br/><sub><b>Supabase</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=sqlite.org&sz=128" height="40" alt="SQLite"/><br/><sub><b>SQLite</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=supabase.com&sz=128" height="40" alt="Supabase"/><br/><sub><b>Supabase</b></sub></td>
   </tr>
 </table>
 
@@ -350,29 +350,29 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 <table>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/github/6B7280" height="40" alt="GitHub"/><br/><sub><b>GitHub</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/jira/0052CC" height="40" alt="Jira"/><br/><sub><b>Jira</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/confluence/0052CC" height="40" alt="Confluence"/><br/><sub><b>Confluence</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/notion/6B7280" height="40" alt="Notion"/><br/><sub><b>Notion</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=128" height="40" alt="GitHub"/><br/><sub><b>GitHub</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=atlassian.com&sz=128" height="40" alt="Jira"/><br/><sub><b>Jira</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=confluence.atlassian.com&sz=128" height="40" alt="Confluence"/><br/><sub><b>Confluence</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=notion.so&sz=128" height="40" alt="Notion"/><br/><sub><b>Notion</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=slack.com&sz=128" height="40" alt="Slack"/><br/><sub><b>Slack</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/discord/5865F2" height="40" alt="Discord"/><br/><sub><b>Discord</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/hubspot/FF7A59" height="40" alt="HubSpot"/><br/><sub><b>HubSpot</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/salesforce/00A1E0" height="40" alt="Salesforce"/><br/><sub><b>Salesforce</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=discord.com&sz=128" height="40" alt="Discord"/><br/><sub><b>Discord</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=128" height="40" alt="HubSpot"/><br/><sub><b>HubSpot</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=salesforce.com&sz=128" height="40" alt="Salesforce"/><br/><sub><b>Salesforce</b></sub></td>
   </tr>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/airtable/18BFFF" height="40" alt="Airtable"/><br/><sub><b>Airtable</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/youtube/FF0000" height="40" alt="YouTube"/><br/><sub><b>YouTube</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/reddit/FF4500" height="40" alt="Reddit"/><br/><sub><b>Reddit</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/wikipedia/6B7280" height="40" alt="Wikipedia"/><br/><sub><b>Wikipedia</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/obsidian/483699" height="40" alt="Obsidian"/><br/><sub><b>Obsidian</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/googlesheets/34A853" height="40" alt="Google Sheets"/><br/><sub><b>Google Sheets</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/firebase/FFCA28" height="40" alt="Firebase"/><br/><sub><b>Firebase</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=airtable.com&sz=128" height="40" alt="Airtable"/><br/><sub><b>Airtable</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=128" height="40" alt="YouTube"/><br/><sub><b>YouTube</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=reddit.com&sz=128" height="40" alt="Reddit"/><br/><sub><b>Reddit</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=wikipedia.org&sz=128" height="40" alt="Wikipedia"/><br/><sub><b>Wikipedia</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=obsidian.md&sz=128" height="40" alt="Obsidian"/><br/><sub><b>Obsidian</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=sheets.google.com&sz=128" height="40" alt="Google Sheets"/><br/><sub><b>Google Sheets</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=firebase.google.com&sz=128" height="40" alt="Firebase"/><br/><sub><b>Firebase</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=twilio.com&sz=128" height="40" alt="Twilio"/><br/><sub><b>Twilio</b></sub></td>
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=arxiv.org&sz=128" height="40" alt="arXiv"/><br/><sub><b>arXiv</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=pubmed.ncbi.nlm.nih.gov&sz=128" height="40" alt="PubMed"/><br/><sub><b>PubMed</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/gmail/EA4335" height="40" alt="Email"/><br/><sub><b>Email (IMAP)</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=gmail.com&sz=128" height="40" alt="Email"/><br/><sub><b>Email (IMAP)</b></sub></td>
   </tr>
 </table>
 
@@ -382,32 +382,32 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 <table>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/duckduckgo/DE5833" height="40" alt="DuckDuckGo"/><br/><sub><b>DuckDuckGo</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/google/4285F4" height="40" alt="Google Search"/><br/><sub><b>Google Search</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=128" height="40" alt="DuckDuckGo"/><br/><sub><b>DuckDuckGo</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=google.com&sz=128" height="40" alt="Google Search"/><br/><sub><b>Google Search</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=tavily.com&sz=128" height="40" alt="Tavily"/><br/><sub><b>Tavily</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=wolframalpha.com&sz=128" height="40" alt="Wolfram Alpha"/><br/><sub><b>Wolfram Alpha</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/wikipedia/6B7280" height="40" alt="Wikipedia"/><br/><sub><b>Wikipedia</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/youtube/FF0000" height="40" alt="YouTube"/><br/><sub><b>YouTube</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=wikipedia.org&sz=128" height="40" alt="Wikipedia"/><br/><sub><b>Wikipedia</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=youtube.com&sz=128" height="40" alt="YouTube"/><br/><sub><b>YouTube</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=arxiv.org&sz=128" height="40" alt="arXiv"/><br/><sub><b>arXiv</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=pubmed.ncbi.nlm.nih.gov&sz=128" height="40" alt="PubMed"/><br/><sub><b>PubMed</b></sub></td>
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=slack.com&sz=128" height="40" alt="Slack"/><br/><sub><b>Slack</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/discord/5865F2" height="40" alt="Discord"/><br/><sub><b>Discord</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/github/6B7280" height="40" alt="GitHub"/><br/><sub><b>GitHub API</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/jira/0052CC" height="40" alt="Jira"/><br/><sub><b>Jira</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/notion/6B7280" height="40" alt="Notion"/><br/><sub><b>Notion</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/linear/5E6AD2" height="40" alt="Linear"/><br/><sub><b>Linear</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/stripe/008CDD" height="40" alt="Stripe"/><br/><sub><b>Stripe</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=discord.com&sz=128" height="40" alt="Discord"/><br/><sub><b>Discord</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=github.com&sz=128" height="40" alt="GitHub"/><br/><sub><b>GitHub API</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=atlassian.com&sz=128" height="40" alt="Jira"/><br/><sub><b>Jira</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=notion.so&sz=128" height="40" alt="Notion"/><br/><sub><b>Notion</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=linear.app&sz=128" height="40" alt="Linear"/><br/><sub><b>Linear</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=stripe.com&sz=128" height="40" alt="Stripe"/><br/><sub><b>Stripe</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=twilio.com&sz=128" height="40" alt="Twilio"/><br/><sub><b>Twilio</b></sub></td>
   </tr>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=calendar.google.com&sz=128" height="40" alt="Google Calendar"/><br/><sub><b>Google Calendar</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=128" height="40" alt="AWS Lambda"/><br/><sub><b>AWS Lambda</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=playwright.dev&sz=128" height="40" alt="Browser"/><br/><sub><b>Browser (Playwright)</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/mysql/4479A1" height="40" alt="SQL"/><br/><sub><b>SQL Query</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/python/3776AB" height="40" alt="Python REPL"/><br/><sub><b>Python REPL</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/gnubash/4EAA25" height="40" alt="Shell"/><br/><sub><b>Shell</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=mysql.com&sz=128" height="40" alt="SQL"/><br/><sub><b>SQL Query</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=python.org&sz=128" height="40" alt="Python REPL"/><br/><sub><b>Python REPL</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=gnu.org&sz=128" height="40" alt="Shell"/><br/><sub><b>Shell</b></sub></td>
   </tr>
 </table>
 
@@ -417,9 +417,9 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 <table>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/sqlite/44799F" height="40" alt="SQLite"/><br/><sub><b>SQLite</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/redis/DC382D" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/postgresql/4169E1" height="40" alt="PostgreSQL"/><br/><sub><b>PostgreSQL</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=sqlite.org&sz=128" height="40" alt="SQLite"/><br/><sub><b>SQLite</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=redis.io&sz=128" height="40" alt="Redis"/><br/><sub><b>Redis</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=postgresql.org&sz=128" height="40" alt="PostgreSQL"/><br/><sub><b>PostgreSQL</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=128" height="40" alt="DynamoDB"/><br/><sub><b>DynamoDB</b></sub></td>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=memcached.org&sz=128" height="40" alt="Memcached"/><br/><sub><b>Memcached</b></sub></td>
   </tr>
@@ -429,7 +429,7 @@ Everything plugs into the same interface. Swap any piece without rewriting your 
 
 <table>
   <tr>
-    <td align="center" width="90"><img src="https://cdn.simpleicons.org/opentelemetry/425CC7" height="40" alt="OpenTelemetry"/><br/><sub><b>OpenTelemetry</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=opentelemetry.io&sz=128" height="40" alt="OpenTelemetry"/><br/><sub><b>OpenTelemetry</b></sub></td>
   </tr>
 </table>
 

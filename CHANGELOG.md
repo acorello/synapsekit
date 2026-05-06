@@ -34,6 +34,8 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **README Integrations icons** — replaced all `cdn.simpleicons.org` URLs with Google Favicons (`google.com/s2/favicons`) after GitHub's image proxy (camo) was found to block the SimpleIcons CDN; all 60+ integration icons now load reliably across light and dark themes
+
 - **Type annotation suppressions for Rust/optional-import fallback paths** — added `# type: ignore` to `_json.py`, `_cache.py`, `text_splitters/character.py`, and `text_splitters/recursive.py` where mypy cannot narrow module-level callables set to `None` in `except ImportError` blocks; no behaviour change
 
 - **`SelfHealingRAG`** — retry-on-low-faithfulness RAG wrapper; cycles through a list of `RetrievalStrategy` implementations until the `FaithfulnessMetric` score meets `quality_threshold`; exposes `last_report` (`SelfHealingReport`) with attempt count, retry count, per-attempt scores, and winning strategy name; `ask_sync()` for synchronous callers; `max_retries` bounds total attempts; gracefully falls back to best answer when all strategies are exhausted

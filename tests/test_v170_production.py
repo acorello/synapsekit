@@ -596,8 +596,8 @@ class TestCostQualityRouterStream:
 
     @pytest.mark.asyncio
     async def test_stream_exception_returns_empty(self):
-        from synapsekit.llm.cost_quality_router import CostQualityRouter
         from synapsekit.llm.base import LLMConfig
+        from synapsekit.llm.cost_quality_router import CostQualityRouter
 
         llm = MagicMock()
         llm.config = LLMConfig(model="broken-model", api_key="", provider="openai")
@@ -717,10 +717,9 @@ class TestReasoningLLMDeepSeekStream:
     @pytest.mark.asyncio
     async def test_deepseek_stream_yields_thinking_then_answer(self):
         from synapsekit.llm.providers.deepseek_r1 import DeepSeekR1Reasoning
-        from synapsekit.llm.reasoning import ReasoningStreamChunk
 
         class _FakeChoice:
-            class delta:
+            class delta:  # noqa: N801
                 reasoning_content = "thinking"
                 content = None
 
@@ -728,8 +727,8 @@ class TestReasoningLLMDeepSeekStream:
             choices = [_FakeChoice()]
 
         class _FakeClient:
-            class chat:
-                class completions:
+            class chat:  # noqa: N801
+                class completions:  # noqa: N801
                     @staticmethod
                     async def create(*a, **kw):
                         class _Stream:
@@ -767,8 +766,8 @@ class TestReasoningLLMDeepSeekStream:
         from synapsekit.llm.providers.deepseek_r1 import DeepSeekR1Reasoning
 
         class _FakeClient:
-            class chat:
-                class completions:
+            class chat:  # noqa: N801
+                class completions:  # noqa: N801
                     @staticmethod
                     async def create(*a, **kw):
                         raise RuntimeError("api error")
@@ -878,8 +877,8 @@ class TestVectorStorePerformance:
     async def test_1000_add_and_search_under_3s(self):
         import numpy as np
 
-        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
         from synapsekit.embeddings.backend import SynapsekitEmbeddings
+        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
 
         class _Emb(SynapsekitEmbeddings):
             async def embed(self, texts):
@@ -905,8 +904,8 @@ class TestVectorStorePerformance:
         """Adding N docs should remain O(N), not O(N²)."""
         import numpy as np
 
-        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
         from synapsekit.embeddings.backend import SynapsekitEmbeddings
+        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
 
         class _Emb(SynapsekitEmbeddings):
             async def embed(self, texts):
@@ -929,8 +928,8 @@ class TestVectorStorePerformance:
         """lambda_mult=0 → pure diversity, results should be spread."""
         import numpy as np
 
-        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
         from synapsekit.embeddings.backend import SynapsekitEmbeddings
+        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
 
         _vecs = {
             "query": np.array([1.0, 0.0], dtype=np.float32),
@@ -957,8 +956,8 @@ class TestVectorStorePerformance:
     async def test_save_load_roundtrip_1k_docs(self, tmp_path):
         import numpy as np
 
-        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
         from synapsekit.embeddings.backend import SynapsekitEmbeddings
+        from synapsekit.retrieval.vectorstore import InMemoryVectorStore
 
         class _Emb(SynapsekitEmbeddings):
             async def embed(self, texts):
@@ -1126,8 +1125,8 @@ class TestCrossFeatureIntegration:
     @pytest.mark.asyncio
     async def test_cost_quality_router_full_explore_exploit_cycle(self):
         """Router correctly transitions from explore → exploit and picks cheapest."""
-        from synapsekit.llm.cost_quality_router import CostQualityRouter
         from synapsekit.llm.base import LLMConfig
+        from synapsekit.llm.cost_quality_router import CostQualityRouter
 
         def _make(name, response):
             m = MagicMock()
@@ -1219,7 +1218,7 @@ class TestCrossFeatureIntegration:
         from synapsekit.llm.reasoning import ReasoningResponse
 
         class _FakeCompletion:
-            class choices:
+            class choices:  # noqa: N801
                 pass
 
             usage = type(
@@ -1249,8 +1248,8 @@ class TestCrossFeatureIntegration:
                 )()
 
         class _FakeClient:
-            class chat:
-                class completions:
+            class chat:  # noqa: N801
+                class completions:  # noqa: N801
                     @staticmethod
                     async def create(*a, **kw):
                         return _FakeCompletion()
@@ -1263,7 +1262,7 @@ class TestCrossFeatureIntegration:
         provider.provider = "openai"
         provider._client = _FakeClient()
 
-        resp = await provider.generate("What is 6×7?")
+        resp = await provider.generate("What is 6x7?")
         assert isinstance(resp, ReasoningResponse)
         assert resp.answer == "The answer is 42"
         assert resp.total_tokens > 0

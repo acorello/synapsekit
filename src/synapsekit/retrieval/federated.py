@@ -124,19 +124,10 @@ class FederatedRetriever:
                 top_k=top_k,
                 metadata_filter=metadata_filter,
             )
-            return [
-                _Result(
-                    text=r.get("text", ""),
-                    score=r.get("score"),
-                    metadata=r.get("metadata") or {},
-                    source=name,
-                )
-                for r in raw
-                if r.get("text")
-            ]
+            return self._coerce_results(raw, source=name)
 
         raw = await retriever.retrieve(query, top_k=top_k, metadata_filter=metadata_filter)
-        return [_Result(text=t, score=None, metadata={}, source=name) for t in raw]
+        return self._coerce_results(raw, source=name)
 
     async def _fetch_remote(
         self,
@@ -169,20 +160,7 @@ class FederatedRetriever:
             data = resp.json()
 
         results = data.get("results", data)
-        out: list[_Result] = []
-        for r in results:
-            text = r.get("text") if isinstance(r, dict) else None
-            if not text:
-                continue
-            out.append(
-                _Result(
-                    text=text,
-                    score=r.get("score") if isinstance(r, dict) else None,
-                    metadata=r.get("metadata") if isinstance(r, dict) else {},
-                    source=name,
-                )
-            )
-        return out
+        return self._coerce_results(results, source=name)
 
     def _fuse(self, results: list[list[_Result]], top_k: int) -> list[_Result]:
         if self._fusion == "interleave":
@@ -272,3 +250,53 @@ class FederatedRetriever:
         if (candidate.score or 0.0) > (current.score or 0.0):
             return candidate
         return current
+
+    def _coerce_results(self, raw: list[Any], source: str | None) -> list[_Result]:
+        results: list[_Result] = []
+        for item in raw:
+            coerced = self._coerce_result(item, source=source)
+            if coerced is not None:
+                results.append(coerced)
+        return results
+
+    def _coerce_result(self, item: Any, source: str | None) -> _Result | None:
+        text: str | None = None
+        score: float | None = None
+        metadata: dict | None = {}
+
+        if isinstance(item, str):
+            text = item
+        elif isinstance(item, dict):
+            text = item.get("text")
+            raw_score = item.get("score")
+            if isinstance(raw_score, (int, float)):
+                score = float(raw_score)
+            metadata = item.get("metadata") if isinstance(item.get("metadata"), dict) else {}
+
+            document = item.get("document")
+            if (not text) and hasattr(document, "text"):
+                text = getattr(document, "text", None)
+                doc_metadata = getattr(document, "metadata", None)
+                if not metadata and isinstance(doc_metadata, dict):
+                    metadata = doc_metadata
+        elif hasattr(item, "text"):
+            text = getattr(item, "text", None)
+            raw_score = getattr(item, "score", None)
+            if isinstance(raw_score, (int, float)):
+                score = float(raw_score)
+            item_metadata = getattr(item, "metadata", None)
+            metadata = item_metadata if isinstance(item_metadata, dict) else {}
+        elif isinstance(item, tuple) and item and isinstance(item[0], str):
+            text = item[0]
+            if len(item) > 1 and isinstance(item[1], (int, float)):
+                score = float(item[1])
+
+        if not isinstance(text, str) or not text:
+            return None
+
+        return _Result(
+            text=text,
+            score=score,
+            metadata=metadata or {},
+            source=source,
+        )

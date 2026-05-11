@@ -121,9 +121,7 @@ async def test_federated_accepts_tuple_results():
     )
 
     results = await retriever.retrieve_with_scores("query")
-    assert results == [
-        {"text": "tuple doc", "score": 0.42, "metadata": {}, "source": "tuple"}
-    ]
+    assert results == [{"text": "tuple doc", "score": 0.42, "metadata": {}, "source": "tuple"}]
 
 
 @pytest.mark.asyncio

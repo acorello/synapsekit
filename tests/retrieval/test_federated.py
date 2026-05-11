@@ -109,6 +109,24 @@ async def test_federated_accepts_document_only_retrievers():
 
 
 @pytest.mark.asyncio
+async def test_federated_accepts_tuple_results():
+    class _TupleRetriever:
+        async def retrieve(self, query, top_k=5, metadata_filter=None):
+            return [("tuple doc", 0.42), ("other", 0.1)]
+
+    retriever = FederatedRetriever(
+        sources=[{"name": "tuple", "retriever": _TupleRetriever()}],
+        fusion="rrf",
+        top_k=1,
+    )
+
+    results = await retriever.retrieve_with_scores("query")
+    assert results == [
+        {"text": "tuple doc", "score": 0.42, "metadata": {}, "source": "tuple"}
+    ]
+
+
+@pytest.mark.asyncio
 async def test_federated_timeout_returns_partial():
     class _SlowRetriever:
         async def retrieve_with_scores(self, query, top_k=5, metadata_filter=None):

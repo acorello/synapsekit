@@ -262,7 +262,7 @@ class FederatedRetriever:
     def _coerce_result(self, item: Any, source: str | None) -> _Result | None:
         text: str | None = None
         score: float | None = None
-        metadata: dict | None = {}
+        metadata: dict = {}
 
         if isinstance(item, str):
             text = item
@@ -271,7 +271,8 @@ class FederatedRetriever:
             raw_score = item.get("score")
             if isinstance(raw_score, (int, float)):
                 score = float(raw_score)
-            metadata = item.get("metadata") if isinstance(item.get("metadata"), dict) else {}
+            raw_meta = item.get("metadata")
+            metadata = raw_meta if isinstance(raw_meta, dict) else {}
 
             document = item.get("document")
             if (not text) and hasattr(document, "text"):

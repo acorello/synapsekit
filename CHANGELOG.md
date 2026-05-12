@@ -9,6 +9,14 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **`FederatedRetriever` input coercion** — `_coerce_result` / `_coerce_results` helpers replace scattered inline list comprehensions in `_fetch_local` and `_fetch_remote`; now handles `str`, `dict` (with optional nested `document` object), any object with a `.text` attribute, and `(text, score)` tuples uniformly; fixes a `dict | None = {}` type annotation inconsistency and eliminates a double `item.get("metadata")` lookup
+
+### Fixed
+
+- **`tzdata` on Windows** — added `tzdata>=2024.1` to the `cron` optional extra and dev dependency group so `croniter` resolves timezone data correctly on Windows (where the OS tzdb is absent)
+
 ---
 
 ## [1.7.0] — 2026-05-06

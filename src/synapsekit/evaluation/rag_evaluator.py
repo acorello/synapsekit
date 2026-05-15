@@ -241,7 +241,9 @@ class RAGEvaluator:
                     threshold=threshold,
                 )
             )
-            suggestions.append(RAGERemediationSuggestion(metric=metric, action=action, reason=recommendation))
+            suggestions.append(
+                RAGERemediationSuggestion(metric=metric, action=action, reason=recommendation)
+            )
 
         add_alert(
             "recall",
@@ -282,7 +284,7 @@ class RAGEvaluator:
         return alerts, suggestions
 
     def _estimate_eval_cost_usd(self, prompt_tokens: int, completion_tokens: int) -> float:
-        pricing = cast(dict[str, float], COST_TABLE.get(self._judge_llm.config.model, {}))
+        pricing = COST_TABLE.get(self._judge_llm.config.model, {})
         input_rate = float(pricing.get("input", 0.0))
         output_rate = float(pricing.get("output", 0.0))
         return prompt_tokens * input_rate + completion_tokens * output_rate
@@ -398,7 +400,9 @@ class RAGEvaluator:
             notes = parsed.get("notes")
             after_tokens = dict(self._judge_llm.tokens_used)
 
-            prompt_tokens = max(0, int(after_tokens.get("input", 0)) - int(before_tokens.get("input", 0)))
+            prompt_tokens = max(
+                0, int(after_tokens.get("input", 0)) - int(before_tokens.get("input", 0))
+            )
             completion_tokens = max(
                 0,
                 int(after_tokens.get("output", 0)) - int(before_tokens.get("output", 0)),

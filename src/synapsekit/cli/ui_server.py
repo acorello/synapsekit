@@ -436,35 +436,51 @@ def create_app(tracer: Any | None = None, rag_evaluator: Any | None = None) -> F
                 "avg_relevancy": summary["avg_relevancy"],
                 "quality_trend": summary["quality_trend"],
                 "total_quality_records": len(t._quality_records),
-                "rag_evaluations": prefer(rag_eval_summary.get("evaluations"), summary.get("rag_evaluations", 0)),
+                "rag_evaluations": prefer(
+                    rag_eval_summary.get("evaluations"), summary.get("rag_evaluations", 0)
+                ),
                 "rag_sample_rate": rag_eval_summary.get("sample_rate"),
                 "rag_sampled_evaluations": prefer(
                     rag_eval_summary.get("sampled_evaluations"), summary.get("rag_evaluations", 0)
                 ),
                 "rag_skipped_evaluations": rag_eval_summary.get("skipped_evaluations"),
-                "avg_rag_recall": prefer(rag_eval_summary.get("avg_recall"), summary.get("avg_rag_recall")),
-                "avg_rag_precision": prefer(rag_eval_summary.get("avg_precision"), summary.get("avg_rag_precision")),
-                "avg_rag_relevance": prefer(rag_eval_summary.get("avg_relevance"), summary.get("avg_rag_relevance")),
+                "avg_rag_recall": prefer(
+                    rag_eval_summary.get("avg_recall"), summary.get("avg_rag_recall")
+                ),
+                "avg_rag_precision": prefer(
+                    rag_eval_summary.get("avg_precision"), summary.get("avg_rag_precision")
+                ),
+                "avg_rag_relevance": prefer(
+                    rag_eval_summary.get("avg_relevance"), summary.get("avg_rag_relevance")
+                ),
                 "avg_rag_answer_quality": prefer(
-                    rag_eval_summary.get("avg_answer_quality"), summary.get("avg_rag_answer_quality")
+                    rag_eval_summary.get("avg_answer_quality"),
+                    summary.get("avg_rag_answer_quality"),
                 ),
                 "avg_rag_retrieval_benefit": prefer(
-                    rag_eval_summary.get("avg_retrieval_benefit"), summary.get("avg_rag_retrieval_benefit")
+                    rag_eval_summary.get("avg_retrieval_benefit"),
+                    summary.get("avg_rag_retrieval_benefit"),
                 ),
                 "avg_rag_benefit_to_cost": prefer(
-                    rag_eval_summary.get("avg_benefit_to_cost"), summary.get("avg_rag_benefit_to_cost")
+                    rag_eval_summary.get("avg_benefit_to_cost"),
+                    summary.get("avg_rag_benefit_to_cost"),
                 ),
                 "total_rag_eval_cost_usd": prefer(
-                    rag_eval_summary.get("total_eval_cost_usd"), summary.get("total_rag_eval_cost_usd")
+                    rag_eval_summary.get("total_eval_cost_usd"),
+                    summary.get("total_rag_eval_cost_usd"),
                 ),
                 "avg_rag_eval_cost_usd": prefer(
                     rag_eval_summary.get("avg_eval_cost_usd"), summary.get("avg_rag_eval_cost_usd")
                 ),
-                "total_rag_alerts": prefer(rag_alerts.get("total"), summary.get("total_rag_alerts", 0)),
+                "total_rag_alerts": prefer(
+                    rag_alerts.get("total"), summary.get("total_rag_alerts", 0)
+                ),
                 "rag_alerts_by_metric": rag_alerts.get("by_metric", {}),
                 "rag_alerts_by_severity": rag_alerts.get("by_severity", {}),
                 "rag_quality_trend": summary.get("rag_quality_trend"),
-                "rag_last_notes": prefer(rag_eval_summary.get("last_notes"), summary.get("last_notes")),
+                "rag_last_notes": prefer(
+                    rag_eval_summary.get("last_notes"), summary.get("last_notes")
+                ),
                 "rag_last_sample_key": rag_eval_summary.get("last_sample_key"),
                 "rag_last_question": rag_eval_summary.get("last_question"),
                 "rag_last_alerts": rag_eval_summary.get("last_alerts", []),

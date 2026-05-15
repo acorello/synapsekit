@@ -65,8 +65,11 @@ class ComplexityClassifier:
         return self._classify_with_heuristics(query)
 
     async def _classify_with_llm(self, query: str) -> ReasoningDecision | None:
+        llm = self._llm
+        if llm is None:
+            return None
         prompt = self._prompt.format(query=query)
-        response = await self._llm.generate(prompt)
+        response = await llm.generate(prompt)
         text = response.strip().lower()
         if text.startswith("simple"):
             return ReasoningDecision(complexity="simple", reason="llm: simple")
@@ -74,12 +77,10 @@ class ComplexityClassifier:
             return ReasoningDecision(complexity="complex", reason="llm: complex")
 
         match = re.search(r"\b(simple|complex)\b", text)
+        if match and match.group(1) == "complex":
+            return ReasoningDecision(complexity="complex", reason="llm: inferred")
         if match:
-            value = match.group(1)
-            return ReasoningDecision(
-                complexity="complex" if value == "complex" else "simple",
-                reason="llm: inferred",
-            )
+            return ReasoningDecision(complexity="simple", reason="llm: inferred")
         return None
 
     def _classify_with_heuristics(self, query: str) -> ReasoningDecision:
@@ -101,9 +102,18 @@ class ComplexityClassifier:
             score += 1
             reasons.append("reasoning keywords")
 
-        complexity = "complex" if score >= self._threshold else "simple"
         reason = ", ".join(reasons) if reasons else "heuristic: short"
-        return ReasoningDecision(complexity=complexity, reason=reason, score=float(score))
+        if score >= self._threshold:
+            return ReasoningDecision(
+                complexity="complex",
+                reason=reason,
+                score=float(score),
+            )
+        return ReasoningDecision(
+            complexity="simple",
+            reason=reason,
+            score=float(score),
+        )
 
 
 class _BudgetedReasoningLLM(BaseLLM):

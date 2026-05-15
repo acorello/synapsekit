@@ -4,8 +4,16 @@ import asyncio
 
 import pytest
 
-from synapsekit.agents.reasoning_agent import ReasoningAgent, ReasoningAgentConfig, ReasoningDecision
-from synapsekit.llm.reasoning import ReasoningLLM, ReasoningResponse, ReasoningStreamChunk
+from synapsekit.agents.reasoning_agent import (
+    ReasoningAgent,
+    ReasoningAgentConfig,
+    ReasoningDecision,
+)
+from synapsekit.llm.reasoning import (
+    ReasoningLLM,
+    ReasoningResponse,
+    ReasoningStreamChunk,
+)
 
 
 class _FixedClassifier:

@@ -487,6 +487,31 @@ Every integration is `pip install synapsekit[name]` — nothing else. Swap provi
   </tr>
 </table>
 
+### Production RAG ROI
+
+```python
+from synapsekit import RAG, RAGEvaluator, SlackWebhookAlertSink
+from synapsekit.cli.ui_server import create_app
+
+rag = RAG(
+    model="gpt-4o-mini",
+    api_key="sk-...",
+    evaluator=RAGEvaluator(
+        judge_llm=judge_llm,  # a cheaper judge model
+        sample_rate=0.1,
+        alert_sinks=[SlackWebhookAlertSink(webhook_url=SLACK_WEBHOOK_URL)],
+    ),
+)
+
+app = create_app(tracer=rag.tracer, rag_evaluator=rag.evaluator)
+answer = await rag.ask("What changed in the release notes?")
+await rag.wait_for_evaluations()
+
+metrics = rag.tracer.summary()
+print(metrics["avg_rag_benefit_to_cost"])
+print(metrics["total_rag_alerts"])
+```
+
 <div align="center">
 
 ---

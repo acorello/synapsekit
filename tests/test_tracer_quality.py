@@ -133,6 +133,15 @@ class TestTracerSummaryReturnTypes:
             "avg_faithfulness",
             "avg_relevancy",
             "quality_trend",
+            "rag_evaluations",
+            "avg_rag_recall",
+            "avg_rag_precision",
+            "avg_rag_relevance",
+            "avg_rag_answer_quality",
+            "avg_rag_benefit_to_cost",
+            "total_rag_eval_cost_usd",
+            "total_rag_alerts",
+            "rag_quality_trend",
         }
         assert expected_keys.issubset(summary.keys())
 

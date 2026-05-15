@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 # Cost per token in USD (input, output)
 COST_TABLE: dict[str, dict[str, float]] = {
@@ -56,6 +56,38 @@ class _QualityRecord:
         return sum(vals) / len(vals)
 
 
+@dataclass
+class _RAGEvaluationRecord:
+    call_id: int
+    sample_key: str
+    question: str | None
+    recall: float | None
+    precision: float | None
+    relevance: float | None
+    answer_quality: float | None
+    retrieval_benefit: float | None
+    benefit_to_cost: float | None
+    eval_cost_usd: float
+    alert_count: int
+    timestamp: float = field(default_factory=time.time)
+
+    @property
+    def mean_score(self) -> float | None:
+        vals = [
+            v
+            for v in (
+                self.recall,
+                self.precision,
+                self.relevance,
+                self.answer_quality,
+            )
+            if v is not None
+        ]
+        if not vals:
+            return None
+        return sum(vals) / len(vals)
+
+
 class TokenTracer:
     """Track token usage, latency, estimated cost, and quality trends per session."""
 
@@ -72,6 +104,7 @@ class TokenTracer:
         self.quality_trend_threshold = max(0.0, quality_trend_threshold)
         self._records: list[_Record] = []
         self._quality_records: list[_QualityRecord] = []
+        self._rag_eval_records: list[_RAGEvaluationRecord] = []
 
     def record(
         self,
@@ -109,6 +142,45 @@ class TokenTracer:
         )
         return resolved_call_id
 
+    def record_rag_evaluation(
+        self,
+        *,
+        recall: float | None = None,
+        precision: float | None = None,
+        relevance: float | None = None,
+        answer_quality: float | None = None,
+        retrieval_benefit: float | None = None,
+        benefit_to_cost: float | None = None,
+        eval_cost_usd: float = 0.0,
+        alert_count: int = 0,
+        call_id: int | None = None,
+        sample_key: str | None = None,
+        question: str | None = None,
+        timestamp: float | None = None,
+    ) -> int:
+        """Record sampled RAG evaluation metrics for dashboarding."""
+        if not self.enabled:
+            return 0
+
+        resolved_call_id = call_id if call_id is not None else len(self._records)
+        self._rag_eval_records.append(
+            _RAGEvaluationRecord(
+                call_id=max(0, resolved_call_id),
+                sample_key=(sample_key or question or "rag-eval").strip() or "rag-eval",
+                question=question,
+                recall=recall,
+                precision=precision,
+                relevance=relevance,
+                answer_quality=answer_quality,
+                retrieval_benefit=retrieval_benefit,
+                benefit_to_cost=benefit_to_cost,
+                eval_cost_usd=eval_cost_usd,
+                alert_count=max(0, alert_count),
+                timestamp=timestamp if timestamp is not None else time.time(),
+            )
+        )
+        return resolved_call_id
+
     def quality_history(self) -> list[dict[str, float | int | None]]:
         """Return recorded quality metrics in insertion order."""
         return [
@@ -121,8 +193,27 @@ class TokenTracer:
             for r in self._quality_records
         ]
 
-    def _quality_trend(self) -> str:
-        scores = [r.mean_score for r in self._quality_records]
+    def rag_evaluation_history(self) -> list[dict[str, float | int | str | None]]:
+        """Return sampled RAG evaluation records in insertion order."""
+        return [
+            {
+                "call_id": r.call_id,
+                "sample_key": r.sample_key,
+                "question": r.question,
+                "recall": r.recall,
+                "precision": r.precision,
+                "relevance": r.relevance,
+                "answer_quality": r.answer_quality,
+                "retrieval_benefit": r.retrieval_benefit,
+                "benefit_to_cost": r.benefit_to_cost,
+                "eval_cost_usd": r.eval_cost_usd,
+                "alert_count": r.alert_count,
+                "timestamp": r.timestamp,
+            }
+            for r in self._rag_eval_records
+        ]
+
+    def _trend_from_scores(self, scores: list[float | None]) -> str:
         numeric_scores = [s for s in scores if s is not None]
 
         if len(numeric_scores) < self.quality_window:
@@ -145,6 +236,19 @@ class TokenTracer:
             return "degrading"
         return "stable"
 
+    def _quality_trend(self) -> str:
+        return self._trend_from_scores([r.mean_score for r in self._quality_records])
+
+    def _rag_quality_trend(self) -> str:
+        return self._trend_from_scores([r.mean_score for r in self._rag_eval_records])
+
+    @staticmethod
+    def _average(values: list[float | None]) -> float | None:
+        numeric = [v for v in values if v is not None]
+        if not numeric:
+            return None
+        return sum(numeric) / len(numeric)
+
     def summary(self) -> dict:
         total_input = sum(r.input_tokens for r in self._records)
         total_output = sum(r.output_tokens for r in self._records)
@@ -164,9 +268,26 @@ class TokenTracer:
         )
         avg_relevancy = sum(relevancy_values) / len(relevancy_values) if relevancy_values else None
 
+        rag_recall_values = [r.recall for r in self._rag_eval_records]
+        rag_precision_values = [r.precision for r in self._rag_eval_records]
+        rag_relevance_values = [r.relevance for r in self._rag_eval_records]
+        rag_answer_quality_values = [r.answer_quality for r in self._rag_eval_records]
+        rag_retrieval_benefit_values = [r.retrieval_benefit for r in self._rag_eval_records]
+        rag_benefit_to_cost_values = [r.benefit_to_cost for r in self._rag_eval_records]
+        rag_total_eval_cost = sum(r.eval_cost_usd for r in self._rag_eval_records)
+        rag_total_alerts = sum(r.alert_count for r in self._rag_eval_records)
+
+        avg_rag_recall = self._average(rag_recall_values)
+        avg_rag_precision = self._average(rag_precision_values)
+        avg_rag_relevance = self._average(rag_relevance_values)
+        avg_rag_answer_quality = self._average(rag_answer_quality_values)
+        avg_rag_retrieval_benefit = self._average(rag_retrieval_benefit_values)
+        avg_rag_benefit_to_cost = self._average(rag_benefit_to_cost_values)
+
         return {
             "model": self.model,
             "calls": len(self._records),
+            "rag_evaluations": len(self._rag_eval_records),
             "total_input_tokens": total_input,
             "total_output_tokens": total_output,
             "total_tokens": total_input + total_output,
@@ -177,11 +298,34 @@ class TokenTracer:
             else None,
             "avg_relevancy": round(avg_relevancy, 4) if avg_relevancy is not None else None,
             "quality_trend": self._quality_trend(),
+            "avg_rag_recall": round(avg_rag_recall, 4) if avg_rag_recall is not None else None,
+            "avg_rag_precision": round(avg_rag_precision, 4)
+            if avg_rag_precision is not None
+            else None,
+            "avg_rag_relevance": round(avg_rag_relevance, 4)
+            if avg_rag_relevance is not None
+            else None,
+            "avg_rag_answer_quality": round(avg_rag_answer_quality, 4)
+            if avg_rag_answer_quality is not None
+            else None,
+            "avg_rag_retrieval_benefit": round(avg_rag_retrieval_benefit, 4)
+            if avg_rag_retrieval_benefit is not None
+            else None,
+            "avg_rag_benefit_to_cost": round(avg_rag_benefit_to_cost, 4)
+            if avg_rag_benefit_to_cost is not None
+            else None,
+            "total_rag_eval_cost_usd": round(rag_total_eval_cost, 6),
+            "avg_rag_eval_cost_usd": round(rag_total_eval_cost / len(self._rag_eval_records), 6)
+            if self._rag_eval_records
+            else None,
+            "total_rag_alerts": rag_total_alerts,
+            "rag_quality_trend": self._rag_quality_trend(),
         }
 
     def reset(self) -> None:
         self._records.clear()
         self._quality_records.clear()
+        self._rag_eval_records.clear()
 
     def start_timer(self) -> float:
         """Return current time in ms for use with record()."""

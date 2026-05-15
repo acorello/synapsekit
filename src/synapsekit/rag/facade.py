@@ -10,6 +10,7 @@ from typing import Any
 
 from .._compat import run_sync
 from ..embeddings.backend import SynapsekitEmbeddings
+from ..evaluation.rag_evaluator import RAGEvaluator
 from ..llm._factory import make_llm
 from ..loaders.base import Document
 from ..memory.conversation import ConversationMemory
@@ -59,6 +60,7 @@ class RAG:
         max_tokens: int = 1024,
         trace: bool = True,
         auto_eval: bool = False,
+        evaluator: RAGEvaluator | None = None,
         context_packer: Any | None = None,
     ) -> None:
         llm = make_llm(model, api_key, provider, system_prompt, temperature, max_tokens)
@@ -77,6 +79,7 @@ class RAG:
                 retrieval_top_k=retrieval_top_k,
                 system_prompt=system_prompt,
                 auto_eval=auto_eval,
+                evaluator=evaluator,
                 context_packer=context_packer,
             )
         )
@@ -318,5 +321,15 @@ class RAG:
         return self._pipeline.config.tracer
 
     @property
+    def evaluator(self) -> RAGEvaluator | None:
+        return self._pipeline.config.evaluator
+
+    @property
     def memory(self) -> ConversationMemory:
         return self._pipeline.config.memory
+
+    async def wait_for_evaluations(self) -> None:
+        await self._pipeline.wait_for_evaluations()
+
+    async def wait_for_auto_eval(self) -> None:
+        await self._pipeline.wait_for_auto_eval()

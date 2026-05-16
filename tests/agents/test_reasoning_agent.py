@@ -143,3 +143,53 @@ async def test_timeout_falls_back():
 
     assert result == "fast"
     assert agent.last_fallback_reason is not None
+
+
+@pytest.mark.asyncio
+async def test_stream_yields_correct_tokens():
+    fast = _FastLLM("hello world")
+    reasoning = _make_reasoning_llm("reasoning")
+
+    agent = ReasoningAgent(
+        ReasoningAgentConfig(
+            fast_llm=fast,
+            reasoning_llm=reasoning,
+            tools=[],
+        )
+    )
+    agent._classifier = _FixedClassifier("simple")
+
+    tokens = []
+    async for token in agent.stream("hi"):
+        tokens.append(token)
+
+    # _FastLLM returns "Thought: ok\nFinal Answer: hello world"
+    # AgentExecutor.run returns "hello world"
+    assert tokens == ["hello", " ", "world"]
+
+
+@pytest.mark.asyncio
+async def test_tool_integration_passed_to_executors():
+    from synapsekit.agents.base import BaseTool
+
+    class MyTool(BaseTool):
+        name = "my_tool"
+        description = "test tool"
+
+        async def run(self, input: str) -> str:
+            return f"tool: {input}"
+
+    fast = _FastLLM("fast")
+    reasoning = _make_reasoning_llm("reasoning")
+    tools = [MyTool()]
+
+    agent = ReasoningAgent(
+        ReasoningAgentConfig(
+            fast_llm=fast,
+            reasoning_llm=reasoning,
+            tools=tools,
+        )
+    )
+
+    assert agent._fast_executor.config.tools == tools
+    assert agent._reasoning_executor.config.tools == tools

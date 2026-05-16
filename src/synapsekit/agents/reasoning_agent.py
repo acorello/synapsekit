@@ -245,7 +245,7 @@ class ReasoningAgent:
                 result = await self._reasoning_executor.run(query)
             self.last_usage = self._budgeted_reasoning_llm.last_usage
             return result
-        except (asyncio.TimeoutError, BudgetExceededError, Exception) as exc:
+        except (asyncio.TimeoutError, BudgetExceededError) as exc:
             if not self._config.fallback_on_error:
                 raise
             self.last_usage = self._budgeted_reasoning_llm.last_usage
@@ -254,5 +254,7 @@ class ReasoningAgent:
 
     async def stream(self, query: str):
         answer = await self.run(query)
-        for token in answer.split(" "):
-            yield token + " "
+        # Use regex to split while preserving whitespace and punctuation for better "simulated" streaming
+        tokens = re.findall(r"\S+|\s+", answer)
+        for token in tokens:
+            yield token

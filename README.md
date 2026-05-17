@@ -223,6 +223,43 @@ Run shared community eval suites with `synapsekit bench` and compare aggregate s
 
 </div>
 
+### ReasoningAgent (automatic routing)
+
+```python
+import asyncio
+
+from synapsekit import ReasoningAgent, ReasoningAgentConfig
+
+from synapsekit.agents.tools import CalculatorTool
+
+from synapsekit.llm import LLMConfig, OpenAILLM, ReasoningLLM
+
+fast = OpenAILLM(
+    LLMConfig(model="gpt-4o-mini", api_key="sk-...", provider="openai")
+)
+
+reasoning = ReasoningLLM(model="o3", api_key="sk-...")
+
+
+agent = ReasoningAgent(
+    ReasoningAgentConfig(
+        fast_llm=fast,
+        reasoning_llm=reasoning,
+        tools=[CalculatorTool()],
+        agent_type="function_calling",
+    )
+)
+
+
+async def main():
+
+    answer = await agent.run("Solve: find the eigenvalues of [[2,1],[1,2]]")
+    print(answer)
+
+
+asyncio.run(main())
+```
+
 ### EvalHub quick usage
 
 ```bash

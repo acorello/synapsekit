@@ -281,6 +281,24 @@ from .text_splitters import (
     SentenceWindowSplitter,
     TokenAwareSplitter,
 )
+from .voice import (
+    AudioFrame,
+    BaseSTT,
+    BaseTTS,
+    BaseVAD,
+    CartesiaTTS,
+    DeepgramSTT,
+    ElevenLabsTTS,
+    EnergyVAD,
+    LocalWhisperSTT,
+    OpenAITTS,
+    OpenAIWhisperSTT,
+    PiperTTS,
+    SileroVAD,
+    TranscriptChunk,
+    VoicePipeline,
+)
+from .voice.types import PipelineEvent, PipelineState
 
 __version__ = "1.7.0"
 __all__ = [
@@ -638,6 +656,29 @@ __all__ = [
     "GoogleDriveLoader",
     # Plugins
     "PluginRegistry",
+    # Voice pipeline
+    "VoicePipeline",
+    # Voice base classes
+    "BaseVAD",
+    "BaseSTT",
+    "BaseTTS",
+    # VAD
+    "EnergyVAD",
+    "SileroVAD",
+    # STT
+    "LocalWhisperSTT",
+    "OpenAIWhisperSTT",
+    "DeepgramSTT",
+    # TTS
+    "OpenAITTS",
+    "ElevenLabsTTS",
+    "CartesiaTTS",
+    "PiperTTS",
+    # Voice types
+    "AudioFrame",
+    "TranscriptChunk",
+    "PipelineEvent",
+    "PipelineState",
     # API stability markers
     "deprecated",
     "experimental",

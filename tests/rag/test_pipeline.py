@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
+from synapsekit.evaluation.rag_evaluator import RAGEvaluationResult
 from synapsekit.memory.conversation import ConversationMemory
 from synapsekit.observability.tracer import TokenTracer
 from synapsekit.rag.pipeline import RAGConfig, RAGPipeline
@@ -57,6 +58,35 @@ def pipeline():
         tracer=tracer,
     )
     return RAGPipeline(config)
+
+
+class _MockRAGEvaluator:
+    def __init__(self, recall: float = 0.82, precision: float = 0.74):
+        self.recall = recall
+        self.precision = precision
+        self.calls = []
+
+    async def evaluate(self, question, answer, contexts, *, sample_key=None):
+        self.calls.append(
+            {
+                "question": question,
+                "answer": answer,
+                "contexts": list(contexts),
+                "sample_key": sample_key,
+            }
+        )
+        return RAGEvaluationResult(
+            sampled=True,
+            sample_key=sample_key or question,
+            recall=self.recall,
+            precision=self.precision,
+            relevance=0.78,
+            answer_quality=0.84,
+            retrieval_benefit=0.81,
+            benefit_to_cost=120.0,
+            eval_cost_usd=0.002,
+            eval_latency_ms=12.0,
+        )
 
 
 class TestRAGPipeline:
@@ -351,3 +381,37 @@ class TestRAGPipeline:
 
         assert not called
         assert tracer.summary()["avg_faithfulness"] is None
+
+    @pytest.mark.asyncio
+    async def test_rag_evaluator_updates_tracer_rag_metrics(self):
+        llm = make_mock_llm()
+        retriever = make_mock_retriever(chunks=["Retrieved chunk 1.", "Retrieved chunk 2."])
+        memory = ConversationMemory()
+        tracer = TokenTracer(model="gpt-4o-mini")
+        evaluator = _MockRAGEvaluator()
+        pipeline = RAGPipeline(
+            RAGConfig(
+                llm=llm,
+                retriever=retriever,
+                memory=memory,
+                tracer=tracer,
+                evaluator=evaluator,
+            )
+        )
+
+        await pipeline.ask("What is RAG?")
+        await pipeline.wait_for_evaluations()
+
+        assert len(evaluator.calls) == 1
+        assert evaluator.calls[0]["sample_key"] == "What is RAG?"
+        summary = tracer.summary()
+        assert summary["rag_evaluations"] == 1
+        assert summary["avg_rag_recall"] == 0.82
+        assert summary["avg_rag_precision"] == 0.74
+        assert summary["avg_rag_relevance"] == 0.78
+        assert summary["avg_rag_answer_quality"] == 0.84
+        assert summary["avg_rag_benefit_to_cost"] == 120.0
+        assert summary["total_rag_alerts"] == 0
+        assert summary["avg_faithfulness"] is None
+        assert summary["avg_relevancy"] is None
+        assert tracer.rag_evaluation_history()[0]["sample_key"] == "What is RAG?"

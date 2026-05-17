@@ -6,6 +6,17 @@ from .finetune import FineTuneJob, FineTuner
 from .groundedness import GroundednessMetric
 from .optimizer import PromptCandidate, PromptOptimizer, PromptVariantRunner
 from .pipeline import EvaluationPipeline, EvaluationResult
+from .rag_evaluator import (
+    EmailAlertSink,
+    PagerDutyAlertSink,
+    RAGAlert,
+    RAGAlertSink,
+    RAGERemediationSuggestion,
+    RAGEvaluationResult,
+    RAGEvaluationThresholds,
+    RAGEvaluator,
+    SlackWebhookAlertSink,
+)
 from .regression import EvalRegression, EvalSnapshot, MetricDelta, RegressionReport
 from .relevancy import RelevancyMetric
 
@@ -26,6 +37,15 @@ __all__ = [
     "GroundednessMetric",
     "MetricDelta",
     "MetricResult",
+    "EmailAlertSink",
+    "PagerDutyAlertSink",
+    "RAGAlert",
+    "RAGAlertSink",
+    "RAGEvaluationResult",
+    "RAGEvaluationThresholds",
+    "RAGEvaluator",
+    "RAGERemediationSuggestion",
+    "SlackWebhookAlertSink",
     "RegressionReport",
     "RelevancyMetric",
     "eval_case",

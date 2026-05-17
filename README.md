@@ -496,6 +496,31 @@ SynapseKit provides advanced retrieval modules, including vector search and mult
 - **Knowledge Graph (KG):** Best for specific, multi-hop reasoning questions where the relationship spans across multiple documents (e.g., finding out who owns the parent company of a subsidiary).
 - **Hybrid (Vector + KG):** Combining both strategies guarantees that you capture deep semantic context while also exploring explicitly extracted entity relationships. Initialize the `RAG` facade with `graph_store=NetworkXStore()` or `Neo4jStore(...)` to enable this out-of-the-box.
 
+### Production RAG ROI
+
+```python
+from synapsekit import RAG, RAGEvaluator, SlackWebhookAlertSink
+from synapsekit.cli.ui_server import create_app
+
+rag = RAG(
+    model="gpt-4o-mini",
+    api_key="sk-...",
+    evaluator=RAGEvaluator(
+        judge_llm=judge_llm,  # a cheaper judge model
+        sample_rate=0.1,
+        alert_sinks=[SlackWebhookAlertSink(webhook_url=SLACK_WEBHOOK_URL)],
+    ),
+)
+
+app = create_app(tracer=rag.tracer, rag_evaluator=rag.evaluator)
+answer = await rag.ask("What changed in the release notes?")
+await rag.wait_for_evaluations()
+
+metrics = rag.tracer.summary()
+print(metrics["avg_rag_benefit_to_cost"])
+print(metrics["total_rag_alerts"])
+```
+
 <div align="center">
 
 ---

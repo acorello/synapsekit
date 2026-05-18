@@ -8,8 +8,14 @@ from typing import Any
 try:  # pragma: no cover - optional dependency
     from prometheus_client import (
         CollectorRegistry as PromCollectorRegistry,
+    )
+    from prometheus_client import (
         Counter as PromCounter,
+    )
+    from prometheus_client import (
         Histogram as PromHistogram,
+    )
+    from prometheus_client import (
         start_http_server as prom_start_http_server,
     )
 

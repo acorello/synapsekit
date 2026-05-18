@@ -9,6 +9,16 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.8.0] — 2026-05-17
+
+### Added
+
+- **`KnowledgeGraphBuilder` + `KGRetriever` + `HybridKGRetriever`** — multi-hop knowledge graph retrieval for entity-relationship queries across documents; NetworkX (in-memory) and Neo4j backends; `KnowledgeGraphBuilder` extracts entities and triples with LLM; `KGRetriever` traverses graph with depth-first search; `HybridKGRetriever` merges vector + graph results; wired into `RAG` facade via optional `graph_store` parameter; `pip install synapsekit[graph]` for NetworkX/Neo4j; closes #699
+- **`RAGEvaluator`** — production sampled RAG quality judge with LLM-based scoring, alert sinks (Slack, PagerDuty, email), ROI metrics, and remediation suggestions; non-blocking evaluation doesn't interrupt main RAG path; deterministic sampling via hash-based stratification; cost tracking and dashboard integration via `TokenTracer`; exposes per-metric thresholds, average scores, and alert history; closes #698
+- **`ReasoningAgent`** — intelligent routing for reasoning models with complexity classifier (LLM + heuristic paths), thinking token budget enforcement, timeout fallback to fast LLM, and cost tracking; supports o1/o3, Claude thinking, Gemini thinking, DeepSeek R1, Qwen QwQ; extends `ReasoningLLM` with native tool-calling for OpenAI/Anthropic; `ReasoningAgentConfig` with configurable complexity thresholds and budgets; closes #700
+- **VoicePipeline performance enhancements** — PiperTTS instance caching eliminates per-sentence model reload from disk (critical fix); DeepgramSTT client caching prevents TLS handshake per utterance; exported BaseVAD, BaseSTT, BaseTTS, AudioFrame, TranscriptChunk for custom voice provider authors; comprehensive `voice_assistant.py` example with persistent memory across sessions; `pip install synapsekit[voice-piper]` new extra; closes #512
+- **`FallbackChain` empty response handling** — explicit `fallback_on_empty` configuration for `FallbackChainConfig` allows chains to accept empty first responses when intended instead of always falling back; default `True` preserves backward compatibility; closes #703
+
 ### Changed
 
 - **`FederatedRetriever` input coercion** — `_coerce_result` / `_coerce_results` helpers replace scattered inline list comprehensions in `_fetch_local` and `_fetch_remote`; now handles `str`, `dict` (with optional nested `document` object), any object with a `.text` attribute, and `(text, score)` tuples uniformly; fixes a `dict | None = {}` type annotation inconsistency and eliminates a double `item.get("metadata")` lookup

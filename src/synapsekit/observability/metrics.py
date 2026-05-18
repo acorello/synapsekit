@@ -3,10 +3,7 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from typing import Any, TYPE_CHECKING
-
-if TYPE_CHECKING:  # pragma: no cover
-    from prometheus_client import Counter, Histogram, CollectorRegistry
+from typing import Any
 
 try:  # pragma: no cover - optional dependency
     from prometheus_client import (
@@ -46,13 +43,13 @@ class PrometheusMetrics:
     ) -> None:
         self.enabled = bool(enabled) and _PROMETHEUS_AVAILABLE
         self._namespace = namespace
-        self._registry: "CollectorRegistry" | None = registry
+        self._registry: Any | None = registry
         if self._registry is None and self.enabled and PromCollectorRegistry is not None:
             self._registry = PromCollectorRegistry()
         self._server_started = False
-        self._cost_counter: "Counter" | None = None
-        self._token_counter: "Counter" | None = None
-        self._latency_hist: "Histogram" | None = None
+        self._cost_counter: Any | None = None
+        self._token_counter: Any | None = None
+        self._latency_hist: Any | None = None
 
         if self.enabled:
             self._cost_counter = PromCounter(

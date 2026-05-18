@@ -6,6 +6,7 @@ from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
 from typing import Any
 
+from ..evaluation.rag_evaluator import RAGEvaluator
 from ..llm.base import BaseLLM
 from ..loaders.base import Document
 from ..memory.conversation import ConversationMemory
@@ -29,6 +30,7 @@ class RAGConfig:
     chunk_size: int = 512
     chunk_overlap: int = 50
     auto_eval: bool = False
+    evaluator: RAGEvaluator | None = None
     splitter: BaseSplitter | None = field(default=None)
     context_packer: Any | None = None
 
@@ -46,6 +48,7 @@ class RAGPipeline:
             chunk_overlap=config.chunk_overlap,
         )
         self._auto_eval_tasks: set[asyncio.Task[None]] = set()
+        self._evaluation_tasks: set[asyncio.Task[None]] = set()
 
     def __repr__(self) -> str:
         model = type(self.config.llm).__name__
@@ -233,6 +236,7 @@ class RAGPipeline:
 
         tracer = self.config.tracer
         t0 = tracer.start_timer() if tracer else 0.0
+        call_id = 0
 
         answer_parts: list[str] = []
         try:
@@ -271,6 +275,14 @@ class RAGPipeline:
                             call_id=call_id,
                         )
 
+                if self.config.evaluator is not None:
+                    self._schedule_rag_eval(
+                        query=query,
+                        answer=answer,
+                        contexts=chunks,
+                        call_id=call_id,
+                    )
+
                 response_span = start_span(
                     "rag.response",
                     {
@@ -305,6 +317,24 @@ class RAGPipeline:
         self._auto_eval_tasks.add(task)
         task.add_done_callback(self._auto_eval_tasks.discard)
 
+    def _schedule_rag_eval(
+        self,
+        query: str,
+        answer: str,
+        contexts: list[str],
+        call_id: int,
+    ) -> None:
+        task = asyncio.create_task(
+            self._run_rag_eval(
+                query=query,
+                answer=answer,
+                contexts=contexts,
+                call_id=call_id,
+            )
+        )
+        self._evaluation_tasks.add(task)
+        task.add_done_callback(self._evaluation_tasks.discard)
+
     async def _run_auto_eval(
         self,
         query: str,
@@ -338,10 +368,51 @@ class RAGPipeline:
             # Auto-eval is best-effort. Never break the primary RAG call.
             return
 
-    async def wait_for_auto_eval(self) -> None:
-        if not self._auto_eval_tasks:
+    async def _run_rag_eval(
+        self,
+        query: str,
+        answer: str,
+        contexts: list[str],
+        call_id: int,
+    ) -> None:
+        evaluator = self.config.evaluator
+        if evaluator is None:
             return
-        await asyncio.gather(*list(self._auto_eval_tasks), return_exceptions=True)
+
+        try:
+            result = await evaluator.evaluate(
+                question=query,
+                answer=answer,
+                contexts=contexts,
+                sample_key=query,
+            )
+            tracer = self.config.tracer
+            if tracer is not None and tracer.enabled and result.sampled:
+                tracer.record_rag_evaluation(
+                    call_id=call_id,
+                    sample_key=result.sample_key,
+                    question=query,
+                    recall=result.recall,
+                    precision=result.precision,
+                    relevance=result.relevance,
+                    answer_quality=result.answer_quality,
+                    retrieval_benefit=result.retrieval_benefit,
+                    benefit_to_cost=result.benefit_to_cost,
+                    eval_cost_usd=result.eval_cost_usd,
+                    alert_count=len(result.alerts),
+                )
+        except Exception:
+            # RAG evaluation is best-effort. Never break the primary RAG call.
+            return
+
+    async def wait_for_evaluations(self) -> None:
+        tasks = [*self._auto_eval_tasks, *self._evaluation_tasks]
+        if not tasks:
+            return
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+    async def wait_for_auto_eval(self) -> None:
+        await self.wait_for_evaluations()
 
     async def ask(self, query: str, top_k: int | None = None) -> str:
         return "".join([t async for t in self.stream(query, top_k=top_k)])

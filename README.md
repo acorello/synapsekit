@@ -223,6 +223,43 @@ Run shared community eval suites with `synapsekit bench` and compare aggregate s
 
 </div>
 
+### ReasoningAgent (automatic routing)
+
+```python
+import asyncio
+
+from synapsekit import ReasoningAgent, ReasoningAgentConfig
+
+from synapsekit.agents.tools import CalculatorTool
+
+from synapsekit.llm import LLMConfig, OpenAILLM, ReasoningLLM
+
+fast = OpenAILLM(
+    LLMConfig(model="gpt-4o-mini", api_key="sk-...", provider="openai")
+)
+
+reasoning = ReasoningLLM(model="o3", api_key="sk-...")
+
+
+agent = ReasoningAgent(
+    ReasoningAgentConfig(
+        fast_llm=fast,
+        reasoning_llm=reasoning,
+        tools=[CalculatorTool()],
+        agent_type="function_calling",
+    )
+)
+
+
+async def main():
+
+    answer = await agent.run("Solve: find the eigenvalues of [[2,1],[1,2]]")
+    print(answer)
+
+
+asyncio.run(main())
+```
+
 ### EvalHub quick usage
 
 ```bash
@@ -487,10 +524,43 @@ Every integration is `pip install synapsekit[name]` — nothing else. Swap provi
   </tr>
 </table>
 
+### Multi-Hop Knowledge Graph RAG
+
+SynapseKit provides advanced retrieval modules, including vector search and multi-hop Knowledge Graph (KG) retrieval.
+
+**When to use which?**
+- **Vector Search (Semantic):** Best for broad conceptual queries, finding similar passages, or answering questions whose answers are contained within a single chunk of text.
+- **Knowledge Graph (KG):** Best for specific, multi-hop reasoning questions where the relationship spans across multiple documents (e.g., finding out who owns the parent company of a subsidiary).
+- **Hybrid (Vector + KG):** Combining both strategies guarantees that you capture deep semantic context while also exploring explicitly extracted entity relationships. Initialize the `RAG` facade with `graph_store=NetworkXStore()` or `Neo4jStore(...)` to enable this out-of-the-box.
+
+### Production RAG ROI
+
+```python
+from synapsekit import RAG, RAGEvaluator, SlackWebhookAlertSink
+from synapsekit.cli.ui_server import create_app
+
+rag = RAG(
+    model="gpt-4o-mini",
+    api_key="sk-...",
+    evaluator=RAGEvaluator(
+        judge_llm=judge_llm,  # a cheaper judge model
+        sample_rate=0.1,
+        alert_sinks=[SlackWebhookAlertSink(webhook_url=SLACK_WEBHOOK_URL)],
+    ),
+)
+
+app = create_app(tracer=rag.tracer, rag_evaluator=rag.evaluator)
+answer = await rag.ask("What changed in the release notes?")
+await rag.wait_for_evaluations()
+
+metrics = rag.tracer.summary()
+print(metrics["avg_rag_benefit_to_cost"])
+print(metrics["total_rag_alerts"])
+```
+
 <div align="center">
 
 ---
-
 **Don't see your stack?**
 Every integration is built the same way — most take under an hour.
 [Browse `good first issue` →](https://github.com/SynapseKit/SynapseKit/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) · [Contributing guide →](CONTRIBUTING.md) · [Discord →](https://discord.gg/PSuAXHRywJ)

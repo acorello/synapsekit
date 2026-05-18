@@ -67,6 +67,9 @@ from .agents import (
     PubMedSearchTool,
     PythonREPLTool,
     ReActAgent,
+    ReasoningAgent,
+    ReasoningAgentConfig,
+    ReasoningDecision,
     RedactionResult,
     RegexTool,
     SentimentAnalysisTool,
@@ -106,6 +109,7 @@ from .agents import (
 )
 from .embeddings.backend import SynapsekitEmbeddings
 from .evaluation import (
+    EmailAlertSink,
     EvalCaseMeta,
     EvalRegression,
     EvalSnapshot,
@@ -115,11 +119,19 @@ from .evaluation import (
     GroundednessMetric,
     MetricDelta,
     MetricResult,
+    PagerDutyAlertSink,
     PromptCandidate,
     PromptOptimizer,
     PromptVariantRunner,
+    RAGAlert,
+    RAGAlertSink,
+    RAGERemediationSuggestion,
+    RAGEvaluationResult,
+    RAGEvaluationThresholds,
+    RAGEvaluator,
     RegressionReport,
     RelevancyMetric,
+    SlackWebhookAlertSink,
     eval_case,
 )
 from .graph import (
@@ -281,6 +293,24 @@ from .text_splitters import (
     SentenceWindowSplitter,
     TokenAwareSplitter,
 )
+from .voice import (
+    AudioFrame,
+    BaseSTT,
+    BaseTTS,
+    BaseVAD,
+    CartesiaTTS,
+    DeepgramSTT,
+    ElevenLabsTTS,
+    EnergyVAD,
+    LocalWhisperSTT,
+    OpenAITTS,
+    OpenAIWhisperSTT,
+    PiperTTS,
+    SileroVAD,
+    TranscriptChunk,
+    VoicePipeline,
+)
+from .voice.types import PipelineEvent, PipelineState
 
 __version__ = "1.7.0"
 __all__ = [
@@ -451,6 +481,9 @@ __all__ = [
     "AgentScratchpad",
     "AgentStep",
     "ReActAgent",
+    "ReasoningAgent",
+    "ReasoningAgentConfig",
+    "ReasoningDecision",
     "FunctionCallingAgent",
     "AgentExecutor",
     "AgentConfig",
@@ -586,9 +619,18 @@ __all__ = [
     "GroundednessMetric",
     "MetricDelta",
     "MetricResult",
+    "EmailAlertSink",
+    "PagerDutyAlertSink",
     "PromptCandidate",
     "PromptOptimizer",
     "PromptVariantRunner",
+    "RAGAlert",
+    "RAGAlertSink",
+    "RAGEvaluationResult",
+    "RAGEvaluationThresholds",
+    "RAGEvaluator",
+    "RAGERemediationSuggestion",
+    "SlackWebhookAlertSink",
     "RegressionReport",
     "RelevancyMetric",
     "eval_case",
@@ -638,6 +680,29 @@ __all__ = [
     "GoogleDriveLoader",
     # Plugins
     "PluginRegistry",
+    # Voice pipeline
+    "VoicePipeline",
+    # Voice base classes
+    "BaseVAD",
+    "BaseSTT",
+    "BaseTTS",
+    # VAD
+    "EnergyVAD",
+    "SileroVAD",
+    # STT
+    "LocalWhisperSTT",
+    "OpenAIWhisperSTT",
+    "DeepgramSTT",
+    # TTS
+    "OpenAITTS",
+    "ElevenLabsTTS",
+    "CartesiaTTS",
+    "PiperTTS",
+    # Voice types
+    "AudioFrame",
+    "TranscriptChunk",
+    "PipelineEvent",
+    "PipelineState",
     # API stability markers
     "deprecated",
     "experimental",

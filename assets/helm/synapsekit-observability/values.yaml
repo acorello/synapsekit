@@ -1,0 +1,29 @@
+prometheus:
+  image: prom/prometheus:v2.52.0
+  scrapeInterval: 15s
+  service:
+    type: ClusterIP
+    port: 9090
+  scrape:
+    enabled: true
+    targets:
+      - job_name: synapsekit
+        static_configs:
+          - targets:
+              - synapsekit-metrics.default.svc.cluster.local:8000
+
+grafana:
+  image: grafana/grafana:11.2.0
+  service:
+    type: ClusterIP
+    port: 3000
+  adminUser: admin
+  adminPassword: admin
+  dashboards:
+    enabled: true
+
+synapsekitMetrics:
+  service:
+    name: synapsekit-metrics
+    type: ClusterIP
+    port: 8000

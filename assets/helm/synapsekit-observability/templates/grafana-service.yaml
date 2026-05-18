@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "synapsekit-observability.fullname" . }}-grafana
+  labels:
+    app.kubernetes.io/name: {{ include "synapsekit-observability.name" . }}
+spec:
+  type: {{ .Values.grafana.service.type }}
+  ports:
+    - port: {{ .Values.grafana.service.port }}
+      targetPort: 3000
+      name: http
+  selector:
+    app.kubernetes.io/component: grafana
+    app.kubernetes.io/name: {{ include "synapsekit-observability.name" . }}

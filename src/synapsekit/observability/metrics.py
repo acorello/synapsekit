@@ -3,19 +3,25 @@
 from __future__ import annotations
 
 from contextlib import suppress
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
-try:  # pragma: no cover - avoid circular import at runtime
-    from ..observe.spans import SpanAttributes
-except Exception:  # pragma: no cover
-    SpanAttributes = None  # type: ignore[assignment]
+if TYPE_CHECKING:  # pragma: no cover
+    from prometheus_client import Counter, Histogram, CollectorRegistry
 
 try:  # pragma: no cover - optional dependency
-    from prometheus_client import CollectorRegistry, Counter, Histogram, start_http_server
+    from prometheus_client import (
+        CollectorRegistry as PromCollectorRegistry,
+        Counter as PromCounter,
+        Histogram as PromHistogram,
+        start_http_server as prom_start_http_server,
+    )
 
     _PROMETHEUS_AVAILABLE = True
 except Exception:  # pragma: no cover - optional dependency
-    Counter = Histogram = CollectorRegistry = start_http_server = None  # type: ignore[assignment]
+    PromCollectorRegistry = None  # type: ignore[assignment,misc]
+    PromCounter = None  # type: ignore[assignment,misc]
+    PromHistogram = None  # type: ignore[assignment,misc]
+    prom_start_http_server = None  # type: ignore[assignment,misc]
     _PROMETHEUS_AVAILABLE = False
 
 
@@ -40,25 +46,30 @@ class PrometheusMetrics:
     ) -> None:
         self.enabled = bool(enabled) and _PROMETHEUS_AVAILABLE
         self._namespace = namespace
-        self._registry = registry or (CollectorRegistry() if self.enabled else None)
+        self._registry: "CollectorRegistry" | None = registry
+        if self._registry is None and self.enabled and PromCollectorRegistry is not None:
+            self._registry = PromCollectorRegistry()
         self._server_started = False
+        self._cost_counter: "Counter" | None = None
+        self._token_counter: "Counter" | None = None
+        self._latency_hist: "Histogram" | None = None
 
         if self.enabled:
-            self._cost_counter = Counter(
+            self._cost_counter = PromCounter(
                 "cost_usd_total",
                 "Total LLM cost in USD.",
                 ["model", "provider"],
                 namespace=self._namespace,
                 registry=self._registry,
             )
-            self._token_counter = Counter(
+            self._token_counter = PromCounter(
                 "tokens_total",
                 "Total LLM tokens.",
                 ["model", "provider"],
                 namespace=self._namespace,
                 registry=self._registry,
             )
-            self._latency_hist = Histogram(
+            self._latency_hist = PromHistogram(
                 "latency_seconds",
                 "LLM latency in seconds.",
                 ["model", "provider"],
@@ -66,10 +77,6 @@ class PrometheusMetrics:
                 registry=self._registry,
                 buckets=(0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10),
             )
-        else:
-            self._cost_counter = None
-            self._token_counter = None
-            self._latency_hist = None
 
         if start_server and self.enabled:
             self.start_http_server(host=host, port=port)
@@ -77,9 +84,9 @@ class PrometheusMetrics:
     def start_http_server(self, *, host: str = "0.0.0.0", port: int = 8000) -> None:
         if not self.enabled or self._server_started:
             return
-        if start_http_server is None:
+        if prom_start_http_server is None or self._registry is None:
             return
-        start_http_server(port, addr=host, registry=self._registry)
+        prom_start_http_server(port, addr=host, registry=self._registry)
         self._server_started = True
 
     def record_llm(

@@ -34,7 +34,7 @@ class SpanExporter(Protocol):
 
     def export_dicts(self) -> list[dict[str, Any]]: ...
 
-    def after_export(self, span: ObserveSpan) -> None: ...
+    def after_export(self, span: ObserveSpan) -> None: pass
 
 
 @dataclass

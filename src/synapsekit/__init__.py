@@ -268,6 +268,18 @@ from .retrieval.self_rag import SelfRAGRetriever
 from .retrieval.sentence_window import SentenceWindowRetriever
 from .retrieval.step_back import StepBackRetriever
 from .retrieval.vectorstore import InMemoryVectorStore
+from .structured_output import (
+    IncrementalJSONBuffer,
+    StructuredOutput,
+    StructuredOutputAttempt,
+    StructuredOutputError,
+    StructuredOutputResult,
+    StructuredOutputRetryStrategy,
+    StructuredOutputStreamEvent,
+    StructuredOutputValidationError,
+    build_corrective_prompt,
+    structured_output,
+)
 from .text_splitters import (
     BaseSplitter,
     CharacterTextSplitter,
@@ -576,6 +588,16 @@ __all__ = [
     "SQLiteCheckpointer",
     # Structured output
     "generate_structured",
+    "IncrementalJSONBuffer",
+    "StructuredOutput",
+    "StructuredOutputAttempt",
+    "StructuredOutputError",
+    "StructuredOutputResult",
+    "StructuredOutputRetryStrategy",
+    "StructuredOutputStreamEvent",
+    "StructuredOutputValidationError",
+    "build_corrective_prompt",
+    "structured_output",
     # Evaluation
     "EvalCaseMeta",
     "EvalRegression",

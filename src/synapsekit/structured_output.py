@@ -8,7 +8,6 @@ import json
 import time
 from collections.abc import AsyncIterator, Callable, Iterable
 from dataclasses import asdict, dataclass, field
-from json import JSONDecodeError
 from typing import Any, Generic, TypeVar, cast
 
 try:  # Pydantic is optional until this module is used.
@@ -139,7 +138,7 @@ class IncrementalJSONBuffer:
 
         try:
             _, end = self._decoder.raw_decode(stripped)
-        except JSONDecodeError:
+        except json.JSONDecodeError:
             self.complete = False
             return False
 
@@ -215,7 +214,7 @@ class StructuredOutput(Generic[SchemaT]):
 
             try:
                 output = self._validate_raw(raw_output)
-            except (JSONDecodeError, ValidationError) as exc:
+            except (json.JSONDecodeError, ValidationError) as exc:
                 last_error = exc
                 attempt = await self._record_attempt(
                     llm=llm,
@@ -287,7 +286,7 @@ class StructuredOutput(Generic[SchemaT]):
 
             try:
                 output = self._validate_raw(raw_output)
-            except (JSONDecodeError, ValidationError) as exc:
+            except (json.JSONDecodeError, ValidationError) as exc:
                 last_error = exc
                 attempt = await self._record_attempt(
                     llm=llm,

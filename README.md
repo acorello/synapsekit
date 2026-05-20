@@ -7,7 +7,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/synapsekit?color=22c55e&label=pypi&logo=pypi&logoColor=white)](https://pypi.org/project/synapsekit/)
 [![Python](https://img.shields.io/badge/python-3.10%2B-22c55e?logo=python&logoColor=white)](https://www.python.org/)
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-22c55e)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-3600%20passing-22c55e?logo=pytest&logoColor=white)]()
+[![Tests](https://img.shields.io/badge/tests-3871%20passing-22c55e?logo=pytest&logoColor=white)]()
 [![Downloads](https://img.shields.io/pypi/dm/synapsekit?color=22c55e&logo=pypi&logoColor=white)](https://pypistats.org/packages/synapsekit)
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/synapsekit?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/synapsekit)
 [![Docs](https://img.shields.io/badge/docs-online-22c55e?logo=readthedocs&logoColor=white)](https://synapsekit.github.io/synapsekit-docs/)
@@ -190,6 +190,34 @@ Output parsers (JSON, Pydantic, List), prompt templates (standard, chat, few-sho
 
 **🌐 Federated Retrieval** *(new in v1.7.0)*<br/>
 `FederatedRetriever` fans out to multiple local retrievers and remote HTTP endpoints in parallel. RRF, normalised score fusion, or round-robin interleave. Near-duplicate dedup, per-source timeouts.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**🧠 Smart Context Manager** *(new)*<br/>
+`SmartContextManager` manages context windows hierarchically: static system prompt → running summary → search results → recent messages. Injects Anthropic `cache_control` tags on system and summary blocks automatically, cutting repeated-call costs by up to 80%. Sliding window prunes and summarises older turns via a cheap LLM. `pip install synapsekit[anthropic]`.
+
+</td>
+<td width="50%">
+
+**✅ Structured Output** *(new)*<br/>
+`StructuredOutput` wraps any LLM and validates its response against a Pydantic v2 model. Retries with a corrective prompt on JSON or schema failures, with configurable backoff and optional fallback provider. Streaming support via `IncrementalJSONBuffer` — detects complete JSON mid-stream and validates immediately.
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**🕸 Agent Federation** *(new)*<br/>
+`AgentFederation` routes prompts across a registry of agents using round-robin, capacity-aware, or cost-aware strategies. `InMemoryAgentRegistry` and `RedisAgentRegistry` track agents with heartbeat-based health checks and stale pruning. Tag and tool-based discovery filters. `LocalAgentClient` for in-process agents, custom `AgentClient` for remote. `pip install synapsekit[redis]` for Redis registry.
+
+</td>
+<td width="50%">
+
+**🔁 Continuous Fine-Tuning Pipeline** *(new)*<br/>
+`ContinuousTrainer` closes the loop from production feedback to a deployed fine-tuned model. `FeedbackCollector` batches samples async; `TrainingDataGenerator` exports JSONL and preference pairs; `OpenAIFineTuneProvider` / `AnthropicFineTuneProvider` submit and poll jobs; `ABTestRouter` sticky-routes traffic by SHA-256 bucket; `AutoRolloutManager` stages rollout with latency/cost/quality regression guards; `CostBenefitAnalyzer` projects ROI and payback days. `pip install synapsekit[training]`.
 
 </td>
 </tr>
@@ -521,8 +549,12 @@ Every integration is `pip install synapsekit[name]` — nothing else. Swap provi
 <table>
   <tr>
     <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=opentelemetry.io&sz=128" height="40" alt="OpenTelemetry"/><br/><sub><b>OpenTelemetry</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=prometheus.io&sz=128" height="40" alt="Prometheus"/><br/><sub><b>Prometheus</b></sub></td>
+    <td align="center" width="90"><img src="https://www.google.com/s2/favicons?domain=grafana.com&sz=128" height="40" alt="Grafana"/><br/><sub><b>Grafana</b></sub></td>
   </tr>
 </table>
+
+`PrometheusMetrics` records `synapsekit_cost_usd_total`, `synapsekit_tokens_total`, and `synapsekit_latency_seconds` per model/provider. Hooks into the existing `observe` span pipeline — no code changes needed. Helm chart for a Prometheus + Grafana stack ships in `assets/helm/synapsekit-observability/`. `pip install synapsekit[observe]`.
 
 ### Multi-Hop Knowledge Graph RAG
 
@@ -576,10 +608,13 @@ We credit every contributor in the README and send a personal thank-you on Disco
 **pip**
 ```bash
 pip install synapsekit[openai]       # OpenAI
-pip install synapsekit[anthropic]    # Anthropic
+pip install synapsekit[anthropic]    # Anthropic + prompt caching
 pip install synapsekit[ollama]       # Ollama (local)
 pip install synapsekit[performance]  # orjson + uvloop + xxhash (faster)
-pip install synapsekit[observe]      # Observability extras
+pip install synapsekit[observe]      # OpenTelemetry + Prometheus metrics
+pip install synapsekit[training]     # Continuous fine-tuning pipeline
+pip install synapsekit[bench]        # pytest-benchmark + ASV harness
+pip install synapsekit[redis]        # Redis agent registry + memory backends
 pip install synapsekit[all]          # Everything
 ```
 

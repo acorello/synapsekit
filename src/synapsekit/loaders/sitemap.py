@@ -22,7 +22,8 @@ def _extract_text(html: str) -> str:
         soup = BeautifulSoup(html, "html.parser")
     for tag in soup(["script", "style"]):
         tag.decompose()
-    return soup.get_text(separator=" ", strip=True)[:_MAX_TEXT_LENGTH]
+    text = soup.get_text(separator=" ", strip=True)
+    return str(text)[:_MAX_TEXT_LENGTH]
 
 
 def _parse_sitemap(xml: str, base_url: str) -> tuple[list[dict[str, str]], list[str]]:

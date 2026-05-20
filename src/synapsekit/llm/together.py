@@ -20,7 +20,7 @@ class TogetherLLM(BaseLLM):
     def __init__(self, config: LLMConfig, base_url: str | None = None) -> None:
         super().__init__(config)
         self._base_url = base_url or _TOGETHER_BASE_URL
-        self._client = None
+        self._client: Any = None
 
     def _get_client(self):
         if self._client is None:

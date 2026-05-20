@@ -25,5 +25,8 @@ class BufferedSpanExporter:
     def clear(self) -> None:
         self.spans.clear()
 
+    def after_export(self, span: ObserveSpan) -> None:
+        return None
+
     def export_dicts(self) -> list[dict]:
         return [span.to_dict() for span in self.spans]

@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "synapsekit-observability.fullname" . }}-grafana
+  labels:
+    app.kubernetes.io/name: {{ include "synapsekit-observability.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: grafana
+      app.kubernetes.io/name: {{ include "synapsekit-observability.name" . }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: grafana
+        app.kubernetes.io/name: {{ include "synapsekit-observability.name" . }}
+    spec:
+      containers:
+        - name: grafana
+          image: {{ .Values.grafana.image }}
+          env:
+            - name: GF_SECURITY_ADMIN_USER
+              value: {{ .Values.grafana.adminUser | quote }}
+            - name: GF_SECURITY_ADMIN_PASSWORD
+              value: {{ .Values.grafana.adminPassword | quote }}
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: grafana-datasource
+              mountPath: /etc/grafana/provisioning/datasources
+            - name: grafana-dashboard
+              mountPath: /etc/grafana/provisioning/dashboards
+            - name: grafana-dashboard-json
+              mountPath: /var/lib/grafana/dashboards
+      volumes:
+        - name: grafana-datasource
+          configMap:
+            name: {{ include "synapsekit-observability.fullname" . }}-grafana-datasource
+        - name: grafana-dashboard
+          configMap:
+            name: {{ include "synapsekit-observability.fullname" . }}-grafana-dashboard
+            items:
+              - key: dashboards.yaml
+                path: dashboards.yaml
+        - name: grafana-dashboard-json
+          configMap:
+            name: {{ include "synapsekit-observability.fullname" . }}-grafana-dashboard
+            items:
+              - key: synapsekit-observe-dashboard.json
+                path: synapsekit-observe-dashboard.json

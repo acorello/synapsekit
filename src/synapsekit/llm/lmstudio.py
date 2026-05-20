@@ -33,7 +33,7 @@ class LMStudioLLM(BaseLLM):
 
     def __init__(self, config: LLMConfig, *, base_url: str | None = None) -> None:
         super().__init__(config)
-        self._client = None
+        self._client: Any = None
         self._base_url: str = base_url or _DEFAULT_BASE_URL
 
     def _get_client(self):

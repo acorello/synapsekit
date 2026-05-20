@@ -6,7 +6,7 @@ import random
 import time
 from contextvars import ContextVar, Token
 from dataclasses import dataclass, field
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 from .exporters import (
     ConsoleExporter,
@@ -15,6 +15,9 @@ from .exporters import (
     LangfuseExporter,
     OTLPExporter,
 )
+
+if TYPE_CHECKING:
+    from ..observability.metrics import PrometheusMetrics
 
 REDACTED = "[REDACTED]"
 
@@ -30,6 +33,9 @@ class SpanExporter(Protocol):
     def clear(self) -> None: ...
 
     def export_dicts(self) -> list[dict[str, Any]]: ...
+
+    def after_export(self, span: ObserveSpan) -> None:
+        pass
 
 
 @dataclass
@@ -96,6 +102,9 @@ class InMemoryExporter:
     def export(self, span: ObserveSpan) -> None:
         self.spans.append(span)
 
+    def after_export(self, span: ObserveSpan) -> None:
+        return None
+
     def clear(self) -> None:
         self.spans.clear()
 
@@ -108,6 +117,7 @@ class _ObserveState:
     config: ObserveConfig = field(default_factory=ObserveConfig)
     exporter: SpanExporter = field(default_factory=InMemoryExporter)
     enabled: bool = False
+    metrics: PrometheusMetrics | None = None
 
 
 _STATE = _ObserveState()
@@ -155,6 +165,7 @@ def configure(
     cost_tracking: bool = True,
     sample_rate: float = 1.0,
     redact_keys: list[str] | tuple[str, ...] | None = None,
+    metrics: PrometheusMetrics | None = None,
 ) -> SpanExporter:
     config = ObserveConfig(
         exporter=exporter,
@@ -173,6 +184,7 @@ def configure(
         endpoint=endpoint,
     )
     _STATE.enabled = True
+    _STATE.metrics = metrics
     return _STATE.exporter
 
 
@@ -180,6 +192,7 @@ def reset() -> None:
     _STATE.exporter.clear()
     _STATE.enabled = False
     _STATE.config = ObserveConfig()
+    _STATE.metrics = None
     _CURRENT_SPAN.set(None)
 
 
@@ -193,6 +206,10 @@ def get_config() -> ObserveConfig:
 
 def get_exporter() -> SpanExporter:
     return _STATE.exporter
+
+
+def set_metrics(metrics: PrometheusMetrics | None) -> None:
+    _STATE.metrics = metrics
 
 
 def clear_exported_spans() -> None:
@@ -276,6 +293,9 @@ def end_span(
         span._context_token = None
     if span.parent is None:
         _STATE.exporter.export(span)
+        _STATE.exporter.after_export(span)
+        if _STATE.metrics is not None:
+            _STATE.metrics.record_span(span)
 
 
 def record_exception(span: ObserveSpan | None, exc: Exception) -> None:

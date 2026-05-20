@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import AsyncGenerator
+from typing import Any
 
 from .base import BaseLLM, LLMConfig, _messages_to_prompt
 
@@ -12,7 +13,7 @@ class BedrockLLM(BaseLLM):
     def __init__(self, config: LLMConfig, region: str = "us-east-1") -> None:
         super().__init__(config)
         self._region = region
-        self._client = None
+        self._client: Any = None
 
     def _get_client(self):
         if self._client is None:

@@ -33,7 +33,7 @@ class GoogleThinking(BaseReasoningProvider):
             thinking=thinking,
             provider="google",
         )
-        self._model = None
+        self._model: Any = None
 
     def _get_model(self):
         if self._model is None:

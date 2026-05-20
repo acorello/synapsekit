@@ -89,6 +89,7 @@ voice-cartesia = ["cartesia>=0.1"]
 voice-elevenlabs = ["elevenlabs>=1.0"]
 voice-deepgram = ["deepgram-sdk>=3.0"]
 voice-silero = ["torch>=2.0", "torchaudio>=2.0"]
+training = ["openai>=1.0"]
 cron = ["croniter>=2.0", "tzdata>=2024.1; sys_platform == 'win32'"]
 excel = ["openpyxl>=3.1"]
 pptx = ["python-pptx>=0.6"]
@@ -115,7 +116,7 @@ ernie = ["erniebot>=0.5"]
 minimax = ["httpx>=0.27"]
 serve = ["fastapi>=0.110", "uvicorn[standard]>=0.29"]
 graph-ui = ["fastapi>=0.110", "uvicorn[standard]>=0.29"]
-observe = []
+observe = ["prometheus-client>=0.20"]
 postgres = ["psycopg[binary]>=3.1", "asyncpg>=0.29"]
 pgvector = ["psycopg[binary]>=3.1", "pgvector>=0.2"]
 wolfram = ["wolframalpha>=5.0"]
@@ -243,6 +244,12 @@ dev = [
     "beautifulsoup4>=4.14.3",
     "fastapi>=0.135.1",
     "tzdata>=2024.1",
+]
+
+bench = [
+    "pytest-benchmark[histogram]>=4.0",
+    "asv>=0.6",
+    "psutil>=5.9",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -406,7 +413,7 @@ snowflake-connector-python = "snowflake"
 "piper-tts" = "piper"
 
 [tool.deptry.per_rule_ignores]
-DEP001 = ["sqlalchemy", "pydantic", "aiohttp", "opentelemetry", "whisper", "botocore", "aiomcache", "nest_asyncio", "huggingface_hub", "serpapi", "weaviate", "uvicorn", "starlette", "tomli", "pyttsx3", "faster_whisper", "sounddevice", "soundfile", "aiokafka", "typesense"]
+DEP001 = ["sqlalchemy", "pydantic", "aiohttp", "opentelemetry", "whisper", "botocore", "aiomcache", "nest_asyncio", "huggingface_hub", "serpapi", "weaviate", "uvicorn", "starlette", "tomli", "pyttsx3", "faster_whisper", "sounddevice", "soundfile", "aiokafka", "typesense", "prometheus_client"]
 DEP002 = ["numpy", "rank-bm25", "beautifulsoup4", "lxml", "pillow", "pyasn1", "faiss-cpu", "google-generativeai", "tavily-python", "youtube-search-python", "psycopg", "google-search-results", "discord.py", "google-auth", "weaviate-client", "pymilvus", "lancedb", "pgvector", "slack-sdk", "supabase", "pymongo", "azure-storage-blob", "elasticsearch", "tzdata", "torchaudio"]
 DEP003 = ["sqlalchemy", "botocore", "nest_asyncio", "opentelemetry", "starlette", "uvicorn"]
 DEP004 = ["pydantic"]

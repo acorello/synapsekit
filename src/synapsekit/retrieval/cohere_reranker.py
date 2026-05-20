@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from typing import Any
 
 from .retriever import Retriever
 
@@ -29,7 +30,7 @@ class CohereReranker:
         self._model = model
         self._api_key = api_key
         self._fetch_k = fetch_k
-        self._client = None
+        self._client: Any = None
 
     def _get_client(self):
         if self._client is None:

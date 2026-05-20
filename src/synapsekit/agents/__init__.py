@@ -1,6 +1,14 @@
+from .agent_registry import AgentMetadata, AgentRegistry, InMemoryAgentRegistry, RedisAgentRegistry
 from .base import BaseTool, ToolResult
 from .executor import AgentConfig, AgentExecutor
 from .facade import SimpleAgent, agent
+from .federation import (
+    AgentClient,
+    AgentFederation,
+    AgentRoutingStrategy,
+    LocalAgentClient,
+    RoutingStrategy,
+)
 from .function_calling import FunctionCallingAgent
 from .guardrails import (
     ContentFilter,
@@ -95,6 +103,15 @@ __all__ = [
     "BaseTool",
     "ToolResult",
     "ToolRegistry",
+    "AgentMetadata",
+    "AgentRegistry",
+    "InMemoryAgentRegistry",
+    "RedisAgentRegistry",
+    "AgentClient",
+    "LocalAgentClient",
+    "AgentFederation",
+    "AgentRoutingStrategy",
+    "RoutingStrategy",
     "AgentMemory",
     "AgentScratchpad",
     "AgentStep",

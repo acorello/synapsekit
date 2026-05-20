@@ -75,3 +75,7 @@ docs/*
 *.npz
 typescript
 .synapsekit_evals/
+
+# ASV machine profiles (contributor-specific, not project config)
+benchmarks/asv/machine.json
+.asv/

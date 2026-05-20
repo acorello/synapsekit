@@ -16,7 +16,7 @@ class DatabricksLLM(BaseLLM):
         workspace_url: str | None = None,
     ) -> None:
         super().__init__(config)
-        self._client = None
+        self._client: Any = None
         self._workspace_url = workspace_url
 
     def _get_client(self):

@@ -91,11 +91,12 @@ class TextToSpeechTool(BaseTool):
 
         def _synthesize() -> None:
             client = openai.OpenAI(api_key=api_key)
+            response_format: Any = format
             response = client.audio.speech.create(
                 model=model,
                 voice=voice,
                 input=input_text,
-                response_format=format,
+                response_format=response_format,
             )
             response.stream_to_file(str(target))
 

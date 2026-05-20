@@ -43,9 +43,9 @@ class RedisLoader:
         except ImportError:
             raise ImportError("redis required: pip install synapsekit[redis]") from None
 
-        client = Redis.from_url(self._url, decode_responses=True)
+        client: Any = Redis.from_url(self._url, decode_responses=True)
 
-        keys: list[str] = client.keys(self._pattern)
+        keys = client.keys(self._pattern)
         if self._limit is not None:
             keys = keys[: self._limit]
 

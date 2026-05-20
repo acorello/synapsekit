@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "synapsekit-observability.fullname" . }}-prometheus
+  labels:
+    app.kubernetes.io/name: {{ include "synapsekit-observability.name" . }}
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: {{ .Values.prometheus.scrapeInterval }}
+    scrape_configs:
+    {{- if .Values.prometheus.scrape.enabled }}
+      {{- toYaml .Values.prometheus.scrape.targets | nindent 6 }}
+    {{- end }}

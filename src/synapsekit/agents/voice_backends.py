@@ -153,7 +153,7 @@ class OpenAITTSBackend(TTSBackend):
                 response_format="mp3",
                 **kwargs,
             )
-            return response.read()
+            return bytes(response.read())
 
         return await asyncio.to_thread(_synthesize)
 

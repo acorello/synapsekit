@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any
+from typing import Any, cast
 
 from .base import Document
 
@@ -101,6 +101,7 @@ class DiscordLoader:
                 if self.after_message_id is not None:
                     kwargs["after"] = discord.Object(id=self.after_message_id)
 
+                channel = cast(Any, channel)
                 messages = [msg async for msg in channel.history(**kwargs)]
 
                 for msg in messages:

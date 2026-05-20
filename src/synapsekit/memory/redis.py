@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from typing import Any
 
 
 class RedisConversationMemory:
@@ -63,7 +64,8 @@ class RedisConversationMemory:
 
     def get_messages(self) -> list[dict]:
         """Return all messages for this conversation."""
-        raw = self._client.lrange(self._messages_key, 0, -1)
+        client: Any = self._client
+        raw = client.lrange(self._messages_key, 0, -1)
         return [json.loads(item) for item in raw]
 
     def format_context(self) -> str:
@@ -81,12 +83,14 @@ class RedisConversationMemory:
 
     def list_conversations(self) -> list[str]:
         """Return all conversation IDs tracked in Redis."""
-        members = self._client.smembers(self._conversations_key)
+        client: Any = self._client
+        members = client.smembers(self._conversations_key)
         # smembers may return bytes or str depending on decode_responses
         return sorted(m.decode() if isinstance(m, bytes) else m for m in members)
 
     def __len__(self) -> int:
-        return int(self._client.llen(self._messages_key))
+        client: Any = self._client
+        return int(client.llen(self._messages_key))
 
     def close(self) -> None:
         """Close the Redis connection."""

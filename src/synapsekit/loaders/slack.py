@@ -94,7 +94,8 @@ class SlackLoader:
 
             return documents
         finally:
-            await client.session.close()
+            if client.session is not None:
+                await client.session.close()
 
     async def _fetch_messages(self, client: Any) -> list[dict]:
         """Fetch messages from the channel with pagination."""

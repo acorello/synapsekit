@@ -20,7 +20,7 @@ class VertexAILLM(BaseLLM):
 
     def __init__(self, config: LLMConfig) -> None:
         super().__init__(config)
-        self._model = None
+        self._model: Any = None
 
     def _get_model(self):
         """Lazy initialization of the Vertex AI model."""

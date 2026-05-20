@@ -18,9 +18,14 @@ from ._api import deprecated, experimental, public_api
 from .a2a import A2AClient, A2AMessage, A2AServer, A2ATask, AgentCard, TaskState
 from .agents import (
     ActionEvent,
+    AgentClient,
     AgentConfig,
     AgentExecutor,
+    AgentFederation,
     AgentMemory,
+    AgentMetadata,
+    AgentRegistry,
+    AgentRoutingStrategy,
     AgentScratchpad,
     AgentStep,
     ArxivSearchTool,
@@ -56,9 +61,11 @@ from .agents import (
     HumanInputTool,
     ImageAnalysisTool,
     ImageGenerationTool,
+    InMemoryAgentRegistry,
     JiraTool,
     JSONQueryTool,
     LinearTool,
+    LocalAgentClient,
     NewsTool,
     ObservationEvent,
     PDFReaderTool,
@@ -68,7 +75,9 @@ from .agents import (
     PythonREPLTool,
     ReActAgent,
     RedactionResult,
+    RedisAgentRegistry,
     RegexTool,
+    RoutingStrategy,
     SentimentAnalysisTool,
     ShellTool,
     SimpleAgent,
@@ -106,6 +115,7 @@ from .agents import (
 )
 from .embeddings.backend import SynapsekitEmbeddings
 from .evaluation import (
+    EmailAlertSink,
     EvalCaseMeta,
     EvalRegression,
     EvalSnapshot,
@@ -115,8 +125,19 @@ from .evaluation import (
     GroundednessMetric,
     MetricDelta,
     MetricResult,
+    PagerDutyAlertSink,
+    PromptCandidate,
+    PromptOptimizer,
+    PromptVariantRunner,
+    RAGAlert,
+    RAGAlertSink,
+    RAGERemediationSuggestion,
+    RAGEvaluationResult,
+    RAGEvaluationThresholds,
+    RAGEvaluator,
     RegressionReport,
     RelevancyMetric,
+    SlackWebhookAlertSink,
     eval_case,
 )
 from .graph import (
@@ -157,9 +178,16 @@ from .graph import (
     ws_stream,
 )
 from .llm.base import BaseLLM, LLMConfig
+from .llm.cost_quality_router import CostQualityRouter
 from .llm.cost_router import QUALITY_TABLE, CostRouter, CostRouterConfig, RouterModelSpec
 from .llm.fallback_chain import FallbackChain, FallbackChainConfig
 from .llm.multimodal import AudioContent, ImageContent, MultimodalMessage
+from .llm.reasoning import (
+    BaseReasoningProvider,
+    ReasoningLLM,
+    ReasoningResponse,
+    ReasoningStreamChunk,
+)
 from .llm.structured import generate_structured
 from .loaders.arxiv import ArXivLoader
 from .loaders.azure_blob import AzureBlobLoader
@@ -272,7 +300,7 @@ from .text_splitters import (
     TokenAwareSplitter,
 )
 
-__version__ = "1.6.0"
+__version__ = "1.7.0"
 __all__ = [
     # Facade
     "RAG",
@@ -286,12 +314,14 @@ __all__ = [
     "MemcachedCacheBackend",
     "BaseLLM",
     "LLMConfig",
+    "CostQualityRouter",
     "CostRouter",
     "CostRouterConfig",
     "RouterModelSpec",
     "QUALITY_TABLE",
     "FallbackChain",
     "FallbackChainConfig",
+    "BaseReasoningProvider",
     "AlephAlphaLLM",
     "AzureOpenAILLM",
     "CerebrasLLM",
@@ -306,6 +336,9 @@ __all__ = [
     "NovitaLLM",
     "OpenRouterLLM",
     "PerplexityLLM",
+    "ReasoningLLM",
+    "ReasoningResponse",
+    "ReasoningStreamChunk",
     "SambaNovaLLM",
     "TogetherLLM",
     "VertexAILLM",
@@ -432,6 +465,15 @@ __all__ = [
     "BaseTool",
     "ToolResult",
     "ToolRegistry",
+    "AgentMetadata",
+    "AgentRegistry",
+    "InMemoryAgentRegistry",
+    "RedisAgentRegistry",
+    "AgentClient",
+    "LocalAgentClient",
+    "AgentFederation",
+    "AgentRoutingStrategy",
+    "RoutingStrategy",
     "AgentMemory",
     "AgentScratchpad",
     "AgentStep",
@@ -571,6 +613,18 @@ __all__ = [
     "GroundednessMetric",
     "MetricDelta",
     "MetricResult",
+    "EmailAlertSink",
+    "PagerDutyAlertSink",
+    "PromptCandidate",
+    "PromptOptimizer",
+    "PromptVariantRunner",
+    "RAGAlert",
+    "RAGAlertSink",
+    "RAGEvaluationResult",
+    "RAGEvaluationThresholds",
+    "RAGEvaluator",
+    "RAGERemediationSuggestion",
+    "SlackWebhookAlertSink",
     "RegressionReport",
     "RelevancyMetric",
     "eval_case",
@@ -664,6 +718,10 @@ _LAZY_IMPORTS = {
     "LMStudioLLM": "llm.lmstudio",
     "VLLMLLM": "llm.vllm",
     "CloudflareLLM": "llm.cloudflare",
+    "BaseReasoningProvider": "llm.reasoning",
+    "ReasoningLLM": "llm.reasoning",
+    "ReasoningResponse": "llm.reasoning",
+    "ReasoningStreamChunk": "llm.reasoning",
     # Checkpointers
     "RedisCheckpointer": "graph.checkpointers.redis",
     "PostgresCheckpointer": "graph.checkpointers.postgres",

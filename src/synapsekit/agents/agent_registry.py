@@ -5,12 +5,13 @@ from __future__ import annotations
 import json
 import threading
 import time
+from builtins import list as builtin_list
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
-from typing import Any, List, Protocol
+from typing import Any, Protocol
 
 
-def _normalise_strings(values: Iterable[str] | str | None) -> List[str]:
+def _normalise_strings(values: Iterable[str] | str | None) -> builtin_list[str]:
     if values is None:
         return []
     if isinstance(values, str):
@@ -24,10 +25,10 @@ class AgentMetadata:
 
     id: str
     model: str
-    tools: list[str] = field(default_factory=list)
+    tools: builtin_list[str] = field(default_factory=list)
     capacity: int = 1
     cost_multiplier: float = 1.0
-    tags: list[str] = field(default_factory=list)
+    tags: builtin_list[str] = field(default_factory=list)
     endpoint: str | None = None
     last_heartbeat: float | None = None
 
@@ -116,7 +117,7 @@ class AgentRegistryBackend(Protocol):
     def register(self, agent: AgentMetadata) -> AgentMetadata: ...
     def unregister(self, agent_id: str) -> bool: ...
     def get(self, agent_id: str) -> AgentMetadata | None: ...
-    def list(self) -> List[AgentMetadata]: ...
+    def list(self) -> builtin_list[AgentMetadata]: ...
     def heartbeat(self, agent_id: str, timestamp: float | None = None) -> AgentMetadata: ...
     def is_healthy(self, agent_id: str) -> bool: ...
     def discover(
@@ -126,9 +127,9 @@ class AgentRegistryBackend(Protocol):
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> List[AgentMetadata]: ...
+    ) -> builtin_list[AgentMetadata]: ...
     stale_timeout: float
-    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]: ...
+    def prune_stale(self, *, stale_timeout: float | None = None) -> builtin_list[str]: ...
 
 
 class InMemoryAgentRegistry:
@@ -168,7 +169,7 @@ class InMemoryAgentRegistry:
 
     get_agent = get
 
-    def list(self) -> List[AgentMetadata]:
+    def list(self) -> builtin_list[AgentMetadata]:
         with self._lock:
             return [agent.copy() for agent in self._agents.values()]
 
@@ -201,7 +202,7 @@ class InMemoryAgentRegistry:
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> List[AgentMetadata]:
+    ) -> builtin_list[AgentMetadata]:
         now = self._clock()
         return [
             agent
@@ -219,10 +220,10 @@ class InMemoryAgentRegistry:
 
     discover_agents = discover
 
-    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]:
+    def prune_stale(self, *, stale_timeout: float | None = None) -> builtin_list[str]:
         now = self._clock()
         timeout = self.stale_timeout if stale_timeout is None else float(stale_timeout)
-        removed: List[str] = []
+        removed: builtin_list[str] = []
         with self._lock:
             for agent_id, agent in list(self._agents.items()):
                 if not agent.is_healthy(timeout, now=now):
@@ -304,8 +305,8 @@ class RedisAgentRegistry:
 
     get_agent = get
 
-    def list(self) -> List[AgentMetadata]:
-        agents: list[AgentMetadata] = []
+    def list(self) -> builtin_list[AgentMetadata]:
+        agents: builtin_list[AgentMetadata] = []
         for key in self._redis.scan_iter(match=f"{self.prefix}:*"):
             agent = self._loads(self._redis.get(key))
             if agent is not None:
@@ -341,7 +342,7 @@ class RedisAgentRegistry:
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> List[AgentMetadata]:
+    ) -> builtin_list[AgentMetadata]:
         now = time.time()
         return [
             agent
@@ -359,10 +360,10 @@ class RedisAgentRegistry:
 
     discover_agents = discover
 
-    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]:
+    def prune_stale(self, *, stale_timeout: float | None = None) -> builtin_list[str]:
         now = time.time()
         timeout = self.stale_timeout if stale_timeout is None else float(stale_timeout)
-        removed: List[str] = []
+        removed: builtin_list[str] = []
         for agent in self.list():
             if not agent.is_healthy(timeout, now=now):
                 removed.append(agent.id)
@@ -426,7 +427,7 @@ class AgentRegistry:
 
     get_agent = get
 
-    def list(self) -> List[AgentMetadata]:
+    def list(self) -> builtin_list[AgentMetadata]:
         return self._backend.list()
 
     list_agents = list
@@ -450,7 +451,7 @@ class AgentRegistry:
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> List[AgentMetadata]:
+    ) -> builtin_list[AgentMetadata]:
         return self._backend.discover(
             tools=tools,
             tags=tags,
@@ -460,7 +461,7 @@ class AgentRegistry:
 
     discover_agents = discover
 
-    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]:
+    def prune_stale(self, *, stale_timeout: float | None = None) -> builtin_list[str]:
         return self._backend.prune_stale(stale_timeout=stale_timeout)
 
     prune_stale_agents = prune_stale

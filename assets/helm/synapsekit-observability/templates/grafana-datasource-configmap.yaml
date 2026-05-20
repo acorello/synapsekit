@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "synapsekit-observability.fullname" . }}-grafana-datasource
+  labels:
+    app.kubernetes.io/name: {{ include "synapsekit-observability.name" . }}
+data:
+  datasources.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://{{ include "synapsekit-observability.fullname" . }}-prometheus:{{ .Values.prometheus.service.port }}
+        isDefault: true

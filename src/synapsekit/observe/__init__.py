@@ -25,6 +25,7 @@ from .runtime import (
     is_enabled,
     record_exception,
     reset,
+    set_metrics,
     start_span,
     trace,
 )
@@ -235,6 +236,7 @@ __all__ = [
     "is_enabled",
     "record_exception",
     "reset",
+    "set_metrics",
     "start_span",
     "trace",
 ]

@@ -1,5 +1,12 @@
 from .base import MetricResult
-from .compat import (
+from .dataset import EvalDataset, EvalRecord
+from .decorators import EvalCaseMeta, eval_case
+from .faithfulness import FaithfulnessMetric
+from .finetune import FineTuneJob, FineTuner
+from .groundedness import GroundednessMetric
+from .optimizer import PromptCandidate, PromptOptimizer, PromptVariantRunner
+from .pipeline import EvaluationPipeline, EvaluationResult
+from .rag_evaluator import (
     EmailAlertSink,
     PagerDutyAlertSink,
     RAGAlert,
@@ -10,19 +17,14 @@ from .compat import (
     RAGEvaluator,
     SlackWebhookAlertSink,
 )
-from .dataset import EvalDataset, EvalRecord
-from .decorators import EvalCaseMeta, eval_case
-from .faithfulness import FaithfulnessMetric
-from .finetune import FineTuneJob, FineTuner
-from .groundedness import GroundednessMetric
-from .optimizer import PromptCandidate, PromptOptimizer, PromptVariantRunner
-from .pipeline import EvaluationPipeline, EvaluationResult
 from .regression import EvalRegression, EvalSnapshot, MetricDelta, RegressionReport
 from .relevancy import RelevancyMetric
 
 __all__ = [
-    "EmailAlertSink",
     "EvalCaseMeta",
+    "PromptCandidate",
+    "PromptOptimizer",
+    "PromptVariantRunner",
     "EvalDataset",
     "EvalRecord",
     "EvalRegression",
@@ -35,18 +37,16 @@ __all__ = [
     "GroundednessMetric",
     "MetricDelta",
     "MetricResult",
+    "EmailAlertSink",
     "PagerDutyAlertSink",
-    "PromptCandidate",
-    "PromptOptimizer",
-    "PromptVariantRunner",
     "RAGAlert",
     "RAGAlertSink",
-    "RAGERemediationSuggestion",
     "RAGEvaluationResult",
     "RAGEvaluationThresholds",
     "RAGEvaluator",
+    "RAGERemediationSuggestion",
+    "SlackWebhookAlertSink",
     "RegressionReport",
     "RelevancyMetric",
-    "SlackWebhookAlertSink",
     "eval_case",
 ]

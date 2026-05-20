@@ -12,6 +12,8 @@ class TestTokenTracer:
         assert s["calls"] == 0
         assert s["total_tokens"] == 0
         assert s["estimated_cost_usd"] == 0.0
+        assert s["rag_evaluations"] == 0
+        assert s["total_rag_alerts"] == 0
 
     def test_record_and_summary(self):
         tracer = TokenTracer(model="gpt-4o-mini")
@@ -93,3 +95,36 @@ class TestTokenTracer:
             degrading.record(input_tokens=1, output_tokens=1, latency_ms=1.0)
             degrading.record_quality(faithfulness=score, relevancy=score)
         assert degrading.summary()["quality_trend"] == "degrading"
+
+    def test_rag_evaluation_summary_tracks_roi_and_alerts(self):
+        tracer = TokenTracer(model="gpt-4o-mini")
+        tracer.record(input_tokens=10, output_tokens=5, latency_ms=12.5)
+        tracer.record_rag_evaluation(
+            recall=0.82,
+            precision=0.74,
+            relevance=0.78,
+            answer_quality=0.84,
+            retrieval_benefit=0.81,
+            benefit_to_cost=120.0,
+            eval_cost_usd=0.002,
+            alert_count=2,
+            call_id=1,
+            sample_key="sample-1",
+            question="What is RAG?",
+        )
+
+        history = tracer.rag_evaluation_history()
+        assert len(history) == 1
+        assert history[0]["question"] == "What is RAG?"
+
+        summary = tracer.summary()
+        assert summary["rag_evaluations"] == 1
+        assert summary["avg_rag_recall"] == 0.82
+        assert summary["avg_rag_precision"] == 0.74
+        assert summary["avg_rag_relevance"] == 0.78
+        assert summary["avg_rag_answer_quality"] == 0.84
+        assert summary["avg_rag_retrieval_benefit"] == 0.81
+        assert summary["avg_rag_benefit_to_cost"] == 120.0
+        assert summary["total_rag_eval_cost_usd"] == 0.002
+        assert summary["total_rag_alerts"] == 2
+        assert summary["rag_quality_trend"] == "stable"

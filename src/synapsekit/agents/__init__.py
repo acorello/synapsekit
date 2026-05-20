@@ -31,6 +31,7 @@ from .multi import (
 )
 from .pii_redactor import PIIRedactor, RedactionResult
 from .react import ReActAgent
+from .reasoning_agent import ReasoningAgent, ReasoningAgentConfig, ReasoningDecision
 from .registry import ToolRegistry
 from .step_events import (
     ActionEvent,
@@ -116,6 +117,9 @@ __all__ = [
     "AgentStep",
     # Agents
     "ReActAgent",
+    "ReasoningAgent",
+    "ReasoningAgentConfig",
+    "ReasoningDecision",
     "FunctionCallingAgent",
     "AgentExecutor",
     "AgentConfig",

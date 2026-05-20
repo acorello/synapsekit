@@ -1,304 +1,425 @@
-"""Unified adapter for extended / chain-of-thought reasoning models."""
-
 from __future__ import annotations
 
-import re
+import json
 from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any
 
-from .base import BaseLLM, LLMConfig
-
-_THINKING_RE = re.compile(r"<thinking>.*?</thinking>", re.DOTALL | re.IGNORECASE)
-
-_PROVIDER_DEFAULTS: dict[str, str] = {
-    "openai": "o3",
-    "anthropic": "claude-opus-4-5-20251001",
-    "google": "gemini-2.0-flash-thinking-exp",
-    "deepseek": "deepseek-reasoner",
-}
-
-Provider = Literal["openai", "anthropic", "google", "deepseek"]
+from ..observability.tracer import COST_TABLE
+from .base import BaseLLM, LLMConfig, _messages_to_prompt
+from .utils import extract_reasoning_tokens, extract_text
 
 
-@dataclass(slots=True)
+@dataclass
 class ReasoningResponse:
-    """Reasoning + answer pair returned by reasoning providers."""
-
-    reasoning: str
     answer: str
+    thinking: str | None
+    thinking_tokens: int
+    answer_tokens: int
+    total_tokens: int
+    model: str
+    provider: str
 
 
-@dataclass(slots=True)
+@dataclass
+class ReasoningUsage:
+    thinking_tokens: int
+    answer_tokens: int
+    total_tokens: int
+    input_tokens: int
+    output_tokens: int
+    thinking_cost_usd: float
+    answer_cost_usd: float
+    total_cost_usd: float
+    model: str
+    provider: str
+
+
+@dataclass
 class ReasoningStreamChunk:
-    """Chunk emitted by a reasoning model stream."""
-
     text: str
-    reasoning: str = ""
+    is_thinking: bool
 
 
-class BaseReasoningProvider(BaseLLM, ABC):
-    """Compatibility base class for reasoning providers."""
+class BaseReasoningProvider(ABC):
+    def __init__(
+        self,
+        model: str,
+        api_key: str | None = None,
+        budget_tokens: int | None = None,
+        thinking: bool = True,
+        provider: str | None = None,
+    ) -> None:
+        self.model = model
+        self.api_key = api_key
+        self.budget_tokens = budget_tokens
+        self.thinking = thinking
+        self.provider = provider or "unknown"
 
     @abstractmethod
-    async def generate_with_reasoning(self, prompt: str, **kw: Any) -> ReasoningResponse:
+    async def generate(self, prompt: str) -> ReasoningResponse:
         raise NotImplementedError
 
+    @abstractmethod
+    async def stream(self, prompt: str) -> AsyncGenerator[ReasoningStreamChunk, None]:
+        raise NotImplementedError
 
-def _strip_thinking(text: str) -> str:
-    return _THINKING_RE.sub("", text).strip()
-
-
-def _extract_reasoning(text: str) -> str:
-    m = re.search(r"<thinking>(.*?)</thinking>", text, re.DOTALL | re.IGNORECASE)
-    return m.group(1).strip() if m else ""
+    def _empty_response(self) -> ReasoningResponse:
+        return ReasoningResponse(
+            answer="",
+            thinking=None,
+            thinking_tokens=0,
+            answer_tokens=0,
+            total_tokens=0,
+            model=self.model,
+            provider=self.provider,
+        )
 
 
 class ReasoningLLM(BaseLLM):
-    """Unified adapter for reasoning / chain-of-thought LLMs.
-
-    Delegates to the appropriate provider LLM with extended-thinking params.
-    Supported providers: ``openai``, ``anthropic``, ``google``, ``deepseek``.
-    """
-
     def __init__(
         self,
-        provider: Provider = "openai",
-        model: str | None = None,
+        model: str,
         api_key: str | None = None,
-        budget_tokens: int = 8000,
-        effort: Literal["low", "medium", "high"] = "medium",
+        budget_tokens: int | None = None,
+        thinking: bool = True,
     ) -> None:
-        if provider not in _PROVIDER_DEFAULTS:
-            raise ValueError(
-                f"provider must be one of {list(_PROVIDER_DEFAULTS)}; got {provider!r}"
-            )
-        resolved_model = model or _PROVIDER_DEFAULTS[provider]
+        provider = self._detect_provider(model)
         config = LLMConfig(
-            model=resolved_model,
+            model=model,
             api_key=api_key or "",
             provider=provider,
         )
         super().__init__(config)
-        self._provider = provider
-        self._budget_tokens = budget_tokens
-        self._effort = effort
-        self._api_key = api_key
-        self._delegate: BaseLLM | None = None
 
-    # ------------------------------------------------------------------
-    # Internal: build provider delegate lazily
-    # ------------------------------------------------------------------
+        self.model = model
+        self.provider = provider
+        self.budget_tokens = budget_tokens
+        self.thinking = thinking
+        self._provider = self._build_provider(
+            provider=provider,
+            model=model,
+            api_key=api_key,
+            budget_tokens=budget_tokens,
+            thinking=thinking,
+        )
+        self.last_response: ReasoningResponse | None = None
+        self.last_usage: ReasoningUsage | None = None
 
-    def _get_delegate(self) -> BaseLLM:
-        if self._delegate is not None:
-            return self._delegate
+    @staticmethod
+    def _detect_provider(model: str) -> str:
+        normalized_model = model.lower()
+        if normalized_model.startswith(("o1", "o3")):
+            return "openai"
+        if "deepseek" in normalized_model:
+            return "deepseek"
+        if normalized_model.startswith("gemini"):
+            return "google"
+        if normalized_model.startswith("claude"):
+            return "anthropic"
+        if normalized_model.startswith("qwq"):
+            return "qwen"
+        raise ValueError("Unsupported reasoning model")
 
-        p = self._provider
-        model = self.config.model
-        key = self._api_key
+    def _build_provider(
+        self,
+        provider: str,
+        model: str,
+        api_key: str | None,
+        budget_tokens: int | None,
+        thinking: bool,
+    ) -> BaseReasoningProvider:
+        if provider == "openai":
+            from .providers.openai_reasoning import OpenAIReasoning
 
-        if p == "openai":
-            self._delegate = _build_openai_reasoning(model, key, self._effort)
-        elif p == "anthropic":
-            self._delegate = _build_anthropic_reasoning(model, key, self._budget_tokens)
-        elif p == "google":
-            self._delegate = _build_google_reasoning(model, key)
-        elif p == "deepseek":
-            self._delegate = _build_deepseek_reasoning(model, key)
-        else:  # pragma: no cover
-            raise ValueError(f"Unsupported provider: {p!r}")
+            return OpenAIReasoning(
+                model=model,
+                api_key=api_key,
+                budget_tokens=budget_tokens,
+                thinking=thinking,
+            )
+        if provider == "anthropic":
+            from .providers.anthropic_thinking import AnthropicThinking
 
-        return self._delegate
+            return AnthropicThinking(
+                model=model,
+                api_key=api_key,
+                budget_tokens=budget_tokens,
+                thinking=thinking,
+            )
+        if provider == "google":
+            from .providers.google_thinking import GoogleThinking
 
-    # ------------------------------------------------------------------
-    # BaseLLM interface
-    # ------------------------------------------------------------------
+            return GoogleThinking(
+                model=model,
+                api_key=api_key,
+                budget_tokens=budget_tokens,
+                thinking=thinking,
+            )
+        if provider in {"deepseek", "qwen"}:
+            from .providers.deepseek_r1 import DeepSeekR1Reasoning
 
-    async def stream(self, prompt: str, **kw: Any) -> AsyncGenerator[str]:
-        delegate = self._get_delegate()
-        async for token in delegate.stream(prompt, **kw):
+            return DeepSeekR1Reasoning(
+                model=model,
+                api_key=api_key,
+                budget_tokens=budget_tokens,
+                thinking=thinking,
+                provider=provider,
+            )
+        raise ValueError("Unsupported reasoning model")
+
+    def _record_usage(self, response: ReasoningResponse) -> ReasoningUsage:
+        output_tokens = response.answer_tokens + response.thinking_tokens
+        total_tokens = response.total_tokens or output_tokens
+        input_tokens = max(0, total_tokens - output_tokens)
+
+        self._input_tokens += input_tokens
+        self._output_tokens += output_tokens
+
+        costs = COST_TABLE.get(self.model, {})
+        output_cost = output_tokens * costs.get("output", 0.0)
+        thinking_cost = response.thinking_tokens * costs.get("output", 0.0)
+        answer_cost = response.answer_tokens * costs.get("output", 0.0)
+        total_cost = input_tokens * costs.get("input", 0.0) + output_cost
+
+        usage = ReasoningUsage(
+            thinking_tokens=response.thinking_tokens,
+            answer_tokens=response.answer_tokens,
+            total_tokens=total_tokens,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            thinking_cost_usd=thinking_cost,
+            answer_cost_usd=answer_cost,
+            total_cost_usd=total_cost,
+            model=self.model,
+            provider=self.provider,
+        )
+        self.last_response = response
+        self.last_usage = usage
+        return usage
+
+    async def agenerate(self, prompt: str) -> ReasoningResponse:
+        await self._acquire_rate_limit()
+        response = await self._provider.generate(prompt)
+        self._record_usage(response)
+        return response
+
+    async def generate(self, prompt: str, **kw: Any) -> str:  # type: ignore[override]
+        del kw
+        response = await self.agenerate(prompt)
+        return response.answer
+
+    async def generate_with_messages(self, messages: list[dict], **kw: Any) -> str:
+        prompt = _messages_to_prompt(messages)
+        return await self.generate(prompt, **kw)
+
+    async def stream_with_messages(
+        self, messages: list[dict[str, Any]], **kw: Any
+    ) -> AsyncGenerator[str, None]:
+        del kw
+        prompt = _messages_to_prompt(messages)
+        async for token in self.stream(prompt):
             yield token
 
-    async def generate(self, prompt: str, **kw: Any) -> str:
-        raw = await self._get_delegate().generate(prompt, **kw)
-        return _strip_thinking(raw)
+    async def astream(self, prompt: str) -> AsyncGenerator[ReasoningStreamChunk, None]:
+        seen_answer = False
+        async for chunk in self._provider.stream(prompt):
+            if chunk.is_thinking:
+                # Enforce reasoning-before-answer ordering.
+                # Any thinking emitted after answer is ignored by design.
+                if seen_answer:
+                    continue
+                yield chunk
+                continue
 
-    async def generate_with_reasoning(self, prompt: str, **kw: Any) -> tuple[str, str]:
-        """Return ``(reasoning, answer)`` tuple.
+            seen_answer = True
+            yield chunk
 
-        For providers that return ``<thinking>…</thinking>`` blocks, the
-        reasoning is extracted from that block; otherwise the full raw output
-        is used as reasoning and the stripped text as the answer.
-        """
-        raw = await self._get_delegate().generate(prompt, **kw)
-        reasoning = _extract_reasoning(raw)
-        answer = _strip_thinking(raw)
-        if not reasoning:
-            # Provider doesn't emit <thinking> blocks — use full text as both
-            reasoning = raw
-        return reasoning, answer
+    async def stream(self, prompt: str, **kw: Any) -> AsyncGenerator[str, None]:
+        del kw
+        async for chunk in self.astream(prompt):
+            if not chunk.is_thinking:
+                yield chunk.text
 
+    async def _call_with_tools_impl(
+        self,
+        messages: list[dict[str, Any]],
+        tools: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        if self.provider == "openai":
+            return await self._openai_call_with_tools(messages, tools)
+        if self.provider == "anthropic":
+            return await self._anthropic_call_with_tools(messages, tools)
+        raise NotImplementedError(
+            f"ReasoningLLM does not support native function calling for provider '{self.provider}'."
+        )
 
-# ------------------------------------------------------------------
-# Provider-specific builder helpers
-# ------------------------------------------------------------------
+    def _openai_reasoning_effort(self) -> str:
+        if not self.thinking:
+            return "low"
+        if self.budget_tokens is None:
+            return "medium"
+        if self.budget_tokens >= 2048:
+            return "high"
+        if self.budget_tokens <= 512:
+            return "low"
+        return "medium"
 
+    def _get_openai_client(self):
+        if not hasattr(self, "_openai_client"):
+            try:
+                from openai import AsyncOpenAI
+            except ImportError:
+                raise ImportError(
+                    "openai package required: pip install synapsekit[openai]"
+                ) from None
+            self._openai_client = AsyncOpenAI(api_key=self.config.api_key)
+        return self._openai_client
 
-def _build_openai_reasoning(model: str, api_key: str | None, effort: str) -> BaseLLM:
-    """OpenAI o-series reasoning models use ``reasoning_effort`` param."""
+    async def _openai_call_with_tools(
+        self,
+        messages: list[dict[str, Any]],
+        tools: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        client = self._get_openai_client()
+        response = await client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            tools=tools,
+            tool_choice="auto",
+            reasoning_effort=self._openai_reasoning_effort(),
+            timeout=30.0,
+        )
+        msg = response.choices[0].message
 
-    import os
+        usage = getattr(response, "usage", None)
+        completion_tokens = int(getattr(usage, "completion_tokens", 0) or 0)
+        thinking_tokens = extract_reasoning_tokens(usage)
+        answer_tokens = max(0, completion_tokens - thinking_tokens)
+        total_tokens = int(getattr(usage, "total_tokens", 0) or 0)
+        if total_tokens == 0:
+            total_tokens = thinking_tokens + answer_tokens
 
-    from .base import LLMConfig
+        reasoning_response = ReasoningResponse(
+            answer=extract_text(getattr(msg, "content", "")),
+            thinking=None,
+            thinking_tokens=thinking_tokens,
+            answer_tokens=answer_tokens,
+            total_tokens=total_tokens,
+            model=self.model,
+            provider=self.provider,
+        )
+        self._record_usage(reasoning_response)
 
-    try:
-        from openai import AsyncOpenAI
-    except ImportError:
-        raise ImportError("openai package required: pip install synapsekit[openai]") from None
+        if msg.tool_calls:
+            return {
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": tc.id,
+                        "name": tc.function.name,
+                        "arguments": json.loads(tc.function.arguments),
+                    }
+                    for tc in msg.tool_calls
+                ],
+            }
+        return {"content": msg.content, "tool_calls": None}
 
-    _key = api_key or os.environ.get("OPENAI_API_KEY", "")
-    cfg = LLMConfig(model=model, api_key=_key, provider="openai")
+    def _get_anthropic_client(self):
+        if not hasattr(self, "_anthropic_client"):
+            try:
+                import anthropic
+            except ImportError:
+                raise ImportError(
+                    "anthropic package required: pip install synapsekit[anthropic]"
+                ) from None
+            self._anthropic_client = anthropic.AsyncAnthropic(api_key=self.config.api_key)
+        return self._anthropic_client
 
-    class _OpenAIReasoningLLM(BaseLLM):
-        def __init__(self) -> None:
-            super().__init__(cfg)
-            self._client = AsyncOpenAI(api_key=_key)
+    def _anthropic_thinking_payload(self) -> dict[str, Any] | None:
+        if not self.thinking:
+            return None
+        budget = self.budget_tokens if self.budget_tokens is not None else 1024
+        return {"type": "enabled", "budget_tokens": budget}
 
-        async def stream(self, prompt: str, **kw: Any) -> AsyncGenerator[str]:
-            response = await self._client.chat.completions.create(
-                model=self.config.model,
-                messages=[{"role": "user", "content": prompt}],
-                reasoning_effort=effort,
-                stream=False,
-            )
-            text = response.choices[0].message.content or ""
-            self._output_tokens += response.usage.completion_tokens or 0
-            self._input_tokens += response.usage.prompt_tokens or 0
-            for ch in text:
-                yield ch
+    async def _anthropic_call_with_tools(
+        self,
+        messages: list[dict[str, Any]],
+        tools: list[dict[str, Any]],
+    ) -> dict[str, Any]:
+        client = self._get_anthropic_client()
+        system = self.config.system_prompt
+        user_messages = []
+        for m in messages:
+            if m.get("role") == "system":
+                system = m["content"]
+            elif m.get("role") == "tool":
+                user_messages.append(
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "tool_result",
+                                "tool_use_id": m["tool_call_id"],
+                                "content": m["content"],
+                            }
+                        ],
+                    }
+                )
+            else:
+                user_messages.append(m)
 
-    return _OpenAIReasoningLLM()
+        anthropic_tools = [
+            {
+                "name": t["function"]["name"],
+                "description": t["function"]["description"],
+                "input_schema": t["function"]["parameters"],
+            }
+            for t in tools
+        ]
 
+        kwargs: dict[str, Any] = {
+            "model": self.model,
+            "system": system,
+            "messages": user_messages,
+            "tools": anthropic_tools,
+            "max_tokens": self.config.max_tokens,
+        }
+        thinking_payload = self._anthropic_thinking_payload()
+        if thinking_payload is not None:
+            kwargs["thinking"] = thinking_payload
 
-def _build_anthropic_reasoning(model: str, api_key: str | None, budget_tokens: int) -> BaseLLM:
-    """Anthropic extended thinking via ``thinking`` param."""
+        response = await client.messages.create(**kwargs)
 
-    import os
+        usage = getattr(response, "usage", None)
+        input_tokens = int(getattr(usage, "input_tokens", 0) or 0)
+        output_tokens = int(getattr(usage, "output_tokens", 0) or 0)
+        thinking_tokens = int(getattr(usage, "thinking_tokens", 0) or 0)
+        answer_tokens = max(0, output_tokens - thinking_tokens)
+        total_tokens = input_tokens + output_tokens
 
-    from .base import LLMConfig
+        tool_uses = [b for b in response.content if b.type == "tool_use"]
+        text_blocks = [b for b in response.content if b.type == "text"]
+        content_text = text_blocks[0].text if text_blocks else ""
 
-    try:
-        import anthropic
-    except ImportError:
-        raise ImportError("anthropic package required: pip install synapsekit[anthropic]") from None
+        reasoning_response = ReasoningResponse(
+            answer=extract_text(content_text),
+            thinking=None,
+            thinking_tokens=thinking_tokens,
+            answer_tokens=answer_tokens,
+            total_tokens=total_tokens,
+            model=self.model,
+            provider=self.provider,
+        )
+        self._record_usage(reasoning_response)
 
-    _key = api_key or os.environ.get("ANTHROPIC_API_KEY", "")
-    cfg = LLMConfig(model=model, api_key=_key, provider="anthropic", max_tokens=16000)
+        if tool_uses:
+            return {
+                "content": None,
+                "tool_calls": [
+                    {"id": tu.id, "name": tu.name, "arguments": tu.input} for tu in tool_uses
+                ],
+            }
 
-    class _AnthropicReasoningLLM(BaseLLM):
-        def __init__(self) -> None:
-            super().__init__(cfg)
-            self._client = anthropic.AsyncAnthropic(api_key=_key)
-
-        async def stream(self, prompt: str, **kw: Any) -> AsyncGenerator[str]:
-            response = await self._client.messages.create(
-                model=self.config.model,
-                max_tokens=self.config.max_tokens,
-                thinking={"type": "enabled", "budget_tokens": budget_tokens},
-                messages=[{"role": "user", "content": prompt}],
-            )
-            self._input_tokens += response.usage.input_tokens or 0
-            self._output_tokens += response.usage.output_tokens or 0
-            # Emit thinking block then text block
-            for block in response.content:
-                if block.type == "thinking":
-                    text = f"<thinking>{block.thinking}</thinking>"
-                    for ch in text:
-                        yield ch
-                elif block.type == "text":
-                    for ch in block.text:
-                        yield ch
-
-    return _AnthropicReasoningLLM()
-
-
-def _build_google_reasoning(model: str, api_key: str | None) -> BaseLLM:
-    """Google Gemini thinking-exp model."""
-
-    import os
-
-    from .base import LLMConfig
-
-    try:
-        import google.generativeai as genai
-    except ImportError:
-        raise ImportError("google-generativeai required: pip install synapsekit[gemini]") from None
-
-    _key = api_key or os.environ.get("GOOGLE_API_KEY", "")
-    cfg = LLMConfig(model=model, api_key=_key, provider="google")
-    genai.configure(api_key=_key)
-    _gmodel = genai.GenerativeModel(model_name=model)
-
-    class _GoogleReasoningLLM(BaseLLM):
-        def __init__(self) -> None:
-            super().__init__(cfg)
-
-        async def stream(self, prompt: str, **kw: Any) -> AsyncGenerator[str]:
-            async for chunk in await _gmodel.generate_content_async(
-                prompt,
-                generation_config={
-                    "max_output_tokens": kw.get("max_tokens", self.config.max_tokens),
-                },
-                stream=True,
-            ):
-                if chunk.text:
-                    self._output_tokens += 1
-                    yield chunk.text
-
-    return _GoogleReasoningLLM()
-
-
-def _build_deepseek_reasoning(model: str, api_key: str | None) -> BaseLLM:
-    """DeepSeek reasoner — exposes ``reasoning_content`` in chain-of-thought field."""
-
-    import os
-
-    from .base import LLMConfig
-
-    try:
-        from openai import AsyncOpenAI
-    except ImportError:
-        raise ImportError("openai package required: pip install synapsekit[openai]") from None
-
-    _key = api_key or os.environ.get("DEEPSEEK_API_KEY", "")
-    cfg = LLMConfig(
-        model=model,
-        api_key=_key,
-        provider="deepseek",
-        max_tokens=8192,
-    )
-    _client = AsyncOpenAI(api_key=_key, base_url="https://api.deepseek.com")
-
-    class _DeepSeekReasoningLLM(BaseLLM):
-        def __init__(self) -> None:
-            super().__init__(cfg)
-
-        async def stream(self, prompt: str, **kw: Any) -> AsyncGenerator[str]:
-            response = await _client.chat.completions.create(
-                model=self.config.model,
-                messages=[{"role": "user", "content": prompt}],
-                stream=False,
-            )
-            msg = response.choices[0].message
-            reasoning = getattr(msg, "reasoning_content", None) or ""
-            answer = msg.content or ""
-            full = f"<thinking>{reasoning}</thinking>{answer}" if reasoning else answer
-            if hasattr(response, "usage") and response.usage:
-                self._input_tokens += response.usage.prompt_tokens or 0
-                self._output_tokens += response.usage.completion_tokens or 0
-            for ch in full:
-                yield ch
-
-    return _DeepSeekReasoningLLM()
+        return {"content": content_text, "tool_calls": None}

@@ -10,6 +10,7 @@ from typing import Any
 
 from .._compat import run_sync
 from ..embeddings.backend import SynapsekitEmbeddings
+from ..evaluation.rag_evaluator import RAGEvaluator
 from ..llm._factory import make_llm
 from ..loaders.base import Document
 from ..memory.conversation import ConversationMemory
@@ -59,12 +60,24 @@ class RAG:
         max_tokens: int = 1024,
         trace: bool = True,
         auto_eval: bool = False,
+        evaluator: RAGEvaluator | None = None,
         context_packer: Any | None = None,
+        graph_store: Any | None = None,
     ) -> None:
         llm = make_llm(model, api_key, provider, system_prompt, temperature, max_tokens)
         embeddings = SynapsekitEmbeddings(model=embedding_model)
         vectorstore = InMemoryVectorStore(embeddings)
         retriever = Retriever(vectorstore, rerank=rerank)
+
+        self._kg_builder = None
+        if graph_store is not None:
+            from ..retrieval.kg.builder import KnowledgeGraphBuilder
+            from ..retrieval.kg.retriever import HybridKGRetriever, KGRetriever
+
+            self._kg_builder = KnowledgeGraphBuilder(llm=llm, store=graph_store)
+            kg_retriever = KGRetriever(store=graph_store, builder=self._kg_builder)
+            retriever = HybridKGRetriever(vector_retriever=retriever, kg_retriever=kg_retriever)  # type: ignore
+
         memory = ConversationMemory(window=memory_window)
         tracer = TokenTracer(model=model, enabled=trace)
 
@@ -77,6 +90,7 @@ class RAG:
                 retrieval_top_k=retrieval_top_k,
                 system_prompt=system_prompt,
                 auto_eval=auto_eval,
+                evaluator=evaluator,
                 context_packer=context_packer,
             )
         )
@@ -96,16 +110,29 @@ class RAG:
         docs = await self._load_multimodal_documents(text, metadata=metadata, **kwargs)
         if docs is not None:
             await self._pipeline.add_documents(docs)
+            if self._kg_builder:
+                await self._kg_builder.build_from_documents(
+                    [d.text for d in docs],
+                    [d.metadata.get("source", f"doc_{i}") for i, d in enumerate(docs)],
+                )
             return
         await self._pipeline.add(text, metadata)
+        if self._kg_builder:
+            source = metadata.get("source", "doc_0") if metadata else "doc_0"
+            await self._kg_builder.build_from_documents([text], [source])
 
     def add_documents(self, docs: list[Document]) -> None:
         """Sync: chunk and embed a list of Documents into the vectorstore."""
-        run_sync(self._pipeline.add_documents(docs))
+        run_sync(self.add_documents_async(docs))
 
     async def add_documents_async(self, docs: list[Document]) -> None:
         """Async: chunk and embed a list of Documents into the vectorstore."""
         await self._pipeline.add_documents(docs)
+        if self._kg_builder:
+            await self._kg_builder.build_from_documents(
+                [d.text for d in docs],
+                [d.metadata.get("source", f"doc_{i}") for i, d in enumerate(docs)],
+            )
 
     async def _load_multimodal_documents(
         self,
@@ -318,5 +345,15 @@ class RAG:
         return self._pipeline.config.tracer
 
     @property
+    def evaluator(self) -> RAGEvaluator | None:
+        return self._pipeline.config.evaluator
+
+    @property
     def memory(self) -> ConversationMemory:
         return self._pipeline.config.memory
+
+    async def wait_for_evaluations(self) -> None:
+        await self._pipeline.wait_for_evaluations()
+
+    async def wait_for_auto_eval(self) -> None:
+        await self._pipeline.wait_for_auto_eval()

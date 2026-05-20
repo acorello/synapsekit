@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "synapsekit"
-version = "1.6.0"
+version = "1.7.0"
 description = "Async-native Python framework for building LLM applications — RAG pipelines, tool-using agents, and graph workflows. Streaming-first, transparent API, 2 hard deps."
 authors = [{ name = "Amit.N", email = "research.amit.n@gmail.com" }]
 license = { text = "Apache-2.0" }
@@ -42,6 +42,7 @@ Discord = "https://discord.gg/PSuAXHRywJ"
 synapsekit = "synapsekit.cli.main:main"
 
 [project.optional-dependencies]
+graph = ["networkx>=3.0", "neo4j>=5.0"]
 openai = ["openai>=1.0"]
 anthropic = ["anthropic>=0.25"]
 semantic = ["sentence-transformers>=2.7"]
@@ -80,10 +81,15 @@ rss = ["feedparser>=6.0"]
 groq = ["groq>=0.9"]
 audio = ["openai>=1.0"]
 video = ["openai>=1.0"]
-voice = ["openai>=1.0"]
-voice-local = ["pyttsx3>=2.90", "faster-whisper>=1.0"]
+voice = ["openai>=1.0", "sounddevice>=0.4", "soundfile>=0.12"]
+voice-local = ["faster-whisper>=1.0", "pyttsx3>=2.90", "sounddevice>=0.4", "soundfile>=0.12"]
 voice-stream = ["sounddevice>=0.4", "soundfile>=0.12"]
-cron = ["croniter>=2.0"]
+voice-piper = ["piper-tts>=1.2"]
+voice-cartesia = ["cartesia>=0.1"]
+voice-elevenlabs = ["elevenlabs>=1.0"]
+voice-deepgram = ["deepgram-sdk>=3.0"]
+voice-silero = ["torch>=2.0", "torchaudio>=2.0"]
+cron = ["croniter>=2.0", "tzdata>=2024.1; sys_platform == 'win32'"]
 excel = ["openpyxl>=3.1"]
 pptx = ["python-pptx>=0.6"]
 docx = ["python-docx>=1.0"]
@@ -142,6 +148,7 @@ elasticsearch = ["elasticsearch>=8.0"]
 browser = ["playwright>=1.40"]
 youtube_transcript = ["youtube-transcript-api>=0.6"]
 airtable = ["pyairtable>=2.0"]
+performance = ["orjson>=3.9", "uvloop>=0.19; sys_platform != 'win32'", "xxhash>=3.4"]
 all = [
     "openai>=1.0",
     "anthropic>=0.25",
@@ -235,10 +242,21 @@ dev = [
     "lxml>=6.1.0",
     "beautifulsoup4>=4.14.3",
     "fastapi>=0.135.1",
+    "tzdata>=2024.1",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/synapsekit"]
+
+# Rust extension (optional — built separately with maturin)
+# To build: cd src/synapsekit/_rust && maturin develop
+# The pure-Python wheel uses hatchling above; the Rust-accelerated wheel
+# is published separately using maturin as the build backend.
+[tool.maturin]
+module-name = "synapsekit._rust_core"
+manifest-path = "src/synapsekit/_rust/Cargo.toml"
+features = ["pyo3/extension-module"]
+python-source = "src"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -289,6 +307,12 @@ module = [
     "synapsekit.llm.mistral",
     "synapsekit.llm.gemini",
     "synapsekit.llm.bedrock",
+    "synapsekit.llm.reasoning",
+    "synapsekit.llm.providers.openai_reasoning",
+    "synapsekit.llm.providers.anthropic_thinking",
+    "synapsekit.llm.providers.google_thinking",
+    "synapsekit.llm.providers.deepseek_r1",
+    "synapsekit.llm.utils",
     "synapsekit.embeddings.backend",
     "synapsekit.retrieval.chroma",
     "synapsekit.retrieval.faiss",
@@ -378,9 +402,11 @@ sqlite-vec = "sqlite_vec"
 snowflake-connector-python = "snowflake"
 "cassandra-driver" = "cassandra"
 "opensearch-py" = "opensearchpy"
+"deepgram-sdk" = "deepgram"
+"piper-tts" = "piper"
 
 [tool.deptry.per_rule_ignores]
 DEP001 = ["sqlalchemy", "pydantic", "aiohttp", "opentelemetry", "whisper", "botocore", "aiomcache", "nest_asyncio", "huggingface_hub", "serpapi", "weaviate", "uvicorn", "starlette", "tomli", "pyttsx3", "faster_whisper", "sounddevice", "soundfile", "aiokafka", "typesense"]
-DEP002 = ["numpy", "rank-bm25", "beautifulsoup4", "lxml", "pillow", "pyasn1", "faiss-cpu", "google-generativeai", "tavily-python", "youtube-search-python", "psycopg", "google-search-results", "discord.py", "google-auth", "weaviate-client", "pymilvus", "lancedb", "pgvector", "slack-sdk", "supabase", "pymongo", "azure-storage-blob", "elasticsearch"]
+DEP002 = ["numpy", "rank-bm25", "beautifulsoup4", "lxml", "pillow", "pyasn1", "faiss-cpu", "google-generativeai", "tavily-python", "youtube-search-python", "psycopg", "google-search-results", "discord.py", "google-auth", "weaviate-client", "pymilvus", "lancedb", "pgvector", "slack-sdk", "supabase", "pymongo", "azure-storage-blob", "elasticsearch", "tzdata", "torchaudio"]
 DEP003 = ["sqlalchemy", "botocore", "nest_asyncio", "opentelemetry", "starlette", "uvicorn"]
 DEP004 = ["pydantic"]

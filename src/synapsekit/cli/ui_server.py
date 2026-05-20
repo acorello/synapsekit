@@ -63,6 +63,11 @@ _DASHBOARD_HTML = """<!DOCTYPE html>
             border-bottom: 1px solid #30363d;
             padding-bottom: 6px;
         }
+        section h3 {
+            font-size: 0.95rem;
+            color: #e6edf3;
+            margin: 12px 0 8px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -111,12 +116,36 @@ _DASHBOARD_HTML = """<!DOCTYPE html>
             min-width: 4px;
         }
         .step-val { font-size: 0.78rem; color: #8b949e; }
+        .rag-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+        }
+        .rag-panel {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .rag-panel ul {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+        }
+        .rag-panel li {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #c9d1d9;
+        }
+        .rag-muted { color: #8b949e; font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <h1>SynapseKit <span class="badge">Observability</span></h1>
     <p class="subtitle">
-        Live dashboard — LLM traces, RAG metrics, agent timelines.
+        Live dashboard — LLM traces, RAG metrics, alerts, ROI, agent timelines.
         <span id="refresh-badge">Auto-refreshing every 5s</span>
     </p>
 
@@ -150,6 +179,11 @@ _DASHBOARD_HTML = """<!DOCTYPE html>
     </section>
 
     <section>
+        <h2>RAG Alerts & Remediations</h2>
+        <div id="rag-alerts">Loading...</div>
+    </section>
+
+    <section>
         <h2>Agent Execution Timeline</h2>
         <div id="agent-timeline">Loading...</div>
     </section>
@@ -162,8 +196,21 @@ _DASHBOARD_HTML = """<!DOCTYPE html>
         function fmtScore(v) {
             if (v === null || v === undefined) return '—';
             const n = parseFloat(v);
+            if (Number.isNaN(n)) return '—';
             const cls = n >= 0.8 ? 'tag-ok' : n >= 0.5 ? 'tag-warn' : 'tag-bad';
             return '<span class="tag ' + cls + '">' + n.toFixed(3) + '</span>';
+        }
+        function fmtNumber(v, digits = 2) {
+            if (v === null || v === undefined) return '—';
+            const n = Number(v);
+            if (Number.isNaN(n)) return '—';
+            return n.toFixed(digits);
+        }
+        function fmtMoney(v, digits = 4) {
+            if (v === null || v === undefined) return '—';
+            const n = Number(v);
+            if (Number.isNaN(n)) return '—';
+            return '$' + n.toFixed(digits);
         }
 
         async function refreshAll() {
@@ -177,6 +224,7 @@ _DASHBOARD_HTML = """<!DOCTYPE html>
                 renderMetricCards(metrics);
                 renderTraces(traces);
                 renderRagMetrics(metrics);
+                renderRagAlerts(metrics);
                 renderTimeline(traces);
             } catch (e) {
                 console.error('Dashboard refresh error:', e);
@@ -187,10 +235,12 @@ _DASHBOARD_HTML = """<!DOCTYPE html>
             const cards = [
                 { value: m.total_calls ?? 0, label: 'Total LLM Calls' },
                 { value: (m.total_tokens ?? 0).toLocaleString(), label: 'Total Tokens' },
-                { value: '$' + (m.total_cost_usd ?? 0).toFixed(4), label: 'Est. Cost (USD)' },
-                { value: (m.avg_latency_ms ?? 0).toFixed(0) + 'ms', label: 'Avg Latency' },
-                { value: m.avg_faithfulness != null ? m.avg_faithfulness.toFixed(3) : '—', label: 'Avg Faithfulness' },
-                { value: m.avg_relevancy != null ? m.avg_relevancy.toFixed(3) : '—', label: 'Avg Relevancy' },
+                { value: fmtMoney(m.total_cost_usd), label: 'Est. Cost (USD)' },
+                { value: fmtNumber(m.avg_latency_ms, 0) + 'ms', label: 'Avg Latency' },
+                { value: m.rag_evaluations ?? 0, label: 'RAG Evaluations' },
+                { value: fmtMoney(m.total_rag_eval_cost_usd), label: 'RAG Eval Cost' },
+                { value: m.total_rag_alerts ?? 0, label: 'RAG Alerts' },
+                { value: fmtNumber(m.avg_rag_benefit_to_cost, 2), label: 'RAG ROI' },
             ];
             document.getElementById('metric-cards').innerHTML = cards.map(c =>
                 '<div class="metric-card"><div class="metric-value">' + c.value + '</div><div class="metric-label">' + c.label + '</div></div>'
@@ -219,14 +269,51 @@ _DASHBOARD_HTML = """<!DOCTYPE html>
         function renderRagMetrics(m) {
             const el = document.getElementById('rag-metrics');
             const rows = [
-                ['Avg Faithfulness', fmtScore(m.avg_faithfulness)],
-                ['Avg Relevancy', fmtScore(m.avg_relevancy)],
-                ['Quality Trend', m.quality_trend || '—'],
-                ['Total Quality Records', m.total_quality_records ?? 0],
+                ['Sample Rate', fmtNumber(m.rag_sample_rate, 2)],
+                ['Evaluations', m.rag_evaluations ?? 0],
+                ['Sampled Evaluations', m.rag_sampled_evaluations ?? 0],
+                ['Skipped Evaluations', m.rag_skipped_evaluations ?? 0],
+                ['Avg Recall', fmtScore(m.avg_rag_recall)],
+                ['Avg Precision', fmtScore(m.avg_rag_precision)],
+                ['Avg Relevance', fmtScore(m.avg_rag_relevance)],
+                ['Avg Answer Quality', fmtScore(m.avg_rag_answer_quality)],
+                ['Avg Retrieval Benefit', fmtScore(m.avg_rag_retrieval_benefit)],
+                ['Avg Benefit / Cost', fmtNumber(m.avg_rag_benefit_to_cost, 2)],
+                ['Total Eval Cost', fmtMoney(m.total_rag_eval_cost_usd)],
+                ['Avg Eval Cost', fmtMoney(m.avg_rag_eval_cost_usd)],
+                ['Total Alerts', m.total_rag_alerts ?? 0],
+                ['RAG Trend', m.rag_quality_trend || '—'],
+                ['Last Notes', m.rag_last_notes || '—'],
             ];
             el.innerHTML = '<table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody>' +
                 rows.map(r => '<tr><td>' + r[0] + '</td><td>' + r[1] + '</td></tr>').join('') +
                 '</tbody></table>';
+        }
+
+        function renderRagAlerts(m) {
+            const el = document.getElementById('rag-alerts');
+            const alerts = m.rag_last_alerts || [];
+            const suggestions = m.rag_last_suggestions || [];
+            const alertList = alerts.length
+                ? '<ul>' + alerts.map(a =>
+                    '<li><strong>' + (a.metric || 'metric') + '</strong> · ' +
+                    (a.severity || 'info') + '<br>' +
+                    (a.message || '—') + '<br><span class="rag-muted">' +
+                    (a.recommendation || '—') + '</span></li>'
+                ).join('') + '</ul>'
+                : '<p class="empty">No recent alerts.</p>';
+            const suggestionList = suggestions.length
+                ? '<ul>' + suggestions.map(s =>
+                    '<li><strong>' + (s.metric || 'metric') + '</strong> · ' +
+                    (s.action || '—') + '<br><span class="rag-muted">' +
+                    (s.reason || '—') + '</span></li>'
+                ).join('') + '</ul>'
+                : '<p class="empty">No recent remediation suggestions.</p>';
+            el.innerHTML =
+                '<div class="rag-grid">' +
+                '<div class="rag-panel"><h3>Latest Alerts</h3>' + alertList + '</div>' +
+                '<div class="rag-panel"><h3>Latest Suggestions</h3>' + suggestionList + '</div>' +
+                '</div>';
         }
 
         function renderTimeline(traces) {
@@ -284,12 +371,12 @@ def _build_trace_list(tracer: Any) -> list[dict[str, Any]]:
     return result
 
 
-def create_app(tracer: Any | None = None) -> FastAPI:
+def create_app(tracer: Any | None = None, rag_evaluator: Any | None = None) -> FastAPI:
     """Create the observability dashboard FastAPI app.
 
     Args:
-        tracer: An optional ``TokenTracer`` instance. If None, a default one is created
-                and accessible via ``app.state.tracer``.
+        tracer: Optional ``TokenTracer`` instance. If None, a default one is created.
+        rag_evaluator: Optional ``RAGEvaluator`` instance for sampled RAG metrics.
     """
     from fastapi import FastAPI
     from fastapi.responses import HTMLResponse, JSONResponse
@@ -302,6 +389,7 @@ def create_app(tracer: Any | None = None) -> FastAPI:
         tracer = TokenTracer(model="gpt-4o-mini", enabled=True)
 
     app.state.tracer = tracer
+    app.state.rag_evaluator = rag_evaluator
 
     @app.get("/")
     def dashboard() -> HTMLResponse:
@@ -320,6 +408,7 @@ def create_app(tracer: Any | None = None) -> FastAPI:
     def get_metrics() -> JSONResponse:
         t = app.state.tracer
         summary = t.summary()
+        rag_summary = app.state.rag_evaluator.summary() if app.state.rag_evaluator else {}
         costs = COST_TABLE.get(t.model, {})
         records = t._records
 
@@ -328,6 +417,12 @@ def create_app(tracer: Any | None = None) -> FastAPI:
             for r in records
         )
         avg_latency = sum(r.latency_ms for r in records) / len(records) if records else 0.0
+
+        def prefer(primary: Any, fallback: Any) -> Any:
+            return fallback if primary is None else primary
+
+        rag_eval_summary = rag_summary or {}
+        rag_alerts = rag_eval_summary.get("alerts") or {}
 
         return JSONResponse(
             {
@@ -341,6 +436,55 @@ def create_app(tracer: Any | None = None) -> FastAPI:
                 "avg_relevancy": summary["avg_relevancy"],
                 "quality_trend": summary["quality_trend"],
                 "total_quality_records": len(t._quality_records),
+                "rag_evaluations": prefer(
+                    rag_eval_summary.get("evaluations"), summary.get("rag_evaluations", 0)
+                ),
+                "rag_sample_rate": rag_eval_summary.get("sample_rate"),
+                "rag_sampled_evaluations": prefer(
+                    rag_eval_summary.get("sampled_evaluations"), summary.get("rag_evaluations", 0)
+                ),
+                "rag_skipped_evaluations": rag_eval_summary.get("skipped_evaluations"),
+                "avg_rag_recall": prefer(
+                    rag_eval_summary.get("avg_recall"), summary.get("avg_rag_recall")
+                ),
+                "avg_rag_precision": prefer(
+                    rag_eval_summary.get("avg_precision"), summary.get("avg_rag_precision")
+                ),
+                "avg_rag_relevance": prefer(
+                    rag_eval_summary.get("avg_relevance"), summary.get("avg_rag_relevance")
+                ),
+                "avg_rag_answer_quality": prefer(
+                    rag_eval_summary.get("avg_answer_quality"),
+                    summary.get("avg_rag_answer_quality"),
+                ),
+                "avg_rag_retrieval_benefit": prefer(
+                    rag_eval_summary.get("avg_retrieval_benefit"),
+                    summary.get("avg_rag_retrieval_benefit"),
+                ),
+                "avg_rag_benefit_to_cost": prefer(
+                    rag_eval_summary.get("avg_benefit_to_cost"),
+                    summary.get("avg_rag_benefit_to_cost"),
+                ),
+                "total_rag_eval_cost_usd": prefer(
+                    rag_eval_summary.get("total_eval_cost_usd"),
+                    summary.get("total_rag_eval_cost_usd"),
+                ),
+                "avg_rag_eval_cost_usd": prefer(
+                    rag_eval_summary.get("avg_eval_cost_usd"), summary.get("avg_rag_eval_cost_usd")
+                ),
+                "total_rag_alerts": prefer(
+                    rag_alerts.get("total"), summary.get("total_rag_alerts", 0)
+                ),
+                "rag_alerts_by_metric": rag_alerts.get("by_metric", {}),
+                "rag_alerts_by_severity": rag_alerts.get("by_severity", {}),
+                "rag_quality_trend": summary.get("rag_quality_trend"),
+                "rag_last_notes": prefer(
+                    rag_eval_summary.get("last_notes"), summary.get("last_notes")
+                ),
+                "rag_last_sample_key": rag_eval_summary.get("last_sample_key"),
+                "rag_last_question": rag_eval_summary.get("last_question"),
+                "rag_last_alerts": rag_eval_summary.get("last_alerts", []),
+                "rag_last_suggestions": rag_eval_summary.get("last_suggestions", []),
             }
         )
 

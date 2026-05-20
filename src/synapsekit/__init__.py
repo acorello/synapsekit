@@ -237,6 +237,7 @@ from .memory.conversation import ConversationMemory
 from .memory.entity import EntityMemory
 from .memory.hybrid import HybridMemory
 from .memory.redis import RedisConversationMemory
+from .memory.smart_context import SmartContextManager
 from .memory.sqlite import SQLiteConversationMemory
 from .memory.summary_buffer import SummaryBufferMemory
 from .memory.token_buffer import TokenBufferMemory
@@ -251,6 +252,7 @@ from .observability import (
     CostTracker,
     DistributedTracer,
     OTelExporter,
+    PrometheusMetrics,
     Span,
     TraceSpan,
     TracingMiddleware,
@@ -457,10 +459,12 @@ __all__ = [
     "EntityMemory",
     "HybridMemory",
     "RedisConversationMemory",
+    "SmartContextManager",
     "SQLiteConversationMemory",
     "SummaryBufferMemory",
     "TokenBufferMemory",
     "TokenTracer",
+    "PrometheusMetrics",
     # Loaders
     "Document",
     "TextLoader",

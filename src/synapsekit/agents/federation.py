@@ -5,7 +5,7 @@ from __future__ import annotations
 import inspect
 from collections.abc import Iterable
 from enum import Enum
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 from .agent_registry import AgentMetadata, AgentRegistry, InMemoryAgentRegistry
 
@@ -169,9 +169,10 @@ class AgentFederation:
                 healthy_only=healthy_only,
             )
         else:
-            agent = self.registry.get(agent_id)
-            if agent is None:
+            agent_record = self.registry.get(agent_id)
+            if agent_record is None:
                 raise KeyError(f"Unknown agent id: {agent_id}")
+            agent = agent_record
             if healthy_only and not self.registry.is_healthy(agent.id):
                 raise LookupError(f"Agent is not healthy: {agent.id}")
 
@@ -220,5 +221,5 @@ class AgentFederation:
 
     def _coerce_client(self, client: Any) -> AgentClient:
         if hasattr(client, "run"):
-            return client
+            return cast(AgentClient, client)
         return LocalAgentClient(client)

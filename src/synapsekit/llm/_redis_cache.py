@@ -49,7 +49,8 @@ class RedisLLMCache:
         return f"{self._prefix}{key}"
 
     def get(self, key: str) -> Any | None:
-        raw = self._client.get(self._full_key(key))
+        client: Any = self._client
+        raw = client.get(self._full_key(key))
         if raw is not None:
             self.hits += 1
             return json.loads(raw)
@@ -58,21 +59,24 @@ class RedisLLMCache:
 
     def put(self, key: str, value: Any) -> None:
         full_key = self._full_key(key)
-        self._client.set(full_key, json.dumps(value))
+        client: Any = self._client
+        client.set(full_key, json.dumps(value))
         if self._ttl is not None:
-            self._client.expire(full_key, self._ttl)
+            client.expire(full_key, self._ttl)
 
     def clear(self) -> None:
+        client: Any = self._client
         cursor = "0"
         while cursor:
-            cursor, keys = self._client.scan(cursor=cursor, match=f"{self._prefix}*", count=100)
+            cursor, keys = client.scan(cursor=cursor, match=f"{self._prefix}*", count=100)
             if keys:
-                self._client.delete(*keys)
+                client.delete(*keys)
 
     def __len__(self) -> int:
+        client: Any = self._client
         count = 0
         cursor = "0"
         while cursor:
-            cursor, keys = self._client.scan(cursor=cursor, match=f"{self._prefix}*", count=100)
+            cursor, keys = client.scan(cursor=cursor, match=f"{self._prefix}*", count=100)
             count += len(keys)
         return count

@@ -11,7 +11,7 @@ class AnthropicLLM(BaseLLM):
 
     def __init__(self, config: LLMConfig) -> None:
         super().__init__(config)
-        self._client = None
+        self._client: Any = None
 
     def _get_client(self):
         if self._client is None:

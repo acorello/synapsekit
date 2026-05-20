@@ -7,10 +7,10 @@ import threading
 import time
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, List, Protocol
 
 
-def _normalise_strings(values: Iterable[str] | str | None) -> list[str]:
+def _normalise_strings(values: Iterable[str] | str | None) -> List[str]:
     if values is None:
         return []
     if isinstance(values, str):
@@ -112,6 +112,25 @@ def _matches_discovery_filters(
     return True
 
 
+class AgentRegistryBackend(Protocol):
+    def register(self, agent: AgentMetadata) -> AgentMetadata: ...
+    def unregister(self, agent_id: str) -> bool: ...
+    def get(self, agent_id: str) -> AgentMetadata | None: ...
+    def list(self) -> List[AgentMetadata]: ...
+    def heartbeat(self, agent_id: str, timestamp: float | None = None) -> AgentMetadata: ...
+    def is_healthy(self, agent_id: str) -> bool: ...
+    def discover(
+        self,
+        *,
+        tools: Iterable[str] | str | None = None,
+        tags: Iterable[str] | str | None = None,
+        min_capacity: int | None = None,
+        healthy_only: bool = True,
+    ) -> List[AgentMetadata]: ...
+    stale_timeout: float
+    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]: ...
+
+
 class InMemoryAgentRegistry:
     """In-memory agent registry with heartbeat-based health checks."""
 
@@ -149,7 +168,7 @@ class InMemoryAgentRegistry:
 
     get_agent = get
 
-    def list(self) -> list[AgentMetadata]:
+    def list(self) -> List[AgentMetadata]:
         with self._lock:
             return [agent.copy() for agent in self._agents.values()]
 
@@ -182,7 +201,7 @@ class InMemoryAgentRegistry:
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> list[AgentMetadata]:
+    ) -> List[AgentMetadata]:
         now = self._clock()
         return [
             agent
@@ -200,10 +219,10 @@ class InMemoryAgentRegistry:
 
     discover_agents = discover
 
-    def prune_stale(self, *, stale_timeout: float | None = None) -> list[str]:
+    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]:
         now = self._clock()
         timeout = self.stale_timeout if stale_timeout is None else float(stale_timeout)
-        removed: list[str] = []
+        removed: List[str] = []
         with self._lock:
             for agent_id, agent in list(self._agents.items()):
                 if not agent.is_healthy(timeout, now=now):
@@ -285,7 +304,7 @@ class RedisAgentRegistry:
 
     get_agent = get
 
-    def list(self) -> list[AgentMetadata]:
+    def list(self) -> List[AgentMetadata]:
         agents: list[AgentMetadata] = []
         for key in self._redis.scan_iter(match=f"{self.prefix}:*"):
             agent = self._loads(self._redis.get(key))
@@ -322,7 +341,7 @@ class RedisAgentRegistry:
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> list[AgentMetadata]:
+    ) -> List[AgentMetadata]:
         now = time.time()
         return [
             agent
@@ -340,10 +359,10 @@ class RedisAgentRegistry:
 
     discover_agents = discover
 
-    def prune_stale(self, *, stale_timeout: float | None = None) -> list[str]:
+    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]:
         now = time.time()
         timeout = self.stale_timeout if stale_timeout is None else float(stale_timeout)
-        removed: list[str] = []
+        removed: List[str] = []
         for agent in self.list():
             if not agent.is_healthy(timeout, now=now):
                 removed.append(agent.id)
@@ -361,6 +380,7 @@ class AgentRegistry:
     """
 
     def __init__(self, backend: str | Any = "memory", **kwargs: Any) -> None:
+        self._backend: AgentRegistryBackend
         if isinstance(backend, str):
             backend_name = backend.replace("-", "_").lower()
             if backend_name in {"memory", "in_memory", "inmemory"}:
@@ -381,7 +401,7 @@ class AgentRegistry:
         return cls("redis", **kwargs)
 
     @property
-    def backend(self) -> Any:
+    def backend(self) -> AgentRegistryBackend:
         return self._backend
 
     @property
@@ -406,7 +426,7 @@ class AgentRegistry:
 
     get_agent = get
 
-    def list(self) -> list[AgentMetadata]:
+    def list(self) -> List[AgentMetadata]:
         return self._backend.list()
 
     list_agents = list
@@ -430,7 +450,7 @@ class AgentRegistry:
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> list[AgentMetadata]:
+    ) -> List[AgentMetadata]:
         return self._backend.discover(
             tools=tools,
             tags=tags,
@@ -440,7 +460,7 @@ class AgentRegistry:
 
     discover_agents = discover
 
-    def prune_stale(self, *, stale_timeout: float | None = None) -> list[str]:
+    def prune_stale(self, *, stale_timeout: float | None = None) -> List[str]:
         return self._backend.prune_stale(stale_timeout=stale_timeout)
 
     prune_stale_agents = prune_stale

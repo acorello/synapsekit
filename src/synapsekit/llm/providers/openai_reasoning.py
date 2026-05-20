@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import AsyncGenerator
+from typing import Any
 
 from ..reasoning import BaseReasoningProvider, ReasoningResponse, ReasoningStreamChunk
 from ..utils import extract_reasoning, extract_reasoning_tokens, extract_text
@@ -21,7 +22,7 @@ class OpenAIReasoning(BaseReasoningProvider):
             thinking=thinking,
             provider="openai",
         )
-        self._client = None
+        self._client: Any = None
 
     def _get_client(self):
         if self._client is None:

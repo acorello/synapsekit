@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import Any
 from .base import BaseSplitter
 
 
@@ -20,7 +21,7 @@ class SemanticSplitter(BaseSplitter):
         self.model_name = model
         self.threshold = threshold
         self.min_chunk_size = min_chunk_size
-        self._model = None
+        self._model: Any = None
 
     def _get_model(self):
         if self._model is None:

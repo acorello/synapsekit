@@ -29,7 +29,7 @@ class AzureOpenAILLM(BaseLLM):
         super().__init__(config)
         self._azure_endpoint = azure_endpoint
         self._api_version = api_version
-        self._client = None
+        self._client: Any = None
 
     def _get_client(self):
         if self._client is None:

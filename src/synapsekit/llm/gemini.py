@@ -12,7 +12,7 @@ class GeminiLLM(BaseLLM):
 
     def __init__(self, config: LLMConfig) -> None:
         super().__init__(config)
-        self._model = None
+        self._model: Any = None
 
     def _get_model(self):
         if self._model is None:

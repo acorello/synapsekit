@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import re
+from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
+from dataclasses import dataclass
 from typing import Any, Literal
 
 from .base import BaseLLM, LLMConfig
@@ -18,6 +20,30 @@ _PROVIDER_DEFAULTS: dict[str, str] = {
 }
 
 Provider = Literal["openai", "anthropic", "google", "deepseek"]
+
+
+@dataclass(slots=True)
+class ReasoningResponse:
+    """Reasoning + answer pair returned by reasoning providers."""
+
+    reasoning: str
+    answer: str
+
+
+@dataclass(slots=True)
+class ReasoningStreamChunk:
+    """Chunk emitted by a reasoning model stream."""
+
+    text: str
+    reasoning: str = ""
+
+
+class BaseReasoningProvider(BaseLLM, ABC):
+    """Compatibility base class for reasoning providers."""
+
+    @abstractmethod
+    async def generate_with_reasoning(self, prompt: str, **kw: Any) -> ReasoningResponse:
+        raise NotImplementedError
 
 
 def _strip_thinking(text: str) -> str:

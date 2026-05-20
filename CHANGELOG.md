@@ -7,7 +7,7 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [Unreleased]
+## [1.9.0] — 2026-05-20
 
 ### Added
 
@@ -17,6 +17,8 @@ SynapseKit uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`AgentFederation` + `AgentRegistry`** — distributed agent registry and federation layer; `InMemoryAgentRegistry` and `RedisAgentRegistry` store `AgentMetadata` with heartbeat-based health checks and stale-agent pruning; `AgentFederation` routes prompts across registered agents using round-robin, capacity-aware, or cost-aware strategies (`RoutingStrategy`); tag and tool-based discovery filters; `LocalAgentClient` for in-process agents; `RedisAgentRegistry` requires `synapsekit[redis]`; closes #701
 - **`ContinuousTrainer` fine-tuning pipeline** — closed-loop continuous fine-tuning with production feedback; `FeedbackCollector` batches samples via async queue with pluggable backends (in-memory default); `TrainingDataGenerator` exports JSONL with preference pairs; `OpenAIFineTuneProvider` and `AnthropicFineTuneProvider` submit and poll jobs; `ABTestRouter` sticky-routes traffic by SHA-256 user bucket; `AutoRolloutManager` stages rollout (5 → 25 → 50 → 100%) with latency/cost/quality regression rollback; `CostBenefitAnalyzer` projects ROI and payback days; `ContinuousTrainer` orchestrator wires all components; `pip install synapsekit[training]` for OpenAI fine-tune SDK; closes #702
 - **Benchmark harness** — `benchmarks/` directory with `pytest-benchmark` config, percentile report script, and ASV config for regression tracking; `make bench` and `make bench-compare` targets; CI workflow in `.github/workflows/benchmarks.yml` runs on version tags and nightly; `pip install synapsekit[bench]` for `pytest-benchmark`, `asv`, and `psutil`; closes #626
+
+---
 
 ## [1.8.0] — 2026-05-17
 

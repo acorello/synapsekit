@@ -114,12 +114,24 @@ def _matches_discovery_filters(
 
 
 class AgentRegistryBackend(Protocol):
-    def register(self, agent: AgentMetadata) -> AgentMetadata: ...
-    def unregister(self, agent_id: str) -> bool: ...
-    def get(self, agent_id: str) -> AgentMetadata | None: ...
-    def list(self) -> builtin_list[AgentMetadata]: ...
-    def heartbeat(self, agent_id: str, timestamp: float | None = None) -> AgentMetadata: ...
-    def is_healthy(self, agent_id: str) -> bool: ...
+    def register(self, agent: AgentMetadata) -> AgentMetadata:
+        pass
+
+    def unregister(self, agent_id: str) -> bool:
+        pass
+
+    def get(self, agent_id: str) -> AgentMetadata | None:
+        pass
+
+    def list(self) -> builtin_list[AgentMetadata]:
+        pass
+
+    def heartbeat(self, agent_id: str, timestamp: float | None = None) -> AgentMetadata:
+        pass
+
+    def is_healthy(self, agent_id: str) -> bool:
+        pass
+
     def discover(
         self,
         *,
@@ -127,9 +139,13 @@ class AgentRegistryBackend(Protocol):
         tags: Iterable[str] | str | None = None,
         min_capacity: int | None = None,
         healthy_only: bool = True,
-    ) -> builtin_list[AgentMetadata]: ...
+    ) -> builtin_list[AgentMetadata]:
+        pass
+
     stale_timeout: float
-    def prune_stale(self, *, stale_timeout: float | None = None) -> builtin_list[str]: ...
+
+    def prune_stale(self, *, stale_timeout: float | None = None) -> builtin_list[str]:
+        pass
 
 
 class InMemoryAgentRegistry:

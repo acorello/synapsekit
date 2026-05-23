@@ -137,6 +137,20 @@ uv run pytest tests/test_graph_run.py::test_linear_two_nodes -v
 - Test both the happy path and error cases
 - Keep tests fast — the full suite should run in under 5 seconds
 
+### Known pre-existing test failures to fix
+
+The following tests have hardcoded version strings that are now stale and need updating to match the current `__version__` in `src/synapsekit/__init__.py`. If you'd like to contribute a quick fix, bump the hardcoded version in each to `1.9.0`:
+
+- `tests/test_v060_features.py` — `test_version` asserts `__version__ == "1.7.0"`
+- `tests/test_v065_features.py` — `test_version` asserts `__version__ == "1.7.0"`
+- `tests/test_v066_features.py` — `test_version` asserts `__version__ == "1.7.0"`
+- `tests/test_v068_features.py` — `test_version` asserts `__version__ == "1.7.0"`
+- `tests/test_v069_features.py` — `test_version` asserts `__version__ == "1.7.0"`
+- `tests/test_v070_features.py` — `test_version` asserts `__version__ == "1.7.0"`
+- `tests/test_v120_features.py` — `test_version_flag` and `test_version_bumped` assert `__version__ == "1.7.0"`
+
+The better long-term fix is to replace all hardcoded version assertions with a dynamic check against `pyproject.toml` (the way `tests/preflight/test_preflight.py::test_version_matches_pyproject` does), so they never go stale again.
+
 ---
 
 ## Commit Message Format

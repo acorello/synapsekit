@@ -342,24 +342,6 @@ from .training import (
     TrainingDataGenerator,
     TrainingExample,
 )
-from .voice import (
-    AudioFrame,
-    BaseSTT,
-    BaseTTS,
-    BaseVAD,
-    CartesiaTTS,
-    DeepgramSTT,
-    ElevenLabsTTS,
-    EnergyVAD,
-    LocalWhisperSTT,
-    OpenAITTS,
-    OpenAIWhisperSTT,
-    PiperTTS,
-    SileroVAD,
-    TranscriptChunk,
-    VoicePipeline,
-)
-from .voice.types import PipelineEvent, PipelineState
 
 __version__ = "1.9.0"
 __all__ = [
@@ -877,6 +859,24 @@ _LAZY_IMPORTS = {
     "ElasticsearchLoader": "loaders.elasticsearch",
     "SitemapLoader": "loaders.sitemap",
     "YouTubeLoader": "loaders.youtube",
+    # Voice
+    "VoicePipeline": "voice.pipeline",
+    "AudioFrame": "voice.types",
+    "TranscriptChunk": "voice.types",
+    "PipelineEvent": "voice.types",
+    "PipelineState": "voice.types",
+    "BaseSTT": "voice.base",
+    "BaseTTS": "voice.base",
+    "BaseVAD": "voice.base",
+    "EnergyVAD": "voice.vad",
+    "SileroVAD": "voice.vad",
+    "LocalWhisperSTT": "voice.stt",
+    "OpenAIWhisperSTT": "voice.stt",
+    "DeepgramSTT": "voice.stt",
+    "OpenAITTS": "voice.tts",
+    "ElevenLabsTTS": "voice.tts",
+    "CartesiaTTS": "voice.tts",
+    "PiperTTS": "voice.tts",
 }
 
 

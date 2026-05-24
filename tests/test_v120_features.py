@@ -832,11 +832,12 @@ class TestCLITest:
 
 class TestCLIMain:
     def test_version_flag(self, capsys: pytest.CaptureFixture[str]):
+        import synapsekit
         from synapsekit.cli.main import main
 
         main(["--version"])
         output = capsys.readouterr().out
-        assert "1.7.0" in output
+        assert synapsekit.__version__ in output
 
     def test_no_command(self):
         from synapsekit.cli.main import main
@@ -891,7 +892,3 @@ class TestTopLevelImports:
 
         assert PostgresCheckpointer is not None
 
-    def test_version_bumped(self):
-        import synapsekit
-
-        assert synapsekit.__version__ == "1.7.0"

@@ -12,11 +12,6 @@ import pytest
 # ------------------------------------------------------------------ #
 
 
-def test_version():
-    import synapsekit
-
-    assert synapsekit.__version__ == "1.7.0"
-
 
 # ------------------------------------------------------------------ #
 # Feature 1: TokenBufferMemory
